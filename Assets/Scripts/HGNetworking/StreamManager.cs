@@ -25,6 +25,7 @@ public class StreamManager
     }
 
     //Fixed tick update n times a second
+    //Should also be a late update, like only after whole frame has been processed
     public void update()
     {
         //write to packet
