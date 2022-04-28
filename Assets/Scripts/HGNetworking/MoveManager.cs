@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveManager
+public static class MoveManager
 {
+    public static bool HasMoreDataToWrite(int connectionId)
+    {
+        return false;
+    }
+
+
     //Store packet id -> moves 
     //Whenever we ack a packet id, remove it from that store
     //Update the outgoing moves store
-    
+
     //Store sliding window of outgoing moves
-    
+
     //Player moves
     //Add it to sliding window of outgoing moves
 

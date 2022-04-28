@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventManager
+public static class EventManager
 {
     //todo
     //enum rpc_guarantee_type
@@ -88,7 +88,7 @@ public class EventManager
     //If we get an event, we ACK it, ACK gets lost, connection manager sends it again, do we want to like redo it 
 
 
-    public bool isThereDataToWrite()
+    public bool moreDataToWrite()
     {
         return false;
     }
@@ -110,7 +110,13 @@ public class EventManager
     {
         //Get the event number from the ack packet also gets whether its a dropped callback or successful
         //Update sliding window for event manager
+    }
 
 
+
+
+    public static bool HasMoreDataToWrite(int connectionId)
+    {
+        return false;
     }
 }

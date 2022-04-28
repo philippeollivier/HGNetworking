@@ -24,6 +24,11 @@ public class ConnectionManager
         //Send ACK packets here? 
     }
 
+
+
+
+
+
     //Sent a packet, ACK header is set to last free value in sliding window (sent).
 
     //Client receives packet with that ACK header
@@ -59,8 +64,8 @@ public class ConnectionManager
     //00000001 please ack
 
     /*
-        For every connect, store two sliding windows of sent and received.
-        When you send an event, it goes in n
+        For every connection, store two sliding windows of sent and received.
+        When you send an event, it goes in sent
 
         When an event is received, add it to the sliding window locally
         Send an ACK with n in packet, where n is latest value in sliding window in order (1, 2, 3, 4, 5)
@@ -72,4 +77,19 @@ public class ConnectionManager
 
         If you receive two packets with same n, don't process twice.
     */
+
+
+
+
+    //Map of Pairs of sliding window
+        //Outgoing
+        //Incoming
+
+    
+    //When packet is received 
+
+    //When ACK is received then remove it from outgoing.
+    //Send ACK to stream manager
+   
+
 }

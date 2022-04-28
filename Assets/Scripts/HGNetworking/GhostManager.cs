@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GhostManager
+public static class GhostManager
 {
     //Ghost Manager is always server -> many client info
     //For every gameobject we want to ghost, we store it in a map
@@ -68,7 +68,7 @@ public class GhostManager
     //Server needs to have map of client -> map of ghost id -> outgoing state changes
 
     //For each client
-        //Figure out what their MRS is. Write into packet
+    //Figure out what their MRS is. Write into packet
 
     //Client side
     //When you receive a ghost packet, update local ghost objects accordingly.
@@ -76,4 +76,9 @@ public class GhostManager
     //Server receives ACK
     //Update outgoing map
 
+
+    public static bool HasMoreDataToWrite(int connectionId)
+    {
+        return false;
+    }
 }
