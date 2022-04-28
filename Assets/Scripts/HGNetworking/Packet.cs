@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace GameServer
-{
     //Packet internal header (we don't write this)
     //00000000 Client ID
     //00000000 ACK information
@@ -20,19 +18,10 @@ namespace GameServer
     //Size for individuals we need at most log2(MAX SIZE) bits
 
     /// <summary>Sent from server to client.</summary>
-    public enum ServerPackets
+    public enum Packets
     {
-        welcome = 1,
-        spawnPlayer,
-        playerPosition,
-        playerRotation
-    }
-
-    /// <summary>Sent from client to server.</summary>
-    public enum ClientPackets
-    {
-        welcomeReceived = 1,
-        playerMovement
+        info,
+        ack
     }
 
     public class Packet : IDisposable
@@ -403,4 +392,3 @@ namespace GameServer
             GC.SuppressFinalize(this);
         }
     }
-}
