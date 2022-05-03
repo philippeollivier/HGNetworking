@@ -44,13 +44,7 @@ public class Connection
         /// <param name="_packetData">The packet containing the recieved data.</param>
         public void HandleData(Packet _packetData)
         {
-            int _packetLength = _packetData.ReadInt();
-            byte[] _packetBytes = _packetData.ReadBytes(_packetLength);
-
-            using (Packet _packet = new Packet(_packetBytes))
-            {
-                PlatformPacketManager.ReadPacket(id, _packet); // Call appropriate method to handle the packet
-            }
+            PlatformPacketManager.ReadPacket(id, _packetData); // Call appropriate method to handle the packet
         }
 
         /// <summary>Cleans up the UDP connection.</summary>

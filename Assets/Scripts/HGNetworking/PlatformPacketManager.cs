@@ -11,20 +11,10 @@ public static class PlatformPacketManager
     public static int Port { get; private set; }
     public static Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
     public static String[] connectionAddresses;
+    private static int connectionIndex = 1;
     private static UdpClient udpListener;
     //This class handles establishing connection from player to server AND sending packet between server and player.
 
-    //Client connect to server
-    public static void Connect(string ip, int port)
-    {
-
-    }
-
-    //Server receives incoming UDP
-    public static void ReceiveConnection()
-    {
-
-    }
 
     //This function opens a UDP socket to receive incoming UDP data
     public static void OpenUDPSocket(int port)
@@ -51,7 +41,9 @@ public static class PlatformPacketManager
     }
     public static void ReadPacket(int id, Packet packet)
     {
-        ConnectionManager.ReadPacket(id, packet);
+        String str = packet.ReadString();
+        Debug.Log(str);
+        //ConnectionManager.ReadPacket(id, packet);
         //Send to connection manager
     }
 
@@ -74,12 +66,20 @@ public static class PlatformPacketManager
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);
             int connectionId = Array.IndexOf(connectionAddresses, _connectionEndPoint.ToString());
+            if(connectionId == -1)
+            {
+                connections[connectionIndex].udp.Connect(_connectionEndPoint);
+                connectionAddresses[connectionIndex] = _connectionEndPoint.ToString();
+                connectionIndex++;
+            }
+
 
             using (Packet _packet = new Packet(_data))
             {
-
-                if (connectionId == -1)
+                
+                if (connections[connectionId].udp.endPoint == null)
                 {
+                    // If this is a new connection
                     connections[connectionId].udp.Connect(_connectionEndPoint);
                     return;
                 }
