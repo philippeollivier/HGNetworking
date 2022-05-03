@@ -12,6 +12,8 @@ public static class EventManager
     //    rpc_unguaranteed = 2 ///< Event delivery is not guaranteed - however, the event will remain ordered relative to other unguaranteed events.
     //};
 
+    //How many Events
+    //EVENT INT, -> Tells you how much to read.
 
     //Maintain a sliding window of events sent and events received
     //Whenever we send event, add to list of events sent.
@@ -88,29 +90,29 @@ public static class EventManager
     //If we get an event, we ACK it, ACK gets lost, connection manager sends it again, do we want to like redo it 
 
 
-    public bool moreDataToWrite()
-    {
-        return false;
-    }
+    //public bool moreDataToWrite()
+    //{
+    //    return false;
+    //}
 
-    public void writeToPacket()
-    {
-        //Based on how much space is left in OVERALL packet, figure out how many EVENTS we can write, and write them
-    }
+    //public void writeToPacket()
+    //{
+    //    //Based on how much space is left in OVERALL packet, figure out how many EVENTS we can write, and write them
+    //}
 
-    public void readPacket()
-    {
-        /*
-            Sliding window that events were sent + received in correct order.
-            If correct order do event business
-        */
-    }
+    //public void readPacket()
+    //{
+    //    /*
+    //        Sliding window that events were sent + received in correct order.
+    //        If correct order do event business
+    //    */
+    //}
 
-    public void ackCallback()
-    {
-        //Get the event number from the ack packet also gets whether its a dropped callback or successful
-        //Update sliding window for event manager
-    }
+    //public void ackCallback()
+    //{
+    //    //Get the event number from the ack packet also gets whether its a dropped callback or successful
+    //    //Update sliding window for event manager
+    //}
 
 
 
@@ -118,5 +120,15 @@ public static class EventManager
     public static bool HasMoreDataToWrite(int connectionId)
     {
         return false;
+    }
+
+    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, ref Packet packet)
+    {
+        return 1;
+    }
+
+    public static void ReadFromPacket(int connectionId, int packetId, ref Packet packet)
+    {
+
     }
 }

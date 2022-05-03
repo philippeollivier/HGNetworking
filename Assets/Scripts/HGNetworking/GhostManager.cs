@@ -81,4 +81,14 @@ public static class GhostManager
     {
         return false;
     }
+
+    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, ref Packet packet)
+    {
+        return 1;
+    }
+
+    public static void ReadFromPacket(int connectionId, int packetId, ref Packet packet)
+    {
+
+    }
 }
