@@ -10,6 +10,7 @@ public static class PlatformPacketManager
     public static int MaxPlayers { get; private set; }
     public static int Port { get; private set; }
     public static Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
+    public static String[] connectionAddresses;
     private static UdpClient udpListener;
     //This class handles establishing connection from player to server AND sending packet between server and player.
 
@@ -58,7 +59,7 @@ public static class PlatformPacketManager
     {
         MaxPlayers = maxPlayers;
         Port = port;
-
+        InitializeServerData(maxPlayers);
         Debug.Log("Starting server...");
 
         OpenUDPSocket(port);
@@ -69,41 +70,39 @@ public static class PlatformPacketManager
     {
         try
         {
-            IPEndPoint _clientEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            byte[] _data = udpListener.EndReceive(_result, ref _clientEndPoint);
+            IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);
-
-            if (_data.Length < 4)
-            {
-                return;
-            }
+            int connectionId = Array.IndexOf(connectionAddresses, _connectionEndPoint.ToString());
 
             using (Packet _packet = new Packet(_data))
             {
-                int _clientId = _packet.ReadInt();
 
-                if (_clientId == 0)
+                if (connectionId == -1)
                 {
+                    connections[connectionId].udp.Connect(_connectionEndPoint);
                     return;
                 }
 
-                if (connections[_clientId].udp.endPoint == null)
-                {
-                    // If this is a new connection
-                    connections[_clientId].udp.Connect(_clientEndPoint);
-                    return;
-                }
-
-                if (connections[_clientId].udp.endPoint.ToString() == _clientEndPoint.ToString())
+                if (connections[connectionId].udp.endPoint.ToString() == _connectionEndPoint.ToString())
                 {
                     // Ensures that the client is not being impersonated by another by sending a false clientID
-                    connections[_clientId].udp.HandleData(_packet);
+                    connections[connectionId].udp.HandleData(_packet);
                 }
             }
         }
         catch (Exception _ex)
         {
             Debug.Log($"Error receiving UDP data: {_ex}");
+        }
+    }
+
+    public static void InitializeServerData(int maxPlayers)
+    {
+        connectionAddresses = new string[maxPlayers+1];
+        for(int i = 1; i <= maxPlayers; i++)
+        {
+            connections.Add(i, new Connection(i));
         }
     }
 }

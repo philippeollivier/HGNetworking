@@ -10,7 +10,11 @@ public class Connection
     public static int dataBufferSize = 4096;
     public int id;
     public UDP udp;
-
+    public Connection(int connectionId)
+    {
+        id = connectionId;
+        udp = new UDP(id);
+    }
     public class UDP
     {
         public IPEndPoint endPoint;
