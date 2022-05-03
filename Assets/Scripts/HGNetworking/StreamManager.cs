@@ -11,11 +11,10 @@ public static class StreamManager
 
     public static Dictionary<int, int> latestPacket = new Dictionary<int, int>();
 
-    [Flags] public enum PacketType { 
-        Regular = 0,
-        ACK = 1
+    public enum PacketType : byte { 
+        Regular,
+        ACK
     }
-
 
     #region General Information For Development
 
@@ -37,8 +36,6 @@ public static class StreamManager
 
     #endregion
 
-
-
     public static void WriteToPacket(int connectionId)
     {
         bool hasInfo = MoreInfoToWrite(connectionId);
@@ -50,8 +47,9 @@ public static class StreamManager
             int packetId = GetLatestPacketId(connectionId);
 
             //Write packet header information
-            packet.InsertInt(connectionId);
-            packet.InsertInt(packetId);
+            packet.Write(connectionId);
+            packet.Write(packetId);
+            packet.Write(Convert.ToByte(PacketType.Regular));
 
             //Write info from each manager into packet in priority order (Move, Event, Ghost)
             remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
@@ -72,10 +70,19 @@ public static class StreamManager
         int connectionId = packet.ReadInt();
         int packetId = packet.ReadInt();
 
+        PacketType packetType = (PacketType) packet.ReadByte();
+
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
-        EventManager.ReadFromPacket(connectionId, packetId, ref packet);
-        GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
+        if(PacketType.Regular == packetType)
+        {
+            MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
+            EventManager.ReadFromPacket(connectionId, packetId, ref packet);
+            GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
+        }
+        else if (PacketType.ACK == packetType)
+        {
+            //TODO
+        }
     }
 
     public static void ProcessNotification(Packet packet)
