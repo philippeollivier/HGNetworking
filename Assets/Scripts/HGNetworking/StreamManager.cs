@@ -11,18 +11,13 @@ public static class StreamManager
 
     public static Dictionary<int, int> latestPacket = new Dictionary<int, int>();
 
-    public enum PacketType : byte { 
-        Regular,
-        ACK
-    }
-
     #region General Information For Development
 
     /* PACKET STRUCTURE
     General Packet Header
         int connectionId
         int packetId
-        byte packetFlags
+        byte packetType
     MoveManager info
         int number of moves
         Moves
@@ -49,7 +44,7 @@ public static class StreamManager
             //Write packet header information
             packet.Write(connectionId);
             packet.Write(packetId);
-            packet.Write(Convert.ToByte(PacketType.Regular));
+            packet.Write(Convert.ToByte(ConnectionManager.PacketType.Regular));
 
             //Write info from each manager into packet in priority order (Move, Event, Ghost)
             remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
@@ -57,32 +52,19 @@ public static class StreamManager
             remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
 
             //Send packet through connection manager
-            //ConnectionManager.SendPacket(connectionId, packet);
+            ConnectionManager.SendPacket(connectionId, packet);
 
             //Check if there is more info that needs to be sent
             hasInfo = MoreInfoToWrite(connectionId);
         }
     }
 
-    public static void ReadFromPacket(Packet packet)
+    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
-        //Read Packet Header
-        int connectionId = packet.ReadInt();
-        int packetId = packet.ReadInt();
-
-        PacketType packetType = (PacketType) packet.ReadByte();
-
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        if(PacketType.Regular == packetType)
-        {
-            MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
-            EventManager.ReadFromPacket(connectionId, packetId, ref packet);
-            GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
-        }
-        else if (PacketType.ACK == packetType)
-        {
-            //TODO
-        }
+        MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
+        EventManager.ReadFromPacket(connectionId, packetId, ref packet);
+        GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
     }
 
     public static void ProcessNotification(Packet packet)

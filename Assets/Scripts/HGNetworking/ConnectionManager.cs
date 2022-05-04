@@ -1,28 +1,71 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConnectionManager
+public static class ConnectionManager
 {
-    //normal send packet, drop to next layer
-    public void SendPacket()
+    public enum PacketType : byte
     {
-        //Send to Platform Packet Manager
+        Regular,
+        ACK
+    }
+    public struct PacketHeader
+    {
+        public int connectionId;
+        public int packetId;
+        public PacketType packetType;
+
+        public PacketHeader(Packet packet)
+        {
+            connectionId = packet.ReadInt();
+            packetId = packet.ReadInt();
+            packetType = (PacketType)packet.ReadByte();
+        }
+        public PacketHeader(int connectionId, int packetId, PacketType packetType)
+        {
+            this.connectionId = connectionId;
+            this.packetId = packetId;
+            this.packetType = packetType;
+        }
+        public override string ToString()
+        {
+            return $"{{ ConnectionId: {connectionId}, PacketId: {packetId}, PacketType: {packetType} }}";
+        }
     }
 
-    //send packet, ack guaranteed
-    public void SendPacket(bool guaranteed)
+    //send given packet to a connection with id
+    public static void SendPacket(int connectionId, Packet packet)
     {
-        //Send to Platform Packet Manager
+        //TODO: Connection to PlatformPacketManager here
     }
 
-    public void ReceivePacket()
+    public static void ReceivePacket(Packet packet)
     {
-        //If ACK do ACK business
-        //Send to stream mananger
+        //Read Packet Header
+        PacketHeader packetHeader = new PacketHeader(packet);
 
-        //Send ACK packets here?    
+        switch (packetHeader.packetType)
+        {
+            case PacketType.Regular:
+                StreamManager.ReadFromPacket(packetHeader.connectionId, packetHeader.packetId, packet);
+                RespondToPacketWithACK(packetHeader);
+                break;
+            case PacketType.ACK:
+                //TODO ACK Business
+                break;
+            default:
+                throw new ArgumentException($"PacketType not currently implemented. PacketType: {packetHeader}");
+        }
     }
+
+    public static void RespondToPacketWithACK(PacketHeader packetHeader)
+    {
+        packetHeader.packetType = PacketType.ACK;
+
+        //TODO: Write to Platform packet manager
+    }
+
 
 
 
@@ -82,14 +125,14 @@ public class ConnectionManager
 
 
     //Map of Pairs of sliding window
-        //Outgoing
-        //Incoming
+    //Outgoing
+    //Incoming
 
-    
+
     //When packet is received 
 
     //When ACK is received then remove it from outgoing.
     //Send ACK to stream manager
-   
+
 
 }
