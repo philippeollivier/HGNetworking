@@ -16,10 +16,11 @@ public class TestScript : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Send");
             using (Packet _packet = new Packet())
             {
                 _packet.Write("Your mum gay");
-                PlatformPacketManager.SendPacket(new System.Net.IPEndPoint(IPAddress.Parse("25.18.58.72"), 6242), _packet);
+                PlatformPacketManager.SendPacket(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6943), _packet);
 
             }
         }

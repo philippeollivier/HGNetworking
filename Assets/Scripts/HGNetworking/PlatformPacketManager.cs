@@ -41,7 +41,7 @@ public static class PlatformPacketManager
     }
     public static void ReadPacket(int id, Packet packet)
     {
-        String str = packet.ReadString();
+        string str = packet.ReadString();
         Debug.Log(str);
         //ConnectionManager.ReadPacket(id, packet);
         //Send to connection manager
@@ -68,22 +68,15 @@ public static class PlatformPacketManager
             int connectionId = Array.IndexOf(connectionAddresses, _connectionEndPoint.ToString());
             if(connectionId == -1)
             {
+                Debug.Log($"Received Connection from: {_connectionEndPoint.ToString()}");
+                // If this is a new connection
                 connections[connectionIndex].udp.Connect(_connectionEndPoint);
                 connectionAddresses[connectionIndex] = _connectionEndPoint.ToString();
                 connectionIndex++;
+                return;
             }
-
-
             using (Packet _packet = new Packet(_data))
             {
-                
-                if (connections[connectionId].udp.endPoint == null)
-                {
-                    // If this is a new connection
-                    connections[connectionId].udp.Connect(_connectionEndPoint);
-                    return;
-                }
-
                 if (connections[connectionId].udp.endPoint.ToString() == _connectionEndPoint.ToString())
                 {
                     // Ensures that the client is not being impersonated by another by sending a false clientID
