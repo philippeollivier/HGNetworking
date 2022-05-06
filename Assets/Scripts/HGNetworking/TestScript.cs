@@ -5,6 +5,8 @@ using System.Net;
 
 public class TestScript : MonoBehaviour
 {
+    public int frameID;
+    public SlidingWindow sw = new SlidingWindow(10, false);
     // Start is called before the first frame update
     void Start()
     {
@@ -16,17 +18,11 @@ public class TestScript : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Send");
-            using (Packet _packet = new Packet())
-            {
-                _packet.Write("Your mum gay");
-                PlatformPacketManager.SendPacket(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6943), _packet);
-
-            }
+            sw.FillFrame(frameID);
         }
         if(Input.GetKeyDown(KeyCode.C))
         {
-            PlatformPacketManager.OpenServer(1, 6942);
+            sw.AdvancePointer();
         }
     }
 }

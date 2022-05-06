@@ -38,13 +38,10 @@ public static class StreamManager
         while (hasInfo)
         {
             //Create new packet
-            Packet packet = new Packet();
+            Packet packet = ConnectionManager.GetPacket(ConnectionManager.PacketType.Regular, connectionId);
             int packetId = GetLatestPacketId(connectionId);
 
-            //Write packet header information
-            packet.Write(connectionId);
-            packet.Write(packetId);
-            packet.Write(Convert.ToByte(ConnectionManager.PacketType.Regular));
+
 
             //Write info from each manager into packet in priority order (Move, Event, Ghost)
             remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
@@ -67,8 +64,9 @@ public static class StreamManager
         GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
     }
 
-    public static void ProcessNotification(Packet packet)
+    public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
+
         //Write to each manager that needs ACK
         //How are we ACK
         
@@ -79,7 +77,7 @@ public static class StreamManager
     public static void UpdateTick()
     {
         //Write Packets to all Outgoing Connections
-        foreach(int connectionId in PlatformPacketManager.connections.Keys)
+        foreach(int connectionId in ConnectionManager.connections.Keys)
         {
             WriteToPacket(connectionId);
         }

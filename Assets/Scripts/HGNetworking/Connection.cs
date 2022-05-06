@@ -10,10 +10,14 @@ public class Connection
     public static int dataBufferSize = 4096;
     public int id;
     public UDP udp;
-    public Connection(int connectionId)
+    public SlidingWindow window = new SlidingWindow(64, false);
+    public long[] timeouts = new long[64];
+    public long timeoutTime;
+    public Connection(int connectionId, long timeoutTime)
     {
         id = connectionId;
         udp = new UDP(id);
+        this.timeoutTime = timeoutTime;
     }
     public class UDP
     {
@@ -33,24 +37,21 @@ public class Connection
             endPoint = _endPoint;
         }
 
-        /// <summary>Sends data to the client via UDP.</summary>
-        /// <param name="_packet">The packet to send.</param>
-        public void SendData(Packet _packet)
-        {
-            PlatformPacketManager.SendPacket(endPoint, _packet);
-        }
-
-        /// <summary>Prepares received data to be used by the appropriate packet handler methods.</summary>
-        /// <param name="_packetData">The packet containing the recieved data.</param>
-        public void HandleData(Packet _packetData)
-        {
-            PlatformPacketManager.ReadPacket(id, _packetData); // Call appropriate method to handle the packet
-        }
-
         /// <summary>Cleans up the UDP connection.</summary>
         public void Disconnect()
         {
             endPoint = null;
+        }
+    }
+
+    public void UpdateTick()
+    {
+        for(int i = 0; i < timeouts.Length; i++)
+        {
+            if(window.ActiveFrames(i))
+            {
+                timeouts[i]++;
+            }
         }
     }
 

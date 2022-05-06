@@ -2,71 +2,193 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Net;
+using System.Net.Sockets;
 public static class ConnectionManager
 {
+    public static int MaxPlayers { get; private set; }
+    public static Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
+    public static string[] connectionAddresses;
+    private static int connectionIndex = 1;
     public enum PacketType : byte
     {
         Regular,
-        ACK
+        ACK,
+        Connect,
+        NoACK
+    }
+
+    private enum ConnectState : byte
+    {
+        Connect,
+        Acknowledge
     }
     public struct PacketHeader
     {
-        public int connectionId;
-        public int packetId;
         public PacketType packetType;
+        public int packetId;
 
         public PacketHeader(Packet packet)
         {
-            connectionId = packet.ReadInt();
-            packetId = packet.ReadInt();
             packetType = (PacketType)packet.ReadByte();
+            packetId = packet.ReadInt();
         }
-        public PacketHeader(int connectionId, int packetId, PacketType packetType)
+        public PacketHeader(int packetId, PacketType packetType)
         {
-            this.connectionId = connectionId;
-            this.packetId = packetId;
             this.packetType = packetType;
+            this.packetId = packetId;
         }
         public override string ToString()
         {
-            return $"{{ ConnectionId: {connectionId}, PacketId: {packetId}, PacketType: {packetType} }}";
+            return $"{{PacketId: {packetId}, PacketType: {packetType} }}";
         }
     }
 
+    public static Packet GetPacket(PacketType type, int connectionId)
+    {
+        switch (type)
+        {
+            case PacketType.NoACK:
+                using (Packet packet = new Packet())
+                {
+                    //Write packet header information
+                    packet.Write(connectionId);
+                    //Get this from the sliding window
+                    packet.Write(0);
+                    packet.Write(Convert.ToByte(PacketType.NoACK));
+                    return packet;
+                }
+            case PacketType.Regular:
+                int packetId = connections[connectionId].window.AdvancePointer();
+                if (packetId == -1) {
+                    return null;
+                }
+                using (Packet packet = new Packet())
+                {
+                    //Write packet header information
+                    packet.Write(connectionId);
+                    //Get this from the sliding window
+                    packet.Write(packetId);
+                    packet.Write(Convert.ToByte(PacketType.Regular));
+                    return packet;
+                }
+            default:
+                throw new ArgumentException($"PacketType not currently implemented. PacketType: {type}");
+        }
+    }
     //send given packet to a connection with id
     public static void SendPacket(int connectionId, Packet packet)
     {
-        //TODO: Connection to PlatformPacketManager here
+        PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
     }
 
-    public static void ReceivePacket(Packet packet)
+    public static void ReadPacket(IPEndPoint connectionEndpoint, Packet packet)
     {
+        int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
+
         //Read Packet Header
         PacketHeader packetHeader = new PacketHeader(packet);
 
         switch (packetHeader.packetType)
         {
+            case PacketType.NoACK:
+                StreamManager.ReadFromPacket(connectionId, packetHeader.packetId, packet);
+                break;
             case PacketType.Regular:
-                StreamManager.ReadFromPacket(packetHeader.connectionId, packetHeader.packetId, packet);
-                RespondToPacketWithACK(packetHeader);
+                StreamManager.ReadFromPacket(connectionId, packetHeader.packetId, packet);
+                // Ensures that the client is not being impersonated by another by sending a false clientID
+                RespondToPacketWithACK(connectionId, packetHeader);
                 break;
             case PacketType.ACK:
+                ReadACK(connectionId, packetHeader);
                 //TODO ACK Business
+                break;
+            case PacketType.Connect:
+                if (connectionId == -1)
+                {
+                    Debug.Log($"Received Connection from: {connectionEndpoint.ToString()}");
+                    // If this is a new connection
+                    connections[connectionIndex].udp.Connect(connectionEndpoint);
+                    connectionAddresses[connectionIndex] = connectionEndpoint.ToString();
+                    connectionIndex++;
+                    return;
+                }
                 break;
             default:
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {packetHeader}");
         }
     }
 
-    public static void RespondToPacketWithACK(PacketHeader packetHeader)
+    public static void Connect(IPEndPoint endpoint)
     {
-        packetHeader.packetType = PacketType.ACK;
-
-        //TODO: Write to Platform packet manager
+        using (Packet packet = new Packet())
+        {
+            packet.Write(Convert.ToByte(PacketType.Connect));
+            packet.Write(0);
+            packet.Write(Convert.ToByte(ConnectState.Connect));
+            PlatformPacketManager.SendPacket(endpoint, packet);
+        }
     }
 
+    public static void RespondToPacketWithACK(int connectionId, PacketHeader packetHeader)
+    {
 
+        using (Packet packet = new Packet())
+        {
+            packet.Write(Convert.ToByte(PacketType.ACK));
+            packet.Write(packetHeader.packetId);
+            PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
+        }
+    }
+
+    public static void OpenServer(int maxPlayers, int port)
+    {
+        MaxPlayers = maxPlayers;
+        //InitializeServerDat(maxPlayers);
+        Debug.Log("Starting server...");
+
+        PlatformPacketManager.OpenUDPSocket(port);
+    }
+
+    private static void ReadACK(int connectionId, PacketHeader packet)
+    {
+
+        SlidingWindow.WindowStatus status = connections[connectionId].window.FillFrame(packet.packetId);
+        switch (status)
+        {
+            case SlidingWindow.WindowStatus.Success:
+                StreamManager.ProcessNotification(true, packet.packetId, connectionId);
+                break;
+            case SlidingWindow.WindowStatus.OutOfOrder:
+                StreamManager.ProcessNotification(false, packet.packetId, connectionId);
+                break;
+            case SlidingWindow.WindowStatus.Duplicate:
+                Debug.Log("Duplicate ACK received");
+                break;
+            case SlidingWindow.WindowStatus.OutofBounds:
+                Debug.Log("ACK Returned out of bounds");
+                break;
+        }
+
+    }
+
+    public static void InitializeServerData(int maxPlayers)
+    {
+        connectionAddresses = new string[maxPlayers + 1];
+        for (int i = 1; i <= maxPlayers; i++)
+        {
+            connections.Add(i, new Connection(i, 1000));
+        }
+    }
+
+    public static void UpdateTick()
+    {
+        //Write Packets to all Outgoing Connections
+        foreach (Connection connection in connections.Values)
+        {
+            connection.UpdateTick();
+        }
+    }
 
 
 
