@@ -28,7 +28,7 @@ public static class EventManager
     //If we receive ACK for second event, and first event has not been ACKed then
     //Add second event to pending queue of events
 
-    //
+
 
     //Event 1 -> dies
     //Event 2 -> dies
@@ -116,9 +116,24 @@ public static class EventManager
 
 
 
+    //EVENT Class
+    //Needs to have EVENT
+    //Store data in EVENT
+    //Ability to read all data in event
+
+    //Int Event + int 4 bytes for the EVENT, 4 bytes for INT
+
+    //EVENT ID => what tells
+    //EVENT DATA IN ORDER
+
+    //We need a write/read event to packet function
+    //Write writes all the member variables to the packet
+
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
+        Event e = new Events.Event_SEND_USERNAME();
+
         return false;
     }
 
