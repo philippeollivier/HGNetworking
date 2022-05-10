@@ -58,6 +58,9 @@ public static class StreamManager
 
     public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
+        Event e4 = Event.GetEventClassFromId(packet.ReadInt());
+        e4.ReadEventFromPacket(packet);
+        Debug.Log(e4);
         //Read info and send to appropriate manager (Event, Move, Ghost)
         MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
         EventManager.ReadFromPacket(connectionId, packetId, ref packet);
@@ -66,7 +69,7 @@ public static class StreamManager
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
-
+        Debug.Log("Packet Acked!");
         //Write to each manager that needs ACK
         //How are we ACK
         

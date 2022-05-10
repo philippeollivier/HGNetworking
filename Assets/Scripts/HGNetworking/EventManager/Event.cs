@@ -17,7 +17,7 @@ public class Event
         packet.Write(GetType().Name);
     }
 
-    public void WriteEventToPacket(ref Packet packet)
+    public void WriteEventToPacket(Packet packet)
     {
         packet.Write(GetEventIdFromString(GetType().Name));
 
@@ -27,7 +27,7 @@ public class Event
         }
     }
 
-    public void ReadEventFromPacket(ref Packet packet)
+    public void ReadEventFromPacket(Packet packet)
     {
         foreach (PropertyInfo propertyInfo in GetType().GetProperties())
         {
