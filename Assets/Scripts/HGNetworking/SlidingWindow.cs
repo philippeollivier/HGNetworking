@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+
 
 [Serializable]
 public class SlidingWindow : ISerializationCallbackReceiver
@@ -13,6 +15,7 @@ public class SlidingWindow : ISerializationCallbackReceiver
     public int MaxSize { get; private set; }
     [SerializeField] private bool[] window;
     readonly bool acceptOutOfOrder;
+
 
     [SerializeField] private int leftBound;
     [SerializeField] private int rightBound;

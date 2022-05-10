@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
+
 public static class ConnectionManager
 {
     public static int MaxPlayers { get; private set; }
     public static Dictionary<int, Connection> connections = new Dictionary<int, Connection>();
     public static string[] connectionAddresses;
     private static int connectionIndex = 1;
+
+
     public enum PacketType : byte
     {
         Regular,
@@ -111,8 +114,8 @@ public static class ConnectionManager
                     connections[connectionIndex].udp.Connect(connectionEndpoint);
                     connectionAddresses[connectionIndex] = connectionEndpoint.ToString();
                     connectionIndex++;
-                    return;
                 }
+                    ReadConnect(packet, connectionEndpoint);
                 break;
             default:
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {packetHeader}");
@@ -127,6 +130,30 @@ public static class ConnectionManager
             packet.Write(0);
             packet.Write(Convert.ToByte(ConnectState.Connect));
             PlatformPacketManager.SendPacket(endpoint, packet);
+        }
+    }
+
+    public static void ReadConnect(Packet packet, IPEndPoint endpoint)
+    {
+        ConnectState state = (ConnectState) packet.ReadByte();
+        switch (state)
+        {
+            case ConnectState.Connect:
+                using (Packet responsePacket = new Packet())
+                {
+                    packet.Write(Convert.ToByte(PacketType.Connect));
+                    packet.Write(0);
+                    packet.Write(Convert.ToByte(ConnectState.Acknowledge));
+                    PlatformPacketManager.SendPacket(endpoint, packet);
+                }
+                break;
+            case (ConnectState.Acknowledge):
+                    Debug.Log($"Connection acknowledged from: {endpoint.ToString()}");
+                    connections[connectionIndex].udp.Connect(endpoint);
+                    connectionAddresses[connectionIndex] = endpoint.ToString();
+                    connectionIndex++;
+                    ReadConnect(packet, endpoint);
+                break;
         }
     }
 
@@ -169,7 +196,6 @@ public static class ConnectionManager
                 Debug.Log("ACK Returned out of bounds");
                 break;
         }
-
     }
 
     public static void InitializeServerData(int maxPlayers)

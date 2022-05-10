@@ -79,7 +79,10 @@ public static class StreamManager
         //Write Packets to all Outgoing Connections
         foreach(int connectionId in ConnectionManager.connections.Keys)
         {
-            WriteToPacket(connectionId);
+            if(!ConnectionManager.connections[connectionId].window.IsFull)
+            {
+                WriteToPacket(connectionId);
+            }
         }
     }
 

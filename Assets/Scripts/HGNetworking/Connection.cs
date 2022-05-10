@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 
+
 public class Connection
 {
     public static int dataBufferSize = 4096;
@@ -13,6 +14,9 @@ public class Connection
     public SlidingWindow window = new SlidingWindow(64, false);
     public long[] timeouts = new long[64];
     public long timeoutTime;
+
+
+
     public Connection(int connectionId, long timeoutTime)
     {
         id = connectionId;
