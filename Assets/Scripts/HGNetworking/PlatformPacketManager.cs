@@ -19,7 +19,7 @@ public static class PlatformPacketManager
         udpListener = new UdpClient(Port);
         udpListener.BeginReceive(UDPReceiveCallback, null);
 
-        Debug.Log($"Listening started on port {Port}.");
+        Debug.Log($"Listening started on port {port}.");
     }
 
     public static void SendPacket(IPEndPoint endpoint, Packet packet)

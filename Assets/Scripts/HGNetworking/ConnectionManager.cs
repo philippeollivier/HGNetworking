@@ -107,15 +107,7 @@ public static class ConnectionManager
                 //TODO ACK Business
                 break;
             case PacketType.Connect:
-                if (connectionId == -1)
-                {
-                    Debug.Log($"Received Connection from: {connectionEndpoint.ToString()}");
-                    // If this is a new connection
-                    connections[connectionIndex].udp.Connect(connectionEndpoint);
-                    connectionAddresses[connectionIndex] = connectionEndpoint.ToString();
-                    connectionIndex++;
-                }
-                    ReadConnect(packet, connectionEndpoint);
+                ReadConnect(packet, connectionEndpoint);
                 break;
             default:
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {packetHeader}");
@@ -136,23 +128,30 @@ public static class ConnectionManager
     public static void ReadConnect(Packet packet, IPEndPoint endpoint)
     {
         ConnectState state = (ConnectState) packet.ReadByte();
+        Debug.Log(state);
         switch (state)
         {
             case ConnectState.Connect:
+                Debug.Log($"Received Connection from: {endpoint.ToString()}");
+                // If this is a new connection
+                connections[connectionIndex].udp.Connect(endpoint);
+                connectionAddresses[connectionIndex] = endpoint.ToString();
+                connectionIndex++;
                 using (Packet responsePacket = new Packet())
                 {
-                    packet.Write(Convert.ToByte(PacketType.Connect));
-                    packet.Write(0);
-                    packet.Write(Convert.ToByte(ConnectState.Acknowledge));
-                    PlatformPacketManager.SendPacket(endpoint, packet);
+                    responsePacket.Write(Convert.ToByte(PacketType.Connect));
+                    responsePacket.Write(0);
+                    responsePacket.Write(Convert.ToByte(ConnectState.Acknowledge));
+                    PlatformPacketManager.SendPacket(endpoint, responsePacket);
                 }
                 break;
             case (ConnectState.Acknowledge):
+                    Debug.Log(connectionIndex);
+                    Debug.Log(connections[connectionIndex]);
                     Debug.Log($"Connection acknowledged from: {endpoint.ToString()}");
                     connections[connectionIndex].udp.Connect(endpoint);
                     connectionAddresses[connectionIndex] = endpoint.ToString();
                     connectionIndex++;
-                    ReadConnect(packet, endpoint);
                 break;
         }
     }
@@ -171,7 +170,7 @@ public static class ConnectionManager
     public static void OpenServer(int maxPlayers, int port)
     {
         MaxPlayers = maxPlayers;
-        //InitializeServerDat(maxPlayers);
+        InitializeServerData(maxPlayers);
         Debug.Log("Starting server...");
 
         PlatformPacketManager.OpenUDPSocket(port);

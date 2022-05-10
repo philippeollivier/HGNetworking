@@ -35,7 +35,7 @@ public class TestScript : MonoBehaviour
 
                 e3.Username = "ikkacuslayer69";
                 e3.WriteEventToPacket(packet);
-                ConnectionManager.SendPacket(0, packet);
+                ConnectionManager.SendPacket(1, packet);
             }
 
         }
