@@ -4,91 +4,237 @@ using UnityEngine;
 
 public static class GhostManager
 {
-    //Ghost Manager is always server -> many client info
-    //For every gameobject we want to ghost, we store it in a map
-    //In the map we store the most recent ghost info for the object.
+    private static int ghostIndex = 0;
+    public enum ghostType
+    {
+        TestGhost
+    }
 
-    //Ghost info has flags then Ghost Object ID
-    //00000000 - 00000000
-    //first bit is transform
-    //second bit is scale
-    //third bit is rotation
-    //fourth bit could be something like create object (with object ID)
-    //fifth bit can be destroy object
+    public const int NEWFLAG = 1; //1
+    public const int DELFLAG = 1 << 1; //10
+    public const int POSFLAG = 1 << 2; //100
+    public const int SCALEFLAG = 1 << 3; //1000
+    public const int ROTFLAG = 1 << 4; //10000
+
+    public class GhostConnection
+    {
+        public bool active;
+        public SlidingWindow window = new SlidingWindow(64, true);
+        public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
+        public void Connect()
+        {
+
+        }
+        public void Disconnect()
+        {
+
+        }
+        public int WriteToPacket(Packet packet, int packetId, int remainingBytes)
+        {
+            int numGhosts = 0;
+            //Add latest ghost data to lists
+            foreach (int ghostId in ghostStates.Keys)
+            {
+                AddState(ghostId);
+                if (ghostStates[ghostId].Count > 0)
+                {
+                    numGhosts++;
+                }
+            }
+            packet.Write(numGhosts);
+            int size = 0;
+            //Go through each ghost's list
+            foreach (int ghostId in ghostStates.Keys) {
+                //If it has unACKED changes
+                if(ghostStates[ghostId].Count > 0) {
+                    int flags = GetFlags(ghostId);
+                    size += GetPacketSize(flags);
+                    //Write the ghost if there is space
+                    if(remainingBytes - size >= 0)
+                    {
+                        remainingBytes -= size;
+                        WriteGhostToPacket(ghostId, flags, packet);
+                    }
+                }
+            }
+            return size;
+        }
+
+        public void AddState(int ghostId)
+        {
+            if (ghosts[ghostId].flags > 0)
+            {
+                ghostStates[ghostId].Add(new GhostState(ghosts[ghostId]));
+            }
+        }
+        public void AddState(int ghostId, int flags)
+        {
+            GhostState state = new GhostState(ghosts[ghostId]);
+            state.flags = flags;
+            ghostStates[ghostId].Add(state);
+        }
 
 
+        private int GetFlags(int ghostId)
+        {
+            int flags = 0; //00000000
+            ghostStates[ghostId].ForEach((GhostState ghost) =>
+            {
+                //10100100
+                flags = flags | ghost.flags;
+            });
+            return flags;
+        }
+        private int GetPacketSize(int flags)
+        {
+            int size = 2 * sizeof(int);
+            if ((flags & NEWFLAG) > 0)
+            {
+                size += sizeof(int);
+            }
+            if((flags & DELFLAG) > 0)
+            {
+                //Delete doesn't add any data
+            }
+            if ((flags & POSFLAG) > 0)
+            {
+                size += 3 * sizeof(float);
+            }
+            if ((flags & SCALEFLAG) > 0)
+            {
+                size += 3 * sizeof(float);
+            }
+            if ((flags & ROTFLAG) > 0)
+            {
+                size += 4 * sizeof(float);
+            }
+            return size;
+        }
+        private void WriteGhostToPacket(int ghostId, int flags, Packet packet)
+        {
+            GhostState mostRecentState = ghostStates[ghostId][ghostStates[ghostId].Count-1];
+            packet.Write(ghostId);
+            packet.Write((byte)flags);
+            if ((flags & NEWFLAG) > 0)
+            {
+                packet.Write((int)ghosts[ghostId].ghostType);
+            }
+            if ((flags & DELFLAG) > 0)
+            {
+                //Delete doesn't add any data
+                return;
+            }
+            if ((flags & POSFLAG) > 0)
+            {
+                packet.Write(mostRecentState.position);
+            }
+            if ((flags & SCALEFLAG) > 0)
+            {
+                packet.Write(mostRecentState.scale);
+            }
+            if ((flags & ROTFLAG) > 0)
+            {
+                packet.Write(mostRecentState.rotation);
+            }
+        }
 
-    //We use the flags to see what we are writing/reading from the packet
 
-    //We use Most Recent State always, so once we have been ACK'd about a certain update we don't need to send it anymore until it changes.
+    }
 
-
-
-
-    //Packet id 1, 11100000 -> to all clients
-    //client 1 returns ack
-
-    //You know client 1 has MRS, so for his ghost packet, you don't need to send that info anymore
-    //Client 2 doesn't return ack, so keep sending the entire ghost update until ack'd.
-
-    //Packet id 1
-
-    //Packet id 2, 11110000 -> to all clients
-    //Packet id 3, 11101000 -> to all clients
-
-    //whenever you are making the packet, you OR the state flags until they have been acknowledged.
-
-    //Make sure they have the most recent updates guaranteed.
-
-    //We store outgoing packet in sliding window.
-    //Whenever we receive an ACK, remove that outgoing packet. 
-    //Whenever we are sending the data, OR all packets in outgoing packet array. 
-
-    //Create ghost
-    //1001 <position info here>
-
-    //Move ghost (later packet)
-    //1000 <position info here>
-
-    //Destroy ghost
-    //00001
+    public class GhostState
+    {
+        public int ghostId;
+        public int flags = 0;
+        public Vector3 position = new Vector3(0, 0, 0);
+        public Vector3 scale = new Vector3(1, 1, 1);
+        public Quaternion rotation = new Quaternion(0, 0, 0, 0);
+        public GhostState(Ghost ghost)
+        {
+            ghostId = ghost.ghostId;
+            flags = ghost.flags;
+            position = ghost.Position;
+            scale = ghost.Scale;
+            rotation = ghost.Rotation;
+        }
+    }
 
 
+    public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
+    public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
+    static Dictionary<ghostType, objectType> objectAssociation = new Dictionary<ghostType, objectType>();
+    public static GameObject[] prefabs;
+    public static void Connect(int connectionId)
+    {
 
+        ghostConnections[connectionId].Connect();
+        foreach (int ghostId in ghostConnections[connectionId].ghostStates.Keys)
+        {
+            ghostConnections[connectionId].AddState(ghostId, 0 | NEWFLAG | POSFLAG | SCALEFLAG | ROTFLAG);
+        }
+    }
 
-    //What happens if client receives the same thing twice though, 
+    public static void Disconnect(int connectionid)
+    {
+        ghostConnections[connectionid].Disconnect();
+    }
 
-    //Create ghost isn't an issue to receive twice, because you can just ignore it
-    //Destroy ghost isn't an issue because you can just ignore it. 
-
-
-
-    //How do we decide what to send
-    //Server needs to have a map of ghost ID -> ghost object (what is a ghost object)
-    //Server needs to have map of client -> map of ghost id -> outgoing state changes
-
-    //For each client
-    //Figure out what their MRS is. Write into packet
-
-    //Client side
-    //When you receive a ghost packet, update local ghost objects accordingly.
-
-    //Server receives ACK
-    //Update outgoing map
-
+    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, ref Packet packet)
+    {
+        return ghostConnections[connectionId].WriteToPacket(packet, packetId, remainingBytes);
+    }
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
         return false;
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, ref Packet packet)
+    public static Ghost NewGhost(ghostType ghostType)
     {
-        return 1;
+        Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        ghost.Initialize(ghostIndex, ghostType);
+        ghosts[ghostIndex] = ghost;
+        foreach(GhostConnection connection in ghostConnections.Values)
+        {
+            connection.ghostStates[ghostIndex] = new List<GhostState>();
+            connection.ghostStates[ghostIndex].Add(new GhostState(ghost));
+        }
+        ghostIndex++;
+        return ghost;
     }
 
     public static void ReadFromPacket(int connectionId, int packetId, ref Packet packet)
     {
+        int numGhosts = packet.ReadInt();
+        for(int i = 0; i < numGhosts; i++)
+        {
+            int ghostId = packet.ReadInt();
+            int flags = packet.ReadByte();
+            if ((flags & NEWFLAG) > 0)
+            {
+                NewGhost((ghostType)packet.ReadInt());
+            }
+            if ((flags & DELFLAG) > 0)
+            {
+                ObjectManager.Destroy(ghosts[ghostId]);
+                return;
+            }
+            if ((flags & POSFLAG) > 0)
+            {
+                ghosts[ghostId].gameObject.transform.position = packet.ReadVector3();
+            }
+            if ((flags & SCALEFLAG) > 0)
+            {
+                ghosts[ghostId].gameObject.transform.localScale = packet.ReadVector3();
+            }
+            if ((flags & ROTFLAG) > 0)
+            {
+                ghosts[ghostId].gameObject.transform.rotation = packet.ReadQuaternion();
+            }
+        } 
+    }
 
+    public static void Initialize()
+    {
+        objectAssociation[ghostType.TestGhost] = objectType.TestGhost;
     }
 }

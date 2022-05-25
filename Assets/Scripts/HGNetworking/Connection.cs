@@ -11,7 +11,7 @@ public class Connection
     public static int dataBufferSize = 4096;
     public int id;
     public UDP udp;
-    public SlidingWindow window = new SlidingWindow(64, false);
+    public SlidingWindow window = new SlidingWindow(64, true);
     public long[] timeouts = new long[64];
     public long timeoutTime;
 

@@ -17,27 +17,35 @@ public class TestScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.18.58.72"), 6942));
+        //}
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    ConnectionManager.OpenServer(1, 6942);
+        //}
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    using(Packet packet = new Packet())
+        //    {
+        //        packet.Write(Convert.ToByte(ConnectionManager.PacketType.Regular));
+        //        packet.Write(0);
+        //        Events.Event_SEND_USERNAME e3 = new Events.Event_SEND_USERNAME();
+
+        //        e3.Username = "ikkacuslayer69";
+        //        e3.WriteEventToPacket(packet);
+        //        ConnectionManager.SendPacket(1, packet);
+        //    }
+
+        //}
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.18.58.72"), 6942));
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ConnectionManager.OpenServer(1, 6942);
-        }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            using(Packet packet = new Packet())
+            using (Packet packet = new Packet())
             {
-                packet.Write(Convert.ToByte(ConnectionManager.PacketType.Regular));
-                packet.Write(0);
-                Events.Event_SEND_USERNAME e3 = new Events.Event_SEND_USERNAME();
-
-                e3.Username = "ikkacuslayer69";
-                e3.WriteEventToPacket(packet);
-                ConnectionManager.SendPacket(1, packet);
+                //GhostManager.WriteToPacket();
             }
-
         }
     }
 }

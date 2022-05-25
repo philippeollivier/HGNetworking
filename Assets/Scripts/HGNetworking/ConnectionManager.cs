@@ -144,6 +144,7 @@ public static class ConnectionManager
                     responsePacket.Write(Convert.ToByte(ConnectState.Acknowledge));
                     PlatformPacketManager.SendPacket(endpoint, responsePacket);
                 }
+                //GhostManager.GhostConnection()
                 break;
             case (ConnectState.Acknowledge):
                     Debug.Log(connectionIndex);
@@ -203,6 +204,7 @@ public static class ConnectionManager
         for (int i = 1; i <= maxPlayers; i++)
         {
             connections.Add(i, new Connection(i, 1000));
+            GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
         }
     }
 
