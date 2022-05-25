@@ -7,42 +7,53 @@ public class PhilippeTesting : MonoBehaviour
 {
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    Events.Event_TEST_EVENT e = new Events.Event_TEST_EVENT();
-        //    e.Username = "animbot";
-        //    e.Number = 14;
-        //    e.Vec = new Vector3(1, 2, 3);
-        //    e.Quat = new Quaternion();
-        //    e.Test = "TADA";
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Events.Event_TEST_EVENT e = new Events.Event_TEST_EVENT();
+            e.Username = "animbot";
+            e.Number = 14;
+            e.Vec = new Vector3(1, 2, 3);
+            e.Quat = new Quaternion();
+            e.Test = "TADA";
+
+            Events.Event_TEST_EVENT e2 = new Events.Event_TEST_EVENT();
+            e2.Username = "animb23123123123123ot";
+            e2.Number = 14;
+            e2.Vec = new Vector3(1, 2, 3);
+            e2.Quat = new Quaternion();
+            e2.Test = "TADA";
 
 
-        //    Events.Event_SEND_USERNAME e3 = new Events.Event_SEND_USERNAME();
-        //    e3.Username = "ikkacuslayer69";
+            Debug.Log($"Size of e is {e.GetSize()}");
+            Debug.Log($"Size of e2 is {e2.GetSize()}");
 
 
-        //    //TODO remove these debugs
-        //    Debug.Log($"Writing All properties");
-        //    DateTime before = DateTime.Now;
-        //    Debug.Log($"Writing packet type properties for packet {GetType().Name}");
+            //Events.Event_SEND_USERNAME e3 = new Events.Event_SEND_USERNAME();
+            //e3.Username = "ikkacuslayer69";
 
 
-        //    Packet p = new Packet();
-        //    e.WriteEventToPacket(ref p);
-        //    e3.WriteEventToPacket(ref p);
+            ////TODO remove these debugs
+            //Debug.Log($"Writing All properties");
+            //DateTime before = DateTime.Now;
+            //Debug.Log($"Writing packet type properties for packet {GetType().Name}");
 
-        //    p.ToArray();
 
-        //    Event e2 = Event.GetEventClassFromId(p.ReadInt());
-        //    e2.ReadEventFromPacket(ref p);
-        //    Debug.Log(e2);
+            //Packet p = new Packet();
+            //e.WriteEventToPacket(ref p);
+            //e3.WriteEventToPacket(ref p);
 
-        //    Event e4 = Event.GetEventClassFromId(p.ReadInt());
-        //    e4.ReadEventFromPacket(ref p);
-        //    Debug.Log(e4);
+            //p.ToArray();
 
-        //    DateTime after = DateTime.Now;
-        //    Debug.Log($"Finished writing Property in Time: {after.Subtract(before).Milliseconds}");
-        //}
+            //Event e2 = Event.GetEventClassFromId(p.ReadInt());
+            //e2.ReadEventFromPacket(ref p);
+            //Debug.Log(e2);
+
+            //Event e4 = Event.GetEventClassFromId(p.ReadInt());
+            //e4.ReadEventFromPacket(ref p);
+            //Debug.Log(e4);
+
+            //DateTime after = DateTime.Now;
+            //Debug.Log($"Finished writing Property in Time: {after.Subtract(before).Milliseconds}");
+        }
     }
 }

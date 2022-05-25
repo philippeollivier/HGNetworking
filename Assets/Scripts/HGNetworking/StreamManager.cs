@@ -45,7 +45,7 @@ public static class StreamManager
 
             //Write info from each manager into packet in priority order (Move, Event, Ghost)
             remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
-            remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
+            remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
             remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
 
             //Send packet through connection manager
@@ -63,16 +63,14 @@ public static class StreamManager
         Debug.Log(e4);
         //Read info and send to appropriate manager (Event, Move, Ghost)
         MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
-        EventManager.ReadFromPacket(connectionId, packetId, ref packet);
+        EventManager.ReadFromPacket(connectionId, packetId, packet);
         GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
     }
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
         Debug.Log("Packet Acked!");
-        //Write to each manager that needs ACK
-        //How are we ACK
-        
+        EventManager.ProcessNotification(success, packetId, connectionId);
     }
 
     //Fixed Tick Update.

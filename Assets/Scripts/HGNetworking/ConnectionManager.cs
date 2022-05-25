@@ -91,7 +91,7 @@ public static class ConnectionManager
 
         //Read Packet Header
         PacketHeader packetHeader = new PacketHeader(packet);
-
+        Debug.Log($"Packet recieved from {connectionId} {packetHeader}");
         switch (packetHeader.packetType)
         {
             case PacketType.NoACK:
