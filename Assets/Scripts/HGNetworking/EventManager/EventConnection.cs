@@ -98,6 +98,10 @@ public class EventConnection
         return outgoingEventsQueue.Count > 0;
     }
 
+    public void QueueOutgoingEvent(Event e)
+    {
+        outgoingEventsQueue.Enqueue(e);
+    }
 
     #region Helper Functions
     private bool IsEventDuplicate(int eventId)

@@ -55,9 +55,9 @@ public static class EventManager
 
     public static void QueueOutgoingEvent(Event outgoingEvent)
     {
-        foreach (EventHandler eventHandler in eventHandlers)
+        foreach (EventConnection eventConnection in eventConnections.Values)
         {
-            eventHandler.QueueOutgoingEvent(outgoingEvent);
+            eventConnection.QueueOutgoingEvent(outgoingEvent);
         }
     }
     #endregion

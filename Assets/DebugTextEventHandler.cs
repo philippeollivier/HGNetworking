@@ -15,11 +15,6 @@ public class DebugTextEventHandler : EventHandler
         EventManager.SubscribeHandler(this);
 
         e = new Event_TEST_EVENT();
-        e.Username = "Animbot";
-        e.Number = Random.Range(-1000, 1000);
-        e.Vec = new Vector3(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
-        e.Quat = new Quaternion();
-        e.Test = Random.Range(0, 1000000).ToString();
 
         StartCoroutine(testPolling());
     }
@@ -28,6 +23,12 @@ public class DebugTextEventHandler : EventHandler
     {
         while (true)
         {
+            e.Username = "Animbot";
+            e.Number = Random.Range(-1000, 1000);
+            e.Vec = new Vector3(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
+            e.Quat = new Quaternion();
+            e.Test = Random.Range(0, 1000000).ToString();
+
             QueueOutgoingEvent(e);
             yield return new WaitForSeconds(1f);
         }
