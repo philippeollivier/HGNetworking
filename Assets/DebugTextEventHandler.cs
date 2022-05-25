@@ -14,6 +14,7 @@ public class DebugTextEventHandler : EventHandler
         //Subscribe to EventManager
         EventManager.SubscribeHandler(this);
 
+        e = new Event_TEST_EVENT();
         e.Username = "Animbot";
         e.Number = Random.Range(-1000, 1000);
         e.Vec = new Vector3(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
