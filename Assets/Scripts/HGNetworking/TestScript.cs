@@ -40,12 +40,12 @@ public class TestScript : MonoBehaviour
 
         //}
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            using (Packet packet = new Packet())
-            {
-                //GhostManager.WriteToPacket();
-            }
-        }
+        //if(Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    using (Packet packet = new Packet())
+        //    {
+        //        //GhostManager.WriteToPacket();
+        //    }
+        //}
     }
 }

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 public static class EventManager
 {
-    private static Dictionary<int, EventConnection> eventConnections = new Dictionary<int, EventConnection>();
-    private static List<EventHandler> eventHandlers = new List<EventHandler>();
+    public static Dictionary<int, EventConnection> eventConnections = new Dictionary<int, EventConnection>();
+    public static List<EventHandler> eventHandlers = new List<EventHandler>();
 
     #region General Data Manager Functions
     public static bool HasMoreDataToWrite(int connectionId)

@@ -41,7 +41,7 @@ public static class StreamManager
             Packet packet = ConnectionManager.GetPacket(ConnectionManager.PacketType.Regular, connectionId);
             int packetId = GetLatestPacketId(connectionId);
 
-
+            Debug.Log($"Stream Manager Writing To Packet {packetId} {packet} ");
 
             //Write info from each manager into packet in priority order (Move, Event, Ghost)
             remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
@@ -58,9 +58,6 @@ public static class StreamManager
 
     public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
-        Event e4 = Event.GetEventClassFromId(packet.ReadInt());
-        e4.ReadEventFromPacket(packet);
-        Debug.Log(e4);
         //Read info and send to appropriate manager (Event, Move, Ghost)
         MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
         EventManager.ReadFromPacket(connectionId, packetId, packet);
@@ -69,19 +66,19 @@ public static class StreamManager
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
-        Debug.Log("Packet Acked!");
+        Debug.Log($"Processing Notification success: {success} packetId: {packetId} connectionId: {connectionId}!");
         EventManager.ProcessNotification(success, packetId, connectionId);
     }
 
     //Fixed Tick Update.
-    //TODO: Should be called in another class in its late update
     public static void UpdateTick()
     {
         //Write Packets to all Outgoing Connections
         foreach(int connectionId in ConnectionManager.connections.Keys)
         {
-            if(!ConnectionManager.connections[connectionId].window.IsFull)
+            if(!ConnectionManager.connections[connectionId].window.IsFull && ConnectionManager.connections[connectionId].udp.endPoint != null) //TODO: remove this conditional to a function in ConnectionManager
             {
+                Debug.Log($"Writing to packet for connection {connectionId}");
                 WriteToPacket(connectionId);
             }
         }

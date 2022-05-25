@@ -205,6 +205,7 @@ public static class ConnectionManager
         {
             connections.Add(i, new Connection(i, 1000));
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
+            EventManager.eventConnections.Add(i, new EventConnection());
         }
     }
 

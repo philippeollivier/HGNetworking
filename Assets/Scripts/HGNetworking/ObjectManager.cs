@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 public enum objectType
 {
@@ -18,5 +20,24 @@ public class ObjectManager : MonoBehaviour
     public void Initialize()
     {
         objectPrefabs[objectType.TestGhost] = prefabs[0];
+    }
+
+    private void FixedUpdate()
+    {
+        ConnectionManager.UpdateTick();
+        StreamManager.UpdateTick();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.18.58.72"), 6942));
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ConnectionManager.OpenServer(1, 6942);
+        }
     }
 }
