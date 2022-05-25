@@ -182,7 +182,6 @@ public class Packet : IDisposable
         Write(_value.z);
         Write(_value.w);
     }
-
     #endregion
 
     #region Read Data
@@ -368,38 +367,6 @@ public class Packet : IDisposable
     {
         return new Quaternion(ReadFloat(_moveReadPos), ReadFloat(_moveReadPos), ReadFloat(_moveReadPos), ReadFloat(_moveReadPos));
     }
-
-    /// <summary>Based on input type, read the type from the packet.</summary>
-    /// <param name="_type">Type we are reading</param>
-    /// <param name="_moveReadPos">Whether or not to move the buffer's read position.</param>
-    //public T ReadGeneric<T>(bool _moveReadPos = true)
-    //{
-    //    T type = default(T);
-    //    switch (type)
-    //    {
-    //        case byte:
-    //            return (T)Convert.ChangeType(ReadByte(_moveReadPos), typeof(T));
-    //        case short:
-    //            return (T)Convert.ChangeType(ReadShort(_moveReadPos), typeof(T));
-    //        case int:
-    //            return (T)Convert.ChangeType(ReadInt(_moveReadPos), typeof(T));
-    //        case long:
-    //            return (T)Convert.ChangeType(ReadLong(_moveReadPos), typeof(T));
-    //        case float:
-    //            return (T)Convert.ChangeType(ReadFloat(_moveReadPos), typeof(T));
-    //        case bool:
-    //            return (T)Convert.ChangeType(ReadBool(_moveReadPos), typeof(T));
-    //        case string:
-    //            return (T)Convert.ChangeType(ReadString(_moveReadPos), typeof(T));
-    //        case Vector3:
-    //            return (T)Convert.ChangeType(ReadVector3(_moveReadPos), typeof(T));
-    //        case Quaternion:
-    //            return (T)Convert.ChangeType(ReadQuaternion(_moveReadPos), typeof(T));
-    //        default:
-    //            throw new ArgumentException($"Type is not currently handled by ReadGeneric: {type}");
-    //    }
-    //    throw new Exception($"Unreachable code reached in ReadGeneric");
-    //}
 
     // <summary>Based on input type, read the type from the packet.</summary>
     // <param name = "_type" > Type we are reading</param>

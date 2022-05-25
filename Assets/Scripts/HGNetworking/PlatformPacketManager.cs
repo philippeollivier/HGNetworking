@@ -16,7 +16,7 @@ public static class PlatformPacketManager
     //This function opens a UDP socket to receive incoming UDP data
     public static void OpenUDPSocket(int port)
     {
-        udpListener = new UdpClient(Port);
+        udpListener = new UdpClient(port);
         udpListener.BeginReceive(UDPReceiveCallback, null);
 
         Debug.Log($"Listening started on port {port}.");
@@ -42,6 +42,7 @@ public static class PlatformPacketManager
     {
         try
         {
+            Debug.Log("In UDP Receive Callback");
             IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);

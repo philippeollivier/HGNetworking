@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
 public class Event
 {
+    public int EventId { get; set; }
+
     private enum EventType{
         Event_ERROR,
         Event_TEST_EVENT,
@@ -19,7 +19,7 @@ public class Event
 
     public void WriteEventToPacket(Packet packet)
     {
-        packet.Write(GetEventIdFromString(GetType().Name));
+        packet.Write(GetEventTypeFromString(GetType().Name));
 
         foreach (PropertyInfo propertyInfo in GetType().GetProperties())
         {
@@ -35,8 +35,8 @@ public class Event
         }
     }
 
-    #region Helper Functions
-    public static int GetEventIdFromString(string eventName)
+    #region Helper? hardly knew 'er Functions
+    public static int GetEventTypeFromString(string eventName)
     {
         try
         {
@@ -63,6 +63,46 @@ public class Event
             retVal += $"{propertyInfo.Name}: {propertyInfo.GetValue(this, null)}\n";;
         }
         return retVal;
+    }
+
+    public int GetSize()
+    {
+        int size = 0;
+        foreach (PropertyInfo propertyInfo in GetType().GetProperties())
+        {
+            switch (propertyInfo.PropertyType)
+            {
+                case Type byteType when byteType == typeof(byte):
+                case Type boolType when boolType == typeof(bool):
+                    size += 1;
+                    break;
+                case Type shortType when shortType == typeof(short):
+                    size += 2;
+                    break;
+                case Type floatType when floatType == typeof(float):
+                case Type intType when intType == typeof(int):
+                    size += 4;
+                    break;
+                case Type longType when longType == typeof(long):
+                    size += 8;
+                    break;
+                case Type vector3Type when vector3Type == typeof(Vector3):
+                    size += 12;
+                    break;
+                case Type quaternionType when quaternionType == typeof(Quaternion):
+                    size += 16;
+                    break;
+                case Type stringType when stringType == typeof(string):
+                    size += 4 + ((String)propertyInfo.GetValue(this, null)).Length;
+                    break;
+                case Type byteArrType when byteArrType == typeof(byte[]):
+                    size += ((byte[])propertyInfo.GetValue(this, null)).Length;
+                    break;
+                default:
+                    throw new ArgumentException($"Type is not currently handled by GetSize: {propertyInfo.PropertyType}");
+            }
+        }
+        return size;
     }
     #endregion
 }
