@@ -42,9 +42,9 @@ public static class GhostManager
                     numGhosts++;
                 }
             }
+            packet.Write(numGhosts);
             if (numGhosts > 0)
             {
-                packet.Write(numGhosts);
                 int size = 0;
                 //Go through each ghost's list
                 foreach (int ghostId in ghostStates.Keys)
