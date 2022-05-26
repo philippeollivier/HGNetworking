@@ -19,6 +19,7 @@ public class EventConnection
 
     public void ReceiveEvents(List<Event> packetEvents)
     {
+        Debug.Log($"EVENT CONNECTION: ReceiveEvents");
         //Add received packets to the received events map
         foreach (Event e in packetEvents)
         {
@@ -56,6 +57,7 @@ public class EventConnection
         //Exit early if there are no events to write or we have too many outgoing events that have not been processed
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)
         {
+            packet.Write(0);
             return remainingPacketSize;
         }
 

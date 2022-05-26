@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class EventManager
 {
@@ -18,7 +19,12 @@ public static class EventManager
 
     public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
+        Debug.Log($"EVENT MANAGER: Reading packet from {connectionId}, {packetId}");
+
         int numEvents = packet.ReadInt();
+        Debug.Log($"EVENT MANAGER: has {numEvents}");
+
+
         List<Event> allEvents = new List<Event>();
 
         for(int i = 0; i < numEvents; i++)
@@ -27,6 +33,7 @@ public static class EventManager
             currentEvent.ReadEventFromPacket(packet);
 
             allEvents.Add(currentEvent);
+            Debug.Log($"EVENT MANAGER RECEIVED: {currentEvent}");
         }
 
         eventConnections[connectionId].ReceiveEvents(allEvents);
