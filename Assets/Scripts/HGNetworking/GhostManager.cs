@@ -18,6 +18,7 @@ public static class GhostManager
 
     public class GhostConnection
     {
+        public bool hasMoreDataToWrite = false;
         public bool active;
         public SlidingWindow window = new SlidingWindow(64, true);
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
@@ -41,23 +42,37 @@ public static class GhostManager
                     numGhosts++;
                 }
             }
-            packet.Write(numGhosts);
-            int size = 0;
-            //Go through each ghost's list
-            foreach (int ghostId in ghostStates.Keys) {
-                //If it has unACKED changes
-                if(ghostStates[ghostId].Count > 0) {
-                    int flags = GetFlags(ghostId);
-                    size += GetPacketSize(flags);
-                    //Write the ghost if there is space
-                    if(remainingBytes - size >= 0)
+            if (numGhosts > 0)
+            {
+                packet.Write(numGhosts);
+                int size = 0;
+                //Go through each ghost's list
+                foreach (int ghostId in ghostStates.Keys)
+                {
+                    //If it has unACKED changes
+                    if (ghostStates[ghostId].Count > 0)
                     {
-                        remainingBytes -= size;
-                        WriteGhostToPacket(ghostId, flags, packet);
+                        int flags = GetFlags(ghostId);
+                        size += GetPacketSize(flags);
+                        //Write the ghost if there is space
+                        if (remainingBytes - size >= 0)
+                        {
+                            remainingBytes -= size;
+                            WriteGhostToPacket(ghostId, flags, packet);
+                        }
+                        else
+                        {
+                            hasMoreDataToWrite = true;
+                        }
                     }
                 }
+                return size;
+            } else
+            {
+                hasMoreDataToWrite = false;
+                return 0;
             }
-            return size;
+            
         }
 
         public void AddState(int ghostId)
@@ -185,7 +200,7 @@ public static class GhostManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
-        return false;
+        return ghostConnections[connectionId].hasMoreDataToWrite;
     }
 
     public static Ghost NewGhost(ghostType ghostType)
