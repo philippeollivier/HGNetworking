@@ -51,7 +51,7 @@ public class EventConnection
 
     public int WriteEvents(Packet packet, int packetId, int remainingPacketSize)
     {
-        Debug.Log($"Writing events to packet {packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count}");
+        Debug.Log($"Writing events to packet {packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
 
         //Exit early if there are no events to write or we have too many outgoing events that have not been processed
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)

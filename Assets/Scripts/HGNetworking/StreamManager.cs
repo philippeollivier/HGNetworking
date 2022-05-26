@@ -37,31 +37,36 @@ public static class StreamManager
         int remainingBytes = MAX_PACKET_SIZE - MIN_HEADER_SIZE;
         while (hasInfo)
         {
-            //Create new packet
-            Packet packet = ConnectionManager.GetPacket(ConnectionManager.PacketType.Regular, connectionId);
-            int packetId = GetLatestPacketId(connectionId);
+            using (Packet packet = new Packet())
+            {
+                //Create new packet
+                bool validPacket = ConnectionManager.GetPacket(packet, ConnectionManager.PacketType.Regular, connectionId);
+                if (!validPacket) {  break; }
 
-            Debug.Log($"Stream Manager Writing To Packet {packetId} {packet} ");
+                int packetId = GetLatestPacketId(connectionId);
 
-            //Write info from each manager into packet in priority order (Move, Event, Ghost)
-            remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
-            remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
-            remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packetId, ref packet);
+                Debug.Log($"Stream Manager Writing To Packet {packetId} {packet} ");
 
-            //Send packet through connection manager
-            ConnectionManager.SendPacket(connectionId, packet);
+                //Write info from each manager into packet in priority order (Move, Event, Ghost)
+                remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
+                remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
+                remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
 
-            //Check if there is more info that needs to be sent
-            hasInfo = MoreInfoToWrite(connectionId);
+                //Send packet through connection manager
+                ConnectionManager.SendPacket(connectionId, packet);
+
+                //Check if there is more info that needs to be sent
+                hasInfo = MoreInfoToWrite(connectionId);
+            }
         }
     }
 
     public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        MoveManager.ReadFromPacket(connectionId, packetId, ref packet);
+        MoveManager.ReadFromPacket(connectionId, packetId, packet);
         EventManager.ReadFromPacket(connectionId, packetId, packet);
-        GhostManager.ReadFromPacket(connectionId, packetId, ref packet);
+        GhostManager.ReadFromPacket(connectionId, packetId, packet);
     }
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
