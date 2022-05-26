@@ -24,13 +24,18 @@ public class EventConnection
         foreach (Event e in packetEvents)
         {
             //If the Event's Id is within Dead Window Area, do not reprocess event. 
+            Debug.Log("Checking for dead window");
             if (!IsEventDuplicate(e.EventId))
             {
+                Debug.Log($"Not dead, adding {e} to received Events window ");
                 receivedEvents[e.EventId] = e;
             }
+            Debug.Log("Dead");
         }
 
         //Process received events in an ordered fashion
+        Debug.Log($"Checking for event id: {nextReadEventId}");
+
         while (receivedEvents.ContainsKey(nextReadEventId))
         {
             ProcessEvents(nextReadEventId);
@@ -43,8 +48,12 @@ public class EventConnection
 
     private void ProcessEvents(int eventId)
     {
+
         Event eventToProcess = receivedEvents[eventId];
         receivedEvents.Remove(eventId);
+
+        Debug.Log($"Processing event id: {nextReadEventId} event {eventToProcess}");
+
 
         //Send Events to Handlers
         EventManager.NotifyEventHandlers(eventToProcess);
@@ -70,8 +79,8 @@ public class EventConnection
             eventsToSendInPacket.Enqueue(currEvent);
 
             //Increment the event packet id we are sending on
-            nextSendEventId = (nextSendEventId + 1) % EVENT_WINDOW_SIZE;
             currEvent.EventId = nextSendEventId;
+            nextSendEventId = (nextSendEventId + 1) % EVENT_WINDOW_SIZE;
 
             //Add Events to Sent Events
             remainingPacketSize -= currEventSize;
@@ -122,7 +131,7 @@ public class EventConnection
         {
             return true;
         }
-        if ((eventId < nextReadEventId && eventId >= 0) || (eventId > (nextReadEventId - EVENT_WINDOW_SIZE) % (RECEIVED_WINDOW_SIZE) && eventId <= RECEIVED_WINDOW_SIZE))
+        if ((eventId < nextReadEventId && eventId >= 0) || (eventId > nextReadEventId + EVENT_WINDOW_SIZE && eventId < RECEIVED_WINDOW_SIZE))
         {
             return true;
         }

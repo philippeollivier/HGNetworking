@@ -51,6 +51,8 @@ public static class EventManager
     {
         foreach (EventHandler eventHandler in eventHandlers)
         {
+            Debug.Log($"Notifying handler {eventHandler}");
+
             eventHandler.HandleEvent(e);
         }
     }
