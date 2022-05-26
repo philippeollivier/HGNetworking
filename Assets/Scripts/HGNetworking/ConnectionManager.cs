@@ -47,34 +47,27 @@ public static class ConnectionManager
         }
     }
 
-    public static Packet GetPacket(PacketType type, int connectionId)
+    public static bool GetPacket(Packet packet, PacketType type, int connectionId)
     {
         switch (type)
         {
             case PacketType.NoACK:
-                using (Packet packet = new Packet())
-                {
-                    //Write packet header information
-                    packet.Write(connectionId);
-                    //Get this from the sliding window
-                    packet.Write(0);
-                    packet.Write(Convert.ToByte(PacketType.NoACK));
-                    return packet;
-                }
+                //Write packet header and sliding window information
+                packet.Write(connectionId);
+                packet.Write(0);
+                packet.Write(Convert.ToByte(PacketType.NoACK));
+                return true;
             case PacketType.Regular:
                 int packetId = connections[connectionId].window.AdvancePointer();
                 if (packetId == -1) {
-                    return null;
+                    return false;
                 }
-                using (Packet packet = new Packet())
-                {
-                    //Write packet header information
-                    packet.Write(connectionId);
-                    //Get this from the sliding window
-                    packet.Write(packetId);
-                    packet.Write(Convert.ToByte(PacketType.Regular));
-                    return packet;
-                }
+                
+                //Write packet header and sliding window information
+                packet.Write(connectionId);
+                packet.Write(packetId);
+                packet.Write(Convert.ToByte(PacketType.Regular));
+                return true;
             default:
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {type}");
         }

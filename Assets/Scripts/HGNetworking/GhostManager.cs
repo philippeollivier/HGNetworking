@@ -193,7 +193,7 @@ public static class GhostManager
         ghostConnections[connectionid].Disconnect();
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, ref Packet packet)
+    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, Packet packet)
     {
         return ghostConnections[connectionId].WriteToPacket(packet, packetId, remainingBytes);
     }
@@ -217,7 +217,7 @@ public static class GhostManager
         return ghost;
     }
 
-    public static void ReadFromPacket(int connectionId, int packetId, ref Packet packet)
+    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
     {
         int numGhosts = packet.ReadInt();
         for(int i = 0; i < numGhosts; i++)
