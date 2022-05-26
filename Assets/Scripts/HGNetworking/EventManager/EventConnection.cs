@@ -59,20 +59,20 @@ public class EventConnection
             return remainingPacketSize;
         }
 
-        //TODO: maybe make this not just look at front, see if any event can fit? Sorted queue by size/event.id? 
+        //Figure out what events we will be writing to packet
+        Queue<Event> eventsToSendInPacket = new Queue<Event>();
         int currEventSize = outgoingEventsQueue.Peek().GetSize();
         while(remainingPacketSize > currEventSize)
         {
             Event currEvent = outgoingEventsQueue.Dequeue();
+            eventsToSendInPacket.Enqueue(currEvent);
 
             //Increment the event packet id we are sending on
             nextSendEventId = (nextSendEventId + 1) % EVENT_WINDOW_SIZE;
             currEvent.EventId = nextSendEventId;
 
-            currEvent.WriteEventToPacket(packet);
-            remainingPacketSize -= currEventSize;
-
             //Add Events to Sent Events
+            remainingPacketSize -= currEventSize;
             sentEvents[nextSendEventId] = currEvent;
             AddEventToPacketEventMap(packetId, currEvent);
 
@@ -81,6 +81,12 @@ public class EventConnection
             //Continue Iteration
             if (outgoingEventsQueue.Count == 0)  {  break; }
             currEventSize = outgoingEventsQueue.Peek().GetSize();
+        }
+
+        //Write to packet
+        packet.Write(eventsToSendInPacket.Count);
+        foreach(Event outgoingEvent in eventsToSendInPacket){
+            outgoingEvent.WriteEventToPacket(packet);
         }
 
         return remainingPacketSize;
