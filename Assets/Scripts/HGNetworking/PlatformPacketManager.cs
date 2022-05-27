@@ -45,11 +45,14 @@ public static class PlatformPacketManager
             IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);
-
-            using (Packet _packet = new Packet(_data))
+            ThreadManager.ExecuteOnMainThread(() =>
             {
-                ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
-            }
+                using (Packet _packet = new Packet(_data))
+                {
+                    ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
+                }
+            });
+
         }
         catch (Exception _ex)
         {
