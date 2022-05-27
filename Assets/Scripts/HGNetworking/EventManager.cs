@@ -49,6 +49,7 @@ public static class EventManager
     #region Event Handler Business
     public static void NotifyEventHandlers(Event e)
     {
+        Debug.Log($"Notifying Event handlers {e}");
         foreach (EventHandler eventHandler in eventHandlers)
         {
             Debug.Log($"Notifying handler {eventHandler}");

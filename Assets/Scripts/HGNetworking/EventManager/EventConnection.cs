@@ -52,8 +52,7 @@ public class EventConnection
         Event eventToProcess = receivedEvents[eventId];
         receivedEvents.Remove(eventId);
 
-        Debug.Log($"Processing event id: {nextReadEventId} event {eventToProcess}");
-
+        Debug.Log($"Processing event id: {eventId} event {eventToProcess}");
 
         //Send Events to Handlers
         EventManager.NotifyEventHandlers(eventToProcess);
