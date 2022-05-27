@@ -110,11 +110,12 @@ public class SlidingWindow : ISerializationCallbackReceiver
 
     public int AdvancePointer()
     {
+        int currentValue = currentPointer;
         int nextValue = loopAdvance(currentPointer);
         if (InWindow(nextValue))
         {
             currentPointer = nextValue;
-            return currentPointer;
+            return currentValue;
         }
         else
         {
