@@ -24,6 +24,7 @@ public class EventConnection
         //Add received packets to the received events map
         foreach (Event e in packetEvents)
         {
+            Debug.Log($"Event {e} received");
             //If the Event's Id is within Dead Window Area, do not reprocess event. 
             if (!IsEventDuplicate(e.EventId))
             {
@@ -47,8 +48,6 @@ public class EventConnection
 
         Event eventToProcess = receivedEvents[eventId];
         receivedEvents.Remove(eventId);
-
-        Debug.Log($"Processing event id: {eventId} event {eventToProcess}");
 
         //Send Events to Handlers
         EventManager.NotifyEventHandlers(eventToProcess);

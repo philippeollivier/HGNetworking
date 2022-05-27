@@ -31,7 +31,7 @@ public class DebugTextEventHandler : EventHandler
             e.Test = Random.Range(0, 1000000).ToString();
 
             QueueOutgoingEvent(e);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

@@ -83,7 +83,6 @@ public static class StreamManager
         {
             if(!ConnectionManager.connections[connectionId].window.IsFull && ConnectionManager.connections[connectionId].udp.endPoint != null) //TODO: remove this conditional to a function in ConnectionManager
             {
-                Debug.Log($"Writing to packet for connection {connectionId}");
                 WriteToPacket(connectionId);
             }
         }
