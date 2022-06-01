@@ -13,8 +13,6 @@ public class DebugTextEventHandler : EventHandler
         //Subscribe to EventManager
         EventManager.SubscribeHandler(this);
 
-   
-
         StartCoroutine(testPolling());
     }
 
@@ -37,7 +35,6 @@ public class DebugTextEventHandler : EventHandler
 
     public override void HandleEvent(Event currEvent)
     {
-        Debug.Log($"Handling event {currEvent}");
         text.text = $"{currEvent}\n{text.text}";
     }
 }

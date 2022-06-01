@@ -41,7 +41,6 @@ public static class PlatformPacketManager
     {
         try
         {
-            Debug.Log("In UDP Receive Callback");
             IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);

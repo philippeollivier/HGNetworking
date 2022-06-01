@@ -21,20 +21,35 @@ public class EventConnection
 
     public void ReceiveEvents(List<Event> packetEvents)
     {
+        //Print out current state of received events before and after 
+        string msg = "READING: ReceivedEvents Map before handling events";
+        foreach (KeyValuePair<int, Event> pair in receivedEvents)
+        {
+            msg += $"{pair.Key}, {pair.Value}\n";
+        }
+        string msg2 = "READING: Events in events";
+
         //Add received packets to the received events map
         foreach (Event e in packetEvents)
         {
-            Debug.Log($"Event {e} received");
+            msg2 += $"{e}";
+
             //If the Event's Id is within Dead Window Area, do not reprocess event. 
             if (!IsEventDuplicate(e.EventId))
             {
                 receivedEvents[e.EventId] = e;
+                msg2 += " duplicated events";
             }
+
+            msg2 += "\n";
         }
 
+
+        Debug.Log($"READING: Trying to process events for {nextReadEventId}");
         //Process received events in an ordered fashion
         while (receivedEvents.ContainsKey(nextReadEventId))
         {
+            Debug.Log($"READING: Processing events {nextReadEventId}");
             ProcessEvents(nextReadEventId);
 
             //Increment the event id we are waiting on
@@ -45,7 +60,6 @@ public class EventConnection
 
     private void ProcessEvents(int eventId)
     {
-
         Event eventToProcess = receivedEvents[eventId];
         receivedEvents.Remove(eventId);
 
@@ -55,7 +69,7 @@ public class EventConnection
 
     public int WriteEvents(Packet packet, int packetId, int remainingPacketSize)
     {
-        Debug.Log($"Writing events to packet {packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
+        Debug.Log($"WRITING: events to packet {packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
 
         //Exit early if there are no events to write or we have too many outgoing events that have not been processed
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)

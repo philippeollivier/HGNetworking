@@ -45,8 +45,6 @@ public static class StreamManager
 
                 int packetId = GetLatestPacketId(connectionId);
 
-                Debug.Log($"Stream Manager Writing To Packet {packetId} {packet} ");
-
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
                 remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
                 remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
@@ -71,7 +69,6 @@ public static class StreamManager
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
-        Debug.Log($"Processing Notification success: {success} packetId: {packetId} connectionId: {connectionId}!");
         EventManager.ProcessNotification(success, packetId, connectionId);
     }
 
