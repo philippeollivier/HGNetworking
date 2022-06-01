@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -160,13 +161,32 @@ public class EventConnection
 
     public void ACKEventPacket(int packetId)
     {
-        //Remove ACK'd Event Packet from Sent Events
-        foreach (int eventId in packetEventMap[packetId])
+        try
         {
-            //Increment sliding window
-            outgoingWindow.FillFrame(eventId);
+            //Remove ACK'd Event Packet from Sent Events
+            foreach (int eventId in packetEventMap[packetId])
+            {
+                //Increment sliding window
+                outgoingWindow.FillFrame(eventId);
 
-            sentEvents.Remove(eventId);
+                sentEvents.Remove(eventId);
+            }
+        } catch(Exception e)
+        {
+            string msg = "ACKING: ";
+            foreach (var pair in packetEventMap)
+            {
+                string msg2 = "";
+
+                foreach (var v in pair.Value)
+                {
+                    msg2 += v;
+                }
+
+                msg += $"<{pair.Key}, {msg2}>\n";
+            }
+
+            Debug.Log($"Failed to ACK Event packet {packetId}\nException: {e}");
         }
     }
 
