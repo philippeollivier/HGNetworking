@@ -186,7 +186,7 @@ public class EventConnection
                 msg += $"<{pair.Key}, {msg2}>\n";
             }
 
-            Debug.Log($"Failed to ACK Event packet {packetId}\nException: {e}");
+            Debug.Log($"Failed to ACK Event packet {packetId}\nException: {e}\n{msg}");
         }
     }
 
