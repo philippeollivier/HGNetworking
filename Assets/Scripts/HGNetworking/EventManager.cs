@@ -23,10 +23,13 @@ public static class EventManager
 
         List<Event> allEvents = new List<Event>();
 
+        Debug.Log($"Received packet {packetId} from {connectionId}");
         for(int i = 0; i < numEvents; i++)
         {
             Event currentEvent = Event.GetEventClassFromId(packet.ReadInt());
             currentEvent.ReadEventFromPacket(packet);
+
+            Debug.Log($"Packet contains Event {currentEvent}");
 
             allEvents.Add(currentEvent);
         }

@@ -100,7 +100,7 @@ public class EventConnection
     }
     public void ProcessNotification(bool success, int packetId)
     {
-        if (success)
+        if (true)
         {
             ACKEventPacket(packetId);
         }
