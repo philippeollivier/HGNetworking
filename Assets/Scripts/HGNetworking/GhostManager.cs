@@ -217,7 +217,7 @@ public static class GhostManager
         return ghost;
     }
 
-    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
+    public static void ReadFromPacket(int connectionId, Packet packet)
     {
         int numGhosts = packet.ReadInt();
         for(int i = 0; i < numGhosts; i++)
