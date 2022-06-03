@@ -9,12 +9,12 @@ public static class MoveManager
         return false;
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, Packet packet)
+    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
         return 1;
     }
 
-    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
+    public static void ReadFromPacket(int connectionId, Packet packet)
     {
 
     }

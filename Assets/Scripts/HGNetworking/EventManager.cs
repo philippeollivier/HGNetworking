@@ -12,12 +12,12 @@ public static class EventManager
         return eventConnections[connectionId].HasMoreToWrite();
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, Packet packet)
+    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
-        return eventConnections[connectionId].WriteEvents(packet, packetId, remainingBytes);
+        return eventConnections[connectionId].WriteEvents(packet, remainingBytes);
     }
 
-    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
+    public static void ReadFromPacket(int connectionId, Packet packet)
     {
         int numEvents = packet.ReadInt();
 
@@ -32,7 +32,7 @@ public static class EventManager
             allEvents.Add(currentEvent);
         }
 
-        Debug.Log($"READING: Packet id: {packetId} connectionId {connectionId}");
+        Debug.Log($"READING: Packet id: {packet.PacketHeader.packetId} connectionId {connectionId}");
         eventConnections[connectionId].ReceiveEvents(allEvents);
     }
 

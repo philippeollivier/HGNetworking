@@ -44,9 +44,9 @@ public static class StreamManager
                 if (!validPacket) {  break; }
 
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
-                remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
-                remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
-                remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
+                remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
+                remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packet);
+                remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
 
                 //Send packet through connection manager
                 ConnectionManager.SendPacket(connectionId, packet);
@@ -57,12 +57,12 @@ public static class StreamManager
         }
     }
 
-    public static void ReadFromPacket(int connectionId, int packetId, Packet packet)
+    public static void ReadFromPacket(int connectionId, Packet packet)
     {
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        MoveManager.ReadFromPacket(connectionId, packetId, packet);
-        EventManager.ReadFromPacket(connectionId, packetId, packet);
-        GhostManager.ReadFromPacket(connectionId, packetId, packet);
+        MoveManager.ReadFromPacket(connectionId, packet);
+        EventManager.ReadFromPacket(connectionId, packet);
+        GhostManager.ReadFromPacket(connectionId, packet);
     }
 
     public static void ProcessNotification(bool success, int packetId, int connectionId)
@@ -88,19 +88,6 @@ public static class StreamManager
     private static bool MoreInfoToWrite(int connectionId)
     {
         return MoveManager.HasMoreDataToWrite(connectionId) || EventManager.HasMoreDataToWrite(connectionId) || GhostManager.HasMoreDataToWrite(connectionId);
-    }
-
-    private static int GetLatestPacketId(int connectionId)
-    {
-        if (latestPacket.ContainsKey(connectionId))
-        {
-            return ++latestPacket[connectionId];
-        }
-        else
-        {
-            latestPacket[connectionId] = 0;
-            return 0;
-        }
     }
     #endregion
 }

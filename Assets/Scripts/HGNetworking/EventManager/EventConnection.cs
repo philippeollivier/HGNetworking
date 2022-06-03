@@ -68,9 +68,9 @@ public class EventConnection
         EventManager.NotifyEventHandlers(eventToProcess);
     }
 
-    public int WriteEvents(Packet packet, int packetId, int remainingPacketSize)
+    public int WriteEvents(Packet packet, int remainingPacketSize)
     {
-        Debug.Log($"WRITING: events to packet {packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
+        Debug.Log($"WRITING: events to packet {packet.PacketHeader.packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
 
         //Exit early if there are no events to write or we have too many outgoing events that have not been processed
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)
@@ -98,7 +98,7 @@ public class EventConnection
             //Add Events to Sent Events
             remainingPacketSize -= currEventSize;
             sentEvents[nextValidId] = currEvent;
-            AddEventToPacketEventMap(packetId, currEvent);
+            AddEventToPacketEventMap(packet.PacketHeader.packetId, currEvent);
 
             //Continue Iteration
             if (outgoingEventsQueue.Count == 0)  {  break; }
