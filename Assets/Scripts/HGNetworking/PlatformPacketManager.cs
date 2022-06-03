@@ -46,7 +46,7 @@ public static class PlatformPacketManager
             udpListener.BeginReceive(UDPReceiveCallback, null);
             ThreadManager.ExecuteOnMainThread(() =>
             {
-                using (Packet _packet = new Packet(_data))
+                using (Packet _packet = new Packet(_data, true))
                 {
                     ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
                 }

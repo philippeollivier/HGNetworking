@@ -12,35 +12,10 @@ public static class ConnectionManager
     public static string[] connectionAddresses;
     private static int connectionIndex = 1;
 
-
-    public enum PacketType : byte
-    {
-        Regular,
-        ACK,
-        Connect,
-        NoACK
-    }
-
     public enum ConnectState : byte
     {
         Connect,
         Acknowledge
-    }
-    public struct PacketHeader
-    {
-        public PacketType packetType;
-        public int packetId;
-
-        public PacketHeader(Packet packet)
-        {
-            packetType = (PacketType)packet.ReadByte();
-            packetId = packet.ReadInt();
-        }
-
-        public override string ToString()
-        {
-            return $"{{PacketId: {packetId}, PacketType: {packetType}}}";
-        }
     }
 
     public static bool GetPacket(Packet packet, PacketType type, int connectionId)
@@ -49,8 +24,8 @@ public static class ConnectionManager
         {
             case PacketType.NoACK:
                 //Write packet header and sliding window information
-                packet.Write(Convert.ToByte(PacketType.NoACK));
-                packet.Write(0);
+                packet.PacketHeader = new PacketHeader(PacketType.NoACK, 0);
+                packet.WritePacketHeaderToPacket();
                 return true;
             case PacketType.Regular:
                 int packetId = connections[connectionId].window.AdvancePointer();
@@ -58,8 +33,8 @@ public static class ConnectionManager
                     return false;
                 }
                 //Write packet header and sliding window information
-                packet.Write(Convert.ToByte(PacketType.Regular));
-                packet.Write(packetId);
+                packet.PacketHeader = new PacketHeader(PacketType.Regular, packetId);
+                packet.WritePacketHeaderToPacket();
                 return true;
             default:
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {type}");
@@ -75,28 +50,25 @@ public static class ConnectionManager
     {
         int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
 
-        //Read Packet Header
-        PacketHeader packetHeader = new PacketHeader(packet);
-        Debug.Log($"Packet recieved from {connectionId} {packetHeader}");
-        switch (packetHeader.packetType)
+        switch (packet.PacketHeader.packetType)
         {
             case PacketType.NoACK:
-                StreamManager.ReadFromPacket(connectionId, packetHeader.packetId, packet);
+                StreamManager.ReadFromPacket(connectionId, packet);
                 break;
             case PacketType.Regular:
-                StreamManager.ReadFromPacket(connectionId, packetHeader.packetId, packet);
+                StreamManager.ReadFromPacket(connectionId, packet);
                 // Ensures that the client is not being impersonated by another by sending a false clientID
-                RespondToPacketWithACK(connectionId, packetHeader);
+                RespondToPacketWithACK(connectionId);
                 break;
             case PacketType.ACK:
-                ReadACK(connectionId, packetHeader);
+                ReadACK(connectionId, packet.PacketHeader);
                 //TODO ACK Business
                 break;
             case PacketType.Connect:
                 ReadConnect(packet, connectionEndpoint);
                 break;
             default:
-                throw new ArgumentException($"PacketType not currently implemented. PacketType: {packetHeader}");
+                throw new ArgumentException($"PacketType not currently implemented. PacketType: {packet.PacketHeader}");
         }
     }
 

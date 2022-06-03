@@ -23,12 +23,42 @@ public enum Packets
     info,
     ack
 }
+public enum PacketType : byte
+{
+    Regular,
+    ACK,
+    Connect,
+    NoACK
+}
+public struct PacketHeader
+{
+    public PacketType packetType;
+    public int packetId;
+
+    public PacketHeader(Packet packet)
+    {
+        packetType = (PacketType)packet.ReadByte();
+        packetId = packet.ReadInt();
+    }
+    public PacketHeader(PacketType packetType, int packetId)
+    {
+        this.packetType = packetType;
+        this.packetId = packetId;
+    }
+
+
+    public override string ToString()
+    {
+        return $"{{PacketId: {packetId}, PacketType: {packetType}}}";
+    }
+}
 
 public class Packet : IDisposable
 {
     private List<byte> buffer;
     private byte[] readableBuffer;
     private int readPos;
+    public PacketHeader PacketHeader { get; set; }
 
     /// <summary>Creates a new empty packet (without an ID).</summary>
     public Packet()
@@ -49,15 +79,33 @@ public class Packet : IDisposable
 
     /// <summary>Creates a packet from which data can be read. Used for receiving.</summary>
     /// <param name="_data">The bytes to add to the packet.</param>
-    public Packet(byte[] _data)
+    /// <param name="setHeader">Set header of packet by default.</param>
+    public Packet(byte[] _data, bool setHeader)
     {
-        buffer = new List<byte>(); // Initialize buffer
-        readPos = 0; // Set readPos to 0
+        if (!setHeader)
+        {
+            buffer = new List<byte>(); // Initialize buffer
+            readPos = 0; // Set readPos to 0
 
-        SetBytes(_data);
+            SetBytes(_data);
+        }
+        else
+        {
+            buffer = new List<byte>(); // Initialize buffer
+            readPos = 0; // Set readPos to 0
+
+            SetBytes(_data);
+            PacketHeader = new PacketHeader(this);
+        }
     }
 
     #region Functions
+    public void WritePacketHeaderToPacket()
+    {
+        Write(Convert.ToByte(PacketHeader.packetType));
+        Write(PacketHeader.packetId);
+    }
+
     /// <summary>Sets the packet's content and prepares it to be read.</summary>
     /// <param name="_data">The bytes to add to the packet.</param>
     public void SetBytes(byte[] _data)

@@ -40,10 +40,8 @@ public static class StreamManager
             using (Packet packet = new Packet())
             {
                 //Create new packet
-                bool validPacket = ConnectionManager.GetPacket(packet, ConnectionManager.PacketType.Regular, connectionId);
+                bool validPacket = ConnectionManager.GetPacket(packet, PacketType.Regular, connectionId);
                 if (!validPacket) {  break; }
-
-                int packetId = GetLatestPacketId(connectionId);
 
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
                 remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packetId, packet);
