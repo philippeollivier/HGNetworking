@@ -44,7 +44,7 @@ public class SlidingWindow : ISerializationCallbackReceiver
 
     public WindowStatus FillFrame(int frameId)
     {
-        if (frameId >= (2 * MaxSize) - 1)
+        if (frameId >= (2 * MaxSize))
         {
             throw new System.Exception($"Frame Id {frameId} out of bounds. Max frame is {2 * MaxSize - 1}");
         }
@@ -56,27 +56,30 @@ public class SlidingWindow : ISerializationCallbackReceiver
         {
             return WindowStatus.Duplicate;
         }
-        else if (frameId != LeftBound)
-        {
-            if (acceptOutOfOrder && InWindow(frameId))
-            {
-                window[frameId] = true;
-            }
-            return WindowStatus.OutOfOrder;
-        }
         else
         {
             if (ActiveFrames(frameId))
             {
-                window[frameId] = true;
+                WindowStatus ret;
+                if (frameId != LeftBound)
+                {
+                    window[frameId] = acceptOutOfOrder;
+                    ret = WindowStatus.OutOfOrder;
+                } else
+                {
+                    window[frameId] = true;
+                    ret = WindowStatus.Success;
+                }
+
                 while (window[leftBound] == true)
                 {
                     window[leftBound] = false;
                     leftBound = loopAdvance(leftBound);
                     rightBound = loopAdvance(rightBound);
                 }
-                return WindowStatus.Success;
-            } else
+                return ret;
+            }
+            else
             {
                 return WindowStatus.NonActiveFrame;
             }
@@ -84,27 +87,29 @@ public class SlidingWindow : ISerializationCallbackReceiver
     }
 
 
+
+
     public bool InWindow(int frameId)
     {
         if (leftBound < rightBound)
         {
-            return frameId < rightBound && frameId >= leftBound;
+            return frameId >= leftBound && frameId < rightBound;
         }
         else
         {
-            return (frameId > 0 && frameId < rightBound) || (frameId < 2 * MaxSize && frameId > leftBound);
+            return (frameId >= 0 && frameId < rightBound) || (frameId >= leftBound && frameId < 2 * MaxSize);
         }
     }
 
     public bool ActiveFrames(int frameId)
     {
-        if (leftBound < currentPointer)
+        if (leftBound <= currentPointer)
         {
-            return frameId < rightBound && frameId >= leftBound;
+            return frameId < currentPointer && frameId >= leftBound;
         }
         else
         {
-            return (frameId > 0 && frameId < currentPointer) || (frameId < 2 * MaxSize && frameId > leftBound);
+            return (frameId >= 0 && frameId < currentPointer) || (frameId >= leftBound && frameId < 2 * MaxSize);
         }
     }
 
