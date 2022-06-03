@@ -30,7 +30,7 @@ public static class GhostManager
         {
 
         }
-        public int WriteToPacket(Packet packet, int packetId, int remainingBytes)
+        public int WriteToPacket(Packet packet, int remainingBytes)
         {
             int numGhosts = 0;
             //Add latest ghost data to lists
@@ -193,9 +193,9 @@ public static class GhostManager
         ghostConnections[connectionid].Disconnect();
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, int packetId, Packet packet)
+    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
-        return ghostConnections[connectionId].WriteToPacket(packet, packetId, remainingBytes);
+        return ghostConnections[connectionId].WriteToPacket(packet, remainingBytes);
     }
 
     public static bool HasMoreDataToWrite(int connectionId)

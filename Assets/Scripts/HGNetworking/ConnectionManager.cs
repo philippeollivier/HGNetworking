@@ -58,7 +58,7 @@ public static class ConnectionManager
             case PacketType.Regular:
                 StreamManager.ReadFromPacket(connectionId, packet);
                 // Ensures that the client is not being impersonated by another by sending a false clientID
-                RespondToPacketWithACK(connectionId);
+                RespondToPacketWithACK(connectionId, packet.PacketHeader);
                 break;
             case PacketType.ACK:
                 ReadACK(connectionId, packet.PacketHeader);
