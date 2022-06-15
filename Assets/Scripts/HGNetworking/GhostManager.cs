@@ -48,6 +48,7 @@ public static class GhostManager
                     numGhosts++;
                 }
             }
+            Debug.Log($"Writing data for {numGhosts} ghosts");
             packet.Write(numGhosts);
             if (numGhosts > 0)
             {
