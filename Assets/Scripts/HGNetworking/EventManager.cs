@@ -31,7 +31,6 @@ public static class EventManager
             allEvents.Add(currentEvent);
         }
 
-        Debug.Log($"READING: Packet id: {packet.PacketHeader.packetId} connectionId {connectionId}");
         eventConnections[connectionId].ReceiveEvents(allEvents);
     }
 

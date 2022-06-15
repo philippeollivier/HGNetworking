@@ -20,15 +20,15 @@ public class DebugTextEventHandler : EventHandler
     {
         while (true)
         {
-            Event_TEST_EVENT e;
-            e = new Event_TEST_EVENT();
-            e.Username = "Animbot";
-            e.Number = Random.Range(-1000, 1000);
-            e.Vec = new Vector3(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
-            e.Quat = new Quaternion();
-            e.Test = Random.Range(0, 1000000).ToString();
+            //Event_TEST_EVENT e;
+            //e = new Event_TEST_EVENT();
+            //e.Username = "Animbot";
+            //e.Number = Random.Range(-1000, 1000);
+            //e.Vec = new Vector3(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
+            //e.Quat = new Quaternion();
+            //e.Test = Random.Range(0, 1000000).ToString();
 
-            QueueOutgoingEvent(e);
+            //QueueOutgoingEvent(e);
             yield return new WaitForSeconds(0.1f);
         }
     }
