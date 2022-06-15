@@ -17,9 +17,8 @@ public class ObjectManager : MonoBehaviour
         return Instantiate(objectPrefabs[objectType]);
     }
 
-    public void Initialize()
+    public static void Initialize()
     {
-        objectPrefabs[objectType.TestGhost] = prefabs[0];
     }
 
     private void FixedUpdate()
@@ -43,5 +42,10 @@ public class ObjectManager : MonoBehaviour
         {
             GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
         }
+    }
+
+    private void Start()
+    {
+        objectPrefabs[objectType.TestGhost] = prefabs[0];
     }
 }

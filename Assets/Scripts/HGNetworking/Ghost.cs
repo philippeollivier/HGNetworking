@@ -12,7 +12,8 @@ public class Ghost : MonoBehaviour
         get { return position; }
         set
         {
-            foreach(int key in flags.Keys)
+            List<int> connectionIds = new List<int>(flags.Keys);
+            foreach(int key in connectionIds)
             {
                 flags[key] = flags[key] | GhostManager.POSFLAG;
             }
@@ -24,7 +25,8 @@ public class Ghost : MonoBehaviour
         get { return scale; }
         set
         {
-            foreach (int key in flags.Keys)
+            List<int> connectionIds = new List<int>(flags.Keys);
+            foreach (int key in connectionIds)
             {
                 flags[key] = flags[key] | GhostManager.SCALEFLAG;
             }
@@ -36,7 +38,8 @@ public class Ghost : MonoBehaviour
         get { return rotation; }
         set
         {
-            foreach (int key in flags.Keys)
+            List<int> connectionIds = new List<int>(flags.Keys);
+            foreach (int key in connectionIds)
             {
                 flags[key] = flags[key] | GhostManager.ROTFLAG;
             }
@@ -66,7 +69,6 @@ public class Ghost : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
