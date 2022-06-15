@@ -43,11 +43,15 @@ public static class ConnectionManager
     //send given packet to a connection with id
     public static void SendPacket(int connectionId, Packet packet)
     {
+        MetricsManager.AddDatapointToMetric("Sent Packet Count", 1, true);
+
         PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
     }
 
     public static void ReadPacket(IPEndPoint connectionEndpoint, Packet packet)
     {
+        MetricsManager.AddDatapointToMetric("Read Packet Count", 1, true);
+
         int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
 
         switch (packet.PacketHeader.packetType)
@@ -137,20 +141,23 @@ public static class ConnectionManager
 
     private static void ReadACK(int connectionId, PacketHeader packet)
     {
-
         SlidingWindow.WindowStatus status = connections[connectionId].window.FillFrame(packet.packetId);
         switch (status)
         {
             case SlidingWindow.WindowStatus.Success:
+                MetricsManager.AddDatapointToMetric("ACK Successful", 1, true);
                 StreamManager.ProcessNotification(true, packet.packetId, connectionId);
                 break;
             case SlidingWindow.WindowStatus.OutOfOrder:
+                MetricsManager.AddDatapointToMetric("ACK Out of Order", 1, true);
                 StreamManager.ProcessNotification(false, packet.packetId, connectionId);
                 break;
             case SlidingWindow.WindowStatus.Duplicate:
+                MetricsManager.AddDatapointToMetric("ACK Duplicate", 1, true);
                 Debug.Log("Duplicate ACK received");
                 break;
             case SlidingWindow.WindowStatus.OutofBounds:
+                MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1, true);
                 Debug.Log("ACK Returned out of bounds");
                 break;
         }

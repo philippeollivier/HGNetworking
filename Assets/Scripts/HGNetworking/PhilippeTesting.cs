@@ -7,18 +7,19 @@ public class PhilippeTesting : MonoBehaviour
 {
     private void Start()
     {
-        StartCoroutine(testPolling());
+        //StartCoroutine(testPolling());
     }
 
-    IEnumerator testPolling()
-    {
-        while (true)
-        {
-            MetricsManager.AddDatapointToMetric("testing", UnityEngine.Random.Range(-1.0f, 1.0f), true);
+    //IEnumerator testPolling()
+    //{
+    //    //while (true)
+    //    //{
+    //    //    MetricsManager.AddDatapointToMetric("testing", UnityEngine.Random.Range(-1.0f, 1.0f), true);
+    //    //    MetricsManager.AddDatapointToMetric("cherese", UnityEngine.Random.Range(-1.0f, 1.0f), true);
 
-            yield return new WaitForSeconds(1f);
-        }
-    }
+    //    //    yield return new WaitForSeconds(1f);
+    //    //}
+    //}
 
     void Update()
     {
