@@ -15,6 +15,7 @@ public class Ghost : MonoBehaviour
             List<int> connectionIds = new List<int>(flags.Keys);
             foreach(int key in connectionIds)
             {
+                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                 flags[key] = flags[key] | GhostManager.POSFLAG;
             }
             position = value;
@@ -28,6 +29,7 @@ public class Ghost : MonoBehaviour
             List<int> connectionIds = new List<int>(flags.Keys);
             foreach (int key in connectionIds)
             {
+                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                 flags[key] = flags[key] | GhostManager.SCALEFLAG;
             }
             scale = value;
@@ -41,6 +43,7 @@ public class Ghost : MonoBehaviour
             List<int> connectionIds = new List<int>(flags.Keys);
             foreach (int key in connectionIds)
             {
+                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                 flags[key] = flags[key] | GhostManager.ROTFLAG;
             }
             rotation = value;
@@ -56,6 +59,7 @@ public class Ghost : MonoBehaviour
             if(GhostManager.ghostConnections[connectionId].active)
             {
                 Debug.Log($"Initializing Ghost: {ghostId}, setting flags for connection: {connectionId}");
+                GhostManager.ghostConnections[connectionId].hasMoreDataToWrite = true;
                 flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
             }
 
