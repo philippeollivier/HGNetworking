@@ -93,6 +93,7 @@ public static class ConnectionManager
                 Debug.Log($"Received Connection from: {endpoint.ToString()}");
                 // If this is a new connection
                 connections[connectionIndex].udp.Connect(endpoint);
+                GhostManager.ghostConnections[connectionIndex].Connect(connectionIndex);
                 connectionAddresses[connectionIndex] = endpoint.ToString();
                 connectionIndex++;
                 using (Packet responsePacket = new Packet())
@@ -102,7 +103,6 @@ public static class ConnectionManager
                     responsePacket.Write(Convert.ToByte(ConnectState.Acknowledge));
                     PlatformPacketManager.SendPacket(endpoint, responsePacket);
                 }
-                //GhostManager.GhostConnection()
                 break;
             case (ConnectState.Acknowledge):
                     Debug.Log(connectionIndex);
@@ -162,6 +162,7 @@ public static class ConnectionManager
         for (int i = 1; i <= maxPlayers; i++)
         {
             connections.Add(i, new Connection(i, 1000));
+            GhostManager.Initialize();
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
             EventManager.eventConnections.Add(i, new EventConnection());
         }

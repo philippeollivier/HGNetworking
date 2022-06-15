@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
-    public int flags = 0;
+    public Dictionary<int, int> flags = new Dictionary<int, int>();
     public int ghostId;
     public GhostManager.ghostType ghostType = 0;
     public Vector3 Position
@@ -12,7 +12,10 @@ public class Ghost : MonoBehaviour
         get { return position; }
         set
         {
-            flags = flags | GhostManager.POSFLAG;
+            foreach(int key in flags.Keys)
+            {
+                flags[key] = flags[key] | GhostManager.POSFLAG;
+            }
             position = value;
         }
     }
@@ -21,7 +24,10 @@ public class Ghost : MonoBehaviour
         get { return scale; }
         set
         {
-            flags = flags | GhostManager.SCALEFLAG;
+            foreach (int key in flags.Keys)
+            {
+                flags[key] = flags[key] | GhostManager.SCALEFLAG;
+            }
             scale = value;
         }
     }
@@ -30,7 +36,10 @@ public class Ghost : MonoBehaviour
         get { return rotation; }
         set
         {
-            flags = flags | GhostManager.ROTFLAG;
+            foreach (int key in flags.Keys)
+            {
+                flags[key] = flags[key] | GhostManager.ROTFLAG;
+            }
             rotation = value;
         }
     }
@@ -39,8 +48,16 @@ public class Ghost : MonoBehaviour
     {
         this.ghostId = ghostId;
         this.ghostType = ghostType;
-        flags = flags | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
+        foreach (int connectionId in GhostManager.ghostConnections.Keys)
+        {
+            flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
 
+        }
+    }
+
+    public void NewPlayer(int connectionId)
+    {
+        flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
     }
 
     private Vector3 position = new Vector3(0, 0, 0);

@@ -68,6 +68,7 @@ public static class StreamManager
     public static void ProcessNotification(bool success, int packetId, int connectionId)
     {
         EventManager.ProcessNotification(success, packetId, connectionId);
+        GhostManager.ProcessNotification(success, packetId, connectionId);
     }
 
     //Fixed Tick Update.

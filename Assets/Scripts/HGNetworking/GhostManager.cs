@@ -18,13 +18,18 @@ public static class GhostManager
 
     public class GhostConnection
     {
+        public int connectionId;
         public bool hasMoreDataToWrite = false;
         public bool active;
-        public SlidingWindow window = new SlidingWindow(64, true);
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
-        public void Connect()
+        public void Connect(int connectionId)
         {
-
+            foreach (Ghost ghost in ghosts.Values)
+            {
+                this.connectionId = connectionId;
+                ghost.NewPlayer(connectionId);
+                
+            }
         }
         public void Disconnect()
         {
@@ -34,10 +39,9 @@ public static class GhostManager
         {
             int numGhosts = 0;
             //Add latest ghost data to lists
-            foreach (int ghostId in ghostStates.Keys)
+            foreach (Ghost ghost in ghosts.Values)
             {
-                AddState(ghostId);
-                if (ghostStates[ghostId].Count > 0)
+                if(ghost.flags[connectionId] > 0)
                 {
                     numGhosts++;
                 }
@@ -47,18 +51,17 @@ public static class GhostManager
             {
                 int size = 0;
                 //Go through each ghost's list
-                foreach (int ghostId in ghostStates.Keys)
+                foreach (Ghost ghost in ghosts.Values)
                 {
                     //If it has unACKED changes
-                    if (ghostStates[ghostId].Count > 0)
+                    if (ghost.flags[connectionId] > 0)
                     {
-                        int flags = GetFlags(ghostId);
-                        size += GetPacketSize(flags);
+                        size += GetPacketSize(ghost.flags[connectionId]);
                         //Write the ghost if there is space
                         if (remainingBytes - size >= 0)
                         {
-                            remainingBytes -= size;
-                            WriteGhostToPacket(ghostId, flags, packet);
+                            remainingBytes -= size; 
+                            WriteGhostToPacket(AddState(packet.PacketHeader.packetId, ghost), packet);
                         }
                         else
                         {
@@ -75,31 +78,14 @@ public static class GhostManager
             
         }
 
-        public void AddState(int ghostId)
+        public GhostState AddState(int packetId, Ghost ghost)
         {
-            if (ghosts[ghostId].flags > 0)
-            {
-                ghostStates[ghostId].Add(new GhostState(ghosts[ghostId]));
-            }
-        }
-        public void AddState(int ghostId, int flags)
-        {
-            GhostState state = new GhostState(ghosts[ghostId]);
-            state.flags = flags;
-            ghostStates[ghostId].Add(state);
+            GhostState state = new GhostState(ghost, connectionId);
+            ghostStates[packetId].Add(state);
+            ghost.flags[connectionId] = 0;
+            return state;
         }
 
-
-        private int GetFlags(int ghostId)
-        {
-            int flags = 0; //00000000
-            ghostStates[ghostId].ForEach((GhostState ghost) =>
-            {
-                //10100100
-                flags = flags | ghost.flags;
-            });
-            return flags;
-        }
         private int GetPacketSize(int flags)
         {
             int size = 2 * sizeof(int);
@@ -125,34 +111,47 @@ public static class GhostManager
             }
             return size;
         }
-        private void WriteGhostToPacket(int ghostId, int flags, Packet packet)
+        private void WriteGhostToPacket(GhostState ghost, Packet packet)
         {
-            GhostState mostRecentState = ghostStates[ghostId][ghostStates[ghostId].Count-1];
-            packet.Write(ghostId);
-            packet.Write((byte)flags);
-            if ((flags & NEWFLAG) > 0)
+            packet.Write(ghost.ghostId);
+            packet.Write((byte)ghost.flags);
+            if ((ghost.flags & NEWFLAG) > 0)
             {
-                packet.Write((int)ghosts[ghostId].ghostType);
+                packet.Write((int)ghost.ghostType);
             }
-            if ((flags & DELFLAG) > 0)
+            if ((ghost.flags & DELFLAG) > 0)
             {
                 //Delete doesn't add any data
                 return;
             }
-            if ((flags & POSFLAG) > 0)
+            if ((ghost.flags & POSFLAG) > 0)
             {
-                packet.Write(mostRecentState.position);
+                packet.Write(ghost.position);
             }
-            if ((flags & SCALEFLAG) > 0)
+            if ((ghost.flags & SCALEFLAG) > 0)
             {
-                packet.Write(mostRecentState.scale);
+                packet.Write(ghost.scale);
             }
-            if ((flags & ROTFLAG) > 0)
+            if ((ghost.flags & ROTFLAG) > 0)
             {
-                packet.Write(mostRecentState.rotation);
+                packet.Write(ghost.rotation);
             }
         }
 
+        public void ProcessNotification(bool success, int packetId)
+        {
+            if(success)
+            {
+                ghostStates[packetId] = null;
+            } else
+            {
+                foreach(GhostState state in ghostStates[packetId])
+                {
+                    ghosts[state.ghostId].flags[connectionId] = ghosts[state.ghostId].flags[connectionId] | state.flags;
+                }
+
+            }
+        }
 
     }
 
@@ -160,13 +159,15 @@ public static class GhostManager
     {
         public int ghostId;
         public int flags = 0;
+        public ghostType ghostType = ghostType.TestGhost;
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 scale = new Vector3(1, 1, 1);
         public Quaternion rotation = new Quaternion(0, 0, 0, 0);
-        public GhostState(Ghost ghost)
+        public GhostState(Ghost ghost, int connectionId)
         {
             ghostId = ghost.ghostId;
-            flags = ghost.flags;
+            flags = ghost.flags[connectionId];
+            ghostType = ghost.ghostType;
             position = ghost.Position;
             scale = ghost.Scale;
             rotation = ghost.Rotation;
@@ -180,12 +181,7 @@ public static class GhostManager
     public static GameObject[] prefabs;
     public static void Connect(int connectionId)
     {
-
-        ghostConnections[connectionId].Connect();
-        foreach (int ghostId in ghostConnections[connectionId].ghostStates.Keys)
-        {
-            ghostConnections[connectionId].AddState(ghostId, 0 | NEWFLAG | POSFLAG | SCALEFLAG | ROTFLAG);
-        }
+        ghostConnections[connectionId].Connect(connectionId);
     }
 
     public static void Disconnect(int connectionid)
@@ -208,11 +204,6 @@ public static class GhostManager
         Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
-        foreach(GhostConnection connection in ghostConnections.Values)
-        {
-            connection.ghostStates[ghostIndex] = new List<GhostState>();
-            connection.ghostStates[ghostIndex].Add(new GhostState(ghost));
-        }
         ghostIndex++;
         return ghost;
     }
@@ -246,6 +237,11 @@ public static class GhostManager
                 ghosts[ghostId].gameObject.transform.rotation = packet.ReadQuaternion();
             }
         } 
+    }
+
+    public static void ProcessNotification(bool success, int packetId, int connectionId)
+    {
+        ghostConnections[connectionId].ProcessNotification(success, packetId);
     }
 
     public static void Initialize()

@@ -39,5 +39,9 @@ public class ObjectManager : MonoBehaviour
         {
             ConnectionManager.OpenServer(1, 6942);
         }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
+        }
     }
 }
