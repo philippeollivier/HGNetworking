@@ -89,7 +89,6 @@ public static class StreamManager
     #region Helper Functions
     private static bool MoreInfoToWrite(int connectionId)
     {
-        Debug.Log("Has data to write");
         return MoveManager.HasMoreDataToWrite(connectionId) || EventManager.HasMoreDataToWrite(connectionId) || GhostManager.HasMoreDataToWrite(connectionId);
     }
     #endregion

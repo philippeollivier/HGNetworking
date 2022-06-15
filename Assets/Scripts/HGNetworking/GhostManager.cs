@@ -20,7 +20,7 @@ public static class GhostManager
     {
         public int connectionId;
         public bool hasMoreDataToWrite = false;
-        public bool active;
+        public bool active = false;
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
         public void Connect(int connectionId)
         {
@@ -206,6 +206,10 @@ public static class GhostManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
+        if(ghostConnections[connectionId].hasMoreDataToWrite)
+        {
+            Debug.Log($"Connection {connectionId} has more data to write");
+        }
         return ghostConnections[connectionId].hasMoreDataToWrite;
     }
 
