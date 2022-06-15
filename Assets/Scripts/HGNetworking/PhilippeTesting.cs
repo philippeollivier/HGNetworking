@@ -5,55 +5,42 @@ using UnityEngine;
 
 public class PhilippeTesting : MonoBehaviour
 {
+    private void Start()
+    {
+        StartCoroutine(testPolling());
+    }
+
+    IEnumerator testPolling()
+    {
+        while (true)
+        {
+            MetricsManager.AddDatapointToMetric("testing", UnityEngine.Random.Range(-1.0f, 1.0f), true);
+
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Events.Event_TEST_EVENT e = new Events.Event_TEST_EVENT();
-            e.Username = "animbot";
-            e.Number = 14;
-            e.Vec = new Vector3(1, 2, 3);
-            e.Quat = new Quaternion();
-            e.Test = "TADA";
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Events.Event_TEST_EVENT e = new Events.Event_TEST_EVENT();
+        //    e.Username = "animbot";
+        //    e.Number = 14;
+        //    e.Vec = new Vector3(1, 2, 3);
+        //    e.Quat = new Quaternion();
+        //    e.Test = "TADA";
 
-            Events.Event_TEST_EVENT e2 = new Events.Event_TEST_EVENT();
-            e2.Username = "animb23123123123123ot";
-            e2.Number = 14;
-            e2.Vec = new Vector3(1, 2, 3);
-            e2.Quat = new Quaternion();
-            e2.Test = "TADA";
-
-
-            Debug.Log($"Size of e is {e.GetSize()}");
-            Debug.Log($"Size of e2 is {e2.GetSize()}");
+        //    Events.Event_TEST_EVENT e2 = new Events.Event_TEST_EVENT();
+        //    e2.Username = "animb23123123123123ot";
+        //    e2.Number = 14;
+        //    e2.Vec = new Vector3(1, 2, 3);
+        //    e2.Quat = new Quaternion();
+        //    e2.Test = "TADA";
 
 
-            //Events.Event_SEND_USERNAME e3 = new Events.Event_SEND_USERNAME();
-            //e3.Username = "ikkacuslayer69";
-
-
-            ////TODO remove these debugs
-            //Debug.Log($"Writing All properties");
-            //DateTime before = DateTime.Now;
-            //Debug.Log($"Writing packet type properties for packet {GetType().Name}");
-
-
-            //Packet p = new Packet();
-            //e.WriteEventToPacket(ref p);
-            //e3.WriteEventToPacket(ref p);
-
-            //p.ToArray();
-
-            //Event e2 = Event.GetEventClassFromId(p.ReadInt());
-            //e2.ReadEventFromPacket(ref p);
-            //Debug.Log(e2);
-
-            //Event e4 = Event.GetEventClassFromId(p.ReadInt());
-            //e4.ReadEventFromPacket(ref p);
-            //Debug.Log(e4);
-
-            //DateTime after = DateTime.Now;
-            //Debug.Log($"Finished writing Property in Time: {after.Subtract(before).Milliseconds}");
-        }
+        //    Debug.Log($"Size of e is {e.GetSize()}");
+        //    Debug.Log($"Size of e2 is {e2.GetSize()}");
+        //}
     }
 }
