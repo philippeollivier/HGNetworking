@@ -12,13 +12,11 @@ public class EventConnection
     private Dictionary<int, Event> sentEvents = new Dictionary<int,Event>();
     private Dictionary<int, List<int>> packetEventMap = new Dictionary<int, List<int>>();
     private Queue<Event> outgoingEventsQueue = new Queue<Event>();
-    private int nextSendEventId = 0;
 
     //Constant Values
     private const int EVENT_WINDOW_SIZE = 64;
     private const int SLIDING_WINDOW_SIZE = EVENT_WINDOW_SIZE * 2;
     private SlidingWindow outgoingWindow = new SlidingWindow(EVENT_WINDOW_SIZE, true);
-    private SlidingWindow incomingWindow = new SlidingWindow(EVENT_WINDOW_SIZE, true);
 
     public void ReceiveEvents(List<Event> packetEvents)
     {
@@ -46,7 +44,6 @@ public class EventConnection
         }
 
 
-        Debug.Log($"READING: Trying to process events for {nextReadEventId}");
         //Process received events in an ordered fashion
         while (receivedEvents.ContainsKey(nextReadEventId))
         {

@@ -23,7 +23,6 @@ public static class EventManager
 
         List<Event> allEvents = new List<Event>();
 
-
         for (int i = 0; i < numEvents; i++)
         {
             Event currentEvent = Event.GetEventClassFromId(packet.ReadInt());
