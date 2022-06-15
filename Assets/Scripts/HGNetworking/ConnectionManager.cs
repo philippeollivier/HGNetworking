@@ -93,7 +93,7 @@ public static class ConnectionManager
                 Debug.Log($"Received Connection from: {endpoint.ToString()}");
                 // If this is a new connection
                 connections[connectionIndex].udp.Connect(endpoint);
-                GhostManager.ghostConnections[connectionIndex].Connect(connectionIndex);
+                GhostManager.Connect(connectionIndex);
                 connectionAddresses[connectionIndex] = endpoint.ToString();
                 connectionIndex++;
                 using (Packet responsePacket = new Packet())

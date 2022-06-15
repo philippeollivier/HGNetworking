@@ -53,7 +53,11 @@ public class Ghost : MonoBehaviour
         this.ghostType = ghostType;
         foreach (int connectionId in GhostManager.ghostConnections.Keys)
         {
-            flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
+            if(GhostManager.ghostConnections[connectionId].active)
+            {
+                Debug.Log($"Initializing Ghost: {ghostId}, setting flags for connection: {connectionId}");
+                flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
+            }
 
         }
     }

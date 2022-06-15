@@ -26,6 +26,7 @@ public static class GhostManager
         {
             foreach (Ghost ghost in ghosts.Values)
             {
+                this.active = true;
                 this.connectionId = connectionId;
                 ghost.NewPlayer(connectionId);
                 
@@ -33,7 +34,8 @@ public static class GhostManager
         }
         public void Disconnect()
         {
-
+            this.active = false;
+            this.connectionId = -1;
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
@@ -69,6 +71,7 @@ public static class GhostManager
                         }
                     }
                 }
+                Debug.Log($"Wrote: {numGhosts} to packet: {packet.PacketHeader.packetId}");
                 return size;
             } else
             {
@@ -81,6 +84,10 @@ public static class GhostManager
         public GhostState AddState(int packetId, Ghost ghost)
         {
             GhostState state = new GhostState(ghost, connectionId);
+            if(ghostStates[packetId] == null)
+            {
+                ghostStates[packetId] = new List<GhostState>();
+            }
             ghostStates[packetId].Add(state);
             ghost.flags[connectionId] = 0;
             return state;
@@ -114,6 +121,7 @@ public static class GhostManager
         private void WriteGhostToPacket(GhostState ghost, Packet packet)
         {
             packet.Write(ghost.ghostId);
+            Debug.Log($"Packet: {packet.PacketHeader.packetId} | Writing {ghost.ghostId} with flags: {ghost.flags}");
             packet.Write((byte)ghost.flags);
             if ((ghost.flags & NEWFLAG) > 0)
             {
@@ -142,6 +150,7 @@ public static class GhostManager
         {
             if(success)
             {
+
                 ghostStates[packetId] = null;
             } else if(ghostStates.ContainsKey(packetId))
             {
@@ -201,6 +210,7 @@ public static class GhostManager
 
     public static Ghost NewGhost(ghostType ghostType)
     {
+        Debug.Log($"Creating ghost with ghostId: {ghostIndex}");
         Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
@@ -210,6 +220,7 @@ public static class GhostManager
 
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
+        Debug.Log($"Reading information about ghost");
         int numGhosts = packet.ReadInt();
         for(int i = 0; i < numGhosts; i++)
         {
