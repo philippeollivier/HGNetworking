@@ -143,7 +143,7 @@ public static class GhostManager
             if(success)
             {
                 ghostStates[packetId] = null;
-            } else
+            } else if(ghostStates.ContainsKey(packetId))
             {
                 foreach(GhostState state in ghostStates[packetId])
                 {
