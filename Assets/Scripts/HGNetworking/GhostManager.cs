@@ -24,10 +24,11 @@ public static class GhostManager
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
         public void Connect(int connectionId)
         {
+            Debug.Log($"Connection: {connectionId} connected to GhostManager");
+            this.active = true;
+            this.connectionId = connectionId;
             foreach (Ghost ghost in ghosts.Values)
             {
-                this.active = true;
-                this.connectionId = connectionId;
                 ghost.NewPlayer(connectionId);
                 
             }
