@@ -20,34 +20,20 @@ public class EventConnection
 
     public void ReceiveEvents(List<Event> packetEvents)
     {
-        //Print out current state of received events before and after 
-        string msg = "READING: ReceivedEvents Map before handling events";
-        foreach (KeyValuePair<int, Event> pair in receivedEvents)
-        {
-            msg += $"{pair.Key}, {pair.Value}\n";
-        }
-        string msg2 = "READING: Events in events";
-
         //Add received packets to the received events map
         foreach (Event e in packetEvents)
         {
-            msg2 += $"{e}";
-
             //If the Event's Id is within Dead Window Area, do not reprocess event. 
             if (!IsEventDuplicate(e.EventId))
             {
                 receivedEvents[e.EventId] = e;
-                msg2 += " duplicated events";
             }
-
-            msg2 += "\n";
         }
 
 
         //Process received events in an ordered fashion
         while (receivedEvents.ContainsKey(nextReadEventId))
         {
-            Debug.Log($"READING: Processing events {nextReadEventId}");
             ProcessEvents(nextReadEventId);
 
             //Increment the event id we are waiting on
@@ -67,8 +53,6 @@ public class EventConnection
 
     public int WriteEvents(Packet packet, int remainingPacketSize)
     {
-        Debug.Log($"WRITING: events to packet {packet.PacketHeader.packetId} outgoingEventsQueue.Count: {outgoingEventsQueue.Count} sentEvents.count: {sentEvents.Count} packet {packet}");
-
         //Exit early if there are no events to write or we have too many outgoing events that have not been processed
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)
         {
@@ -170,20 +154,7 @@ public class EventConnection
             }
         } catch(Exception e)
         {
-            string msg = "ACKING: ";
-            foreach (var pair in packetEventMap)
-            {
-                string msg2 = "";
-
-                foreach (var v in pair.Value)
-                {
-                    msg2 += v;
-                }
-
-                msg += $"<{pair.Key}, {msg2}>\n";
-            }
-
-            Debug.Log($"Failed to ACK Event packet {packetId}\nException: {e}\n{msg}");
+            Debug.LogError($"Failed to ACK Event packet {packetId}\nException: {e}\n");
         }
     }
 
