@@ -55,12 +55,14 @@ public static class GhostManager
             {
                 int size = 0;
                 //Go through each ghost's list
+                Debug.Log($"List of Ghosts to send: {ghosts.Values}");
                 foreach (Ghost ghost in ghosts.Values)
                 {
                     //If it has unACKED changes
                     if (ghost.flags[connectionId] > 0)
                     {
                         size += GetPacketSize(ghost.flags[connectionId]);
+                        Debug.Log($"Flags for ghost: {ghost.ghostId} are {ghost.flags} for connection: {connectionId}. Size is: {size}");
                         //Write the ghost if there is space
                         if (remainingBytes - size >= 0)
                         {
@@ -226,9 +228,9 @@ public static class GhostManager
 
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
-        Debug.Log($"Reading information about ghost");
         int numGhosts = packet.ReadInt();
-        for(int i = 0; i < numGhosts; i++)
+        Debug.Log($"Reading information about {numGhosts} ghosts from packet {packet.PacketHeader.packetId}");
+        for (int i = 0; i < numGhosts; i++)
         {
             int ghostId = packet.ReadInt();
             int flags = packet.ReadByte();
