@@ -72,15 +72,13 @@ public class MetricsManager : MonoBehaviour
 
         if (isUIActive)
         {
-            string tempMetricsText = "<b>Metrics Information:</b>\n";
+            string tempMetricsText = "";
             foreach (DataVisualization dataVisualization in metricsDictionary.Values)
             {
                 tempMetricsText += $"<color=#{dataVisualization.GetColor()}>{dataVisualization.GetName()} : {dataVisualization.GetLastValue()}</color>\n";
             }
             metricsText.text = tempMetricsText;
         }
-
-
     }
     #endregion
 
@@ -98,11 +96,11 @@ public class MetricsManager : MonoBehaviour
         public DataVisualization(string name)
         {
             this.name = name;
-            color = ColorUtility.ToHtmlStringRGBA(Random.ColorHSV(0f, 1f, 0.6f, 1.0f, 0.8f, 0.8f));
+            color = ColorUtility.ToHtmlStringRGBA(Random.ColorHSV(0f, 1f, 1f, 1f, 0.8f, 1f));
             animationCurve = new AnimationCurve();
         }
 
-        public void Add(Datapoint datapoint)
+        public void Add(Datapoint datapoint)    
         {
             animationCurve.AddKey(datapoint.Time, datapoint.Value);
         }
