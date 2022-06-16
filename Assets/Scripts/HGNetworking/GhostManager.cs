@@ -62,7 +62,7 @@ public static class GhostManager
                     if (ghost.flags[connectionId] > 0)
                     {
                         size += GetPacketSize(ghost.flags[connectionId]);
-                        Debug.Log($"Flags for ghost: {ghost.ghostId} are {ghost.flags} for connection: {connectionId}. Size is: {size}");
+                        Debug.Log($"Flags for ghost: {ghost.ghostId} are {ghost.flags[connectionId]} for connection: {connectionId}. Size is: {size}");
                         //Write the ghost if there is space
                         if (remainingBytes - size >= 0)
                         {

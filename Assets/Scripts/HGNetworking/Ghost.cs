@@ -12,13 +12,17 @@ public class Ghost : MonoBehaviour
         get { return position; }
         set
         {
-            List<int> connectionIds = new List<int>(flags.Keys);
-            foreach(int key in connectionIds)
+            if((position-value).magnitude > 0.01f)
             {
-                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
-                flags[key] = flags[key] | GhostManager.POSFLAG;
+                List<int> connectionIds = new List<int>(flags.Keys);
+                foreach (int key in connectionIds)
+                {
+                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
+                    flags[key] = flags[key] | GhostManager.POSFLAG;
+                }
+                position = value;
             }
-            position = value;
+
         }
     }
     public Vector3 Scale
@@ -26,13 +30,16 @@ public class Ghost : MonoBehaviour
         get { return scale; }
         set
         {
-            List<int> connectionIds = new List<int>(flags.Keys);
-            foreach (int key in connectionIds)
+            if ((scale - value).magnitude > 0.01f)
             {
-                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
-                flags[key] = flags[key] | GhostManager.SCALEFLAG;
+                List<int> connectionIds = new List<int>(flags.Keys);
+                foreach (int key in connectionIds)
+                {
+                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
+                    flags[key] = flags[key] | GhostManager.SCALEFLAG;
+                }
+                scale = value;
             }
-            scale = value;
         }
     }
     public Quaternion Rotation
@@ -40,13 +47,17 @@ public class Ghost : MonoBehaviour
         get { return rotation; }
         set
         {
-            List<int> connectionIds = new List<int>(flags.Keys);
-            foreach (int key in connectionIds)
-            {
-                GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
-                flags[key] = flags[key] | GhostManager.ROTFLAG;
-            }
             rotation = value;
+            //if ((rotation.).magnitude > 0.01f)
+            //{
+            //    List<int> connectionIds = new List<int>(flags.Keys);
+            //    foreach (int key in connectionIds)
+            //    {
+            //        GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
+            //        flags[key] = flags[key] | GhostManager.ROTFLAG;
+            //    }
+            //    rotation = value;
+            //}
         }
     }
 
