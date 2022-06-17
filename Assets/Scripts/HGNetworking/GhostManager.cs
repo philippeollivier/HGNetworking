@@ -19,7 +19,6 @@ public static class GhostManager
     public class GhostConnection
     {
         public int connectionId;
-        public bool hasMoreDataToWrite = false;
         public bool active = false;
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
         public void Connect(int connectionId)
@@ -40,20 +39,10 @@ public static class GhostManager
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
-            int numGhosts = 0;
-            //Add latest ghost data to lists
-            foreach (Ghost ghost in ghosts.Values)
-            {
-                if(ghost.flags[connectionId] > 0)
-                {
-                    numGhosts++;
-                }
-            }
-            Debug.Log($"Writing data for {numGhosts} ghosts");
-            packet.Write(numGhosts);
-            if (numGhosts > 0)
+            if (HasMoreDataToWrite(connectionId))
             {
                 int size = 0;
+                List<GhostState> ghostsToWrite = new List<GhostState>();
                 //Go through each ghost's list
                 Debug.Log($"List of Ghosts to send: {ghosts.Values}");
                 foreach (Ghost ghost in ghosts.Values)
@@ -66,20 +55,20 @@ public static class GhostManager
                         //Write the ghost if there is space
                         if (remainingBytes - size >= 0)
                         {
-                            remainingBytes -= size; 
-                            WriteGhostToPacket(AddState(packet.PacketHeader.packetId, ghost), packet);
-                        }
-                        else
-                        {
-                            hasMoreDataToWrite = true;
+                            remainingBytes -= size;
+                            ghostsToWrite.Add(AddState(packet.PacketHeader.packetId, ghost));
                         }
                     }
                 }
-                Debug.Log($"Wrote: {numGhosts} to packet: {packet.PacketHeader.packetId}");
+                packet.Write(ghostsToWrite.Count);
+                foreach(GhostState ghost in ghostsToWrite)
+                {
+                    WriteGhostToPacket(ghost, packet);
+                }
+                Debug.Log($"Wrote: {ghostsToWrite.Count} to packet: {packet.PacketHeader.packetId}");
                 return size;
             } else
             {
-                hasMoreDataToWrite = false;
                 return 0;
             }
             
@@ -209,11 +198,14 @@ public static class GhostManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
-        if(ghostConnections[connectionId].hasMoreDataToWrite)
+        foreach (Ghost ghost in ghosts.Values)
         {
-            Debug.Log($"Connection {connectionId} has more data to write");
+            if (ghost.flags[connectionId] > 0)
+            {
+                return true;
+            }
         }
-        return ghostConnections[connectionId].hasMoreDataToWrite;
+        return false;
     }
 
     public static Ghost NewGhost(ghostType ghostType)
