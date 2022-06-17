@@ -46,9 +46,12 @@ public static class StreamManager
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
                 Debug.Log($"Looking for data to write to packet");
                 remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
+                Debug.Log($"Remaining Bytes before EventManager {remainingBytes}");
                 remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packet);
+                Debug.Log($"Remaining Bytes before GhostManager {remainingBytes}");
                 remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
 
+                Debug.Log($"StreamManager WriteToPacket: {packet}");
                 //Send packet through connection manager
                 ConnectionManager.SendPacket(connectionId, packet);
 

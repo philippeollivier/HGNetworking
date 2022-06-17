@@ -43,6 +43,7 @@ public static class ConnectionManager
     //send given packet to a connection with id
     public static void SendPacket(int connectionId, Packet packet)
     {
+        Debug.Log(packet);
         MetricsManager.AddDatapointToMetric("Sent Packet Count", 1, true);
 
         PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
@@ -53,7 +54,7 @@ public static class ConnectionManager
         MetricsManager.AddDatapointToMetric("Read Packet Count", 1, true);
 
         int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
-
+        Debug.Log(packet);
         switch (packet.PacketHeader.packetType)
         {
             case PacketType.NoACK:

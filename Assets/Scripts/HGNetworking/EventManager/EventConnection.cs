@@ -57,7 +57,7 @@ public class EventConnection
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)
         {
             packet.Write(0);
-            return remainingPacketSize;
+            return 1;
         }
 
         //Figure out what events we will be writing to packet
