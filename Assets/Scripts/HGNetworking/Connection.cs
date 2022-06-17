@@ -73,9 +73,9 @@ public class Connection
     public string RenderTimeout()
     {
         string retVal = "|";
-        for (int i = 0; i < 2 * WINDOW_SIZE; i++)
+        for (int i = 0; i < timeouts.Length; i++)
         {
-            //retVal += $"<color={(InWindow(i) ? (ActiveFrames(i) ? "blue" : "green") : "red")}>{i}</color>|";
+            retVal += $"{timeouts[i]}|";
         }
 
         return retVal;
