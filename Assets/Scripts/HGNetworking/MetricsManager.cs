@@ -44,14 +44,14 @@ public class MetricsManager : MonoBehaviour
         }
 
         //If metric is not present add it to the dictionary
-        AddMetric(metricName);
+        AddMetricIfNotPresent(metricName);
 
         //Store the value in the dictionary
         Datapoint datapoint = new Datapoint(Time.time, value);
         Instance.metricsDictionary[metricName].Add(datapoint);
     }
 
-    public static void AddMetric(string metricName)
+    public static void AddMetricIfNotPresent(string metricName)
     {
         if (!Instance.metricsDictionary.ContainsKey(metricName))
         {
@@ -78,6 +78,11 @@ public class MetricsManager : MonoBehaviour
                 tempMetricsText += $"<color=#{dataVisualization.GetColor()}>{dataVisualization.GetName()} : {dataVisualization.GetLastValue()}</color>\n";
             }
             metricsText.text = tempMetricsText;
+
+            foreach (Connection connection in ConnectionManager.connections.Values)
+            {
+
+            }
         }
     }
     #endregion

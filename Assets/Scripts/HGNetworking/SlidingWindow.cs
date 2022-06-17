@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Serializable]
 public class SlidingWindow : ISerializationCallbackReceiver
 {
-    public enum WindowStatus { Success, Duplicate, OutOfOrder, OutofBounds, NonActiveFrame }
+    public enum WindowStatus { Success, Duplicate, OutOfOrder, OutofBounds, NonActiveFrame, Timeout }
     [SerializeField]
     public int LeftBound { get { return leftBound; } }
     public int RightBound { get { return RightBound; } }
@@ -137,5 +137,16 @@ public class SlidingWindow : ISerializationCallbackReceiver
             nextValue = 0;
         }
         return nextValue;
+    }
+
+    public string RenderSlidingWindow()
+    {
+        string retVal = "|";
+        for(int i = 0; i < 2* MaxSize; i++)
+        {
+            retVal += $"<color={(InWindow(i)?(ActiveFrames(i)?"blue":"green"):"red")}>{i}</color>|";
+        }
+
+        return retVal;
     }
 }

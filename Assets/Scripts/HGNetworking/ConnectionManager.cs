@@ -32,6 +32,7 @@ public static class ConnectionManager
                 if (packetId == -1) {
                     return false;
                 }
+                connections[connectionId].ResetTimeout(packetId);
                 //Write packet header and sliding window information
                 packet.PacketHeader = new PacketHeader(PacketType.Regular, packetId);
                 packet.WritePacketHeaderToPacket();
@@ -40,19 +41,17 @@ public static class ConnectionManager
                 throw new ArgumentException($"PacketType not currently implemented. PacketType: {type}");
         }
     }
-    //send given packet to a connection with id
+
     public static void SendPacket(int connectionId, Packet packet)
     {
-        MetricsManager.AddDatapointToMetric("Sent Packet Count", 1, true);
-
+        MetricsManager.AddDatapointToMetric($"Sent Packet Count [{connectionId}]", 1, true);
         PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
     }
 
     public static void ReadPacket(IPEndPoint connectionEndpoint, Packet packet)
     {
-        MetricsManager.AddDatapointToMetric("Read Packet Count", 1, true);
-
         int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
+        MetricsManager.AddDatapointToMetric($"Read Packet Count [{connectionId}]", 1, true);
 
         switch (packet.PacketHeader.packetType)
         {
@@ -160,6 +159,7 @@ public static class ConnectionManager
                 MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1, true);
                 Debug.Log("ACK Returned out of bounds");
                 break;
+
         }
     }
 
@@ -168,7 +168,7 @@ public static class ConnectionManager
         connectionAddresses = new string[maxPlayers + 1];
         for (int i = 1; i <= maxPlayers; i++)
         {
-            connections.Add(i, new Connection(i, 1000));
+            connections.Add(i, new Connection(i));
             GhostManager.Initialize();
             ObjectManager.Initialize();
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
