@@ -17,7 +17,6 @@ public class Ghost : MonoBehaviour
                 List<int> connectionIds = new List<int>(flags.Keys);
                 foreach (int key in connectionIds)
                 {
-                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                     flags[key] = flags[key] | GhostManager.POSFLAG;
                 }
                 position = value;
@@ -35,7 +34,6 @@ public class Ghost : MonoBehaviour
                 List<int> connectionIds = new List<int>(flags.Keys);
                 foreach (int key in connectionIds)
                 {
-                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                     flags[key] = flags[key] | GhostManager.SCALEFLAG;
                 }
                 scale = value;
@@ -69,8 +67,7 @@ public class Ghost : MonoBehaviour
         {
             if(GhostManager.ghostConnections[connectionId].active)
             {
-                GhostManager.ghostConnections[connectionId].hasMoreDataToWrite = true;
-                Debug.Log($"Initializing Ghost: {ghostId}, setting flags for connection: {connectionId}, set data to write to {GhostManager.ghostConnections[connectionId].hasMoreDataToWrite}");
+                Debug.Log($"Initializing Ghost: {ghostId}, setting flags for connection: {connectionId}");
                 flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
             }
 
