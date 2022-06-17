@@ -57,7 +57,7 @@ public class EventConnection
         if(outgoingEventsQueue.Count == 0 || sentEvents.Count >= EVENT_WINDOW_SIZE)
         {
             packet.Write(0);
-            return remainingPacketSize;
+            return 1;
         }
 
         //Figure out what events we will be writing to packet
@@ -144,13 +144,16 @@ public class EventConnection
     {
         try
         {
-            //Remove ACK'd Event Packet from Sent Events
-            foreach (int eventId in packetEventMap[packetId])
+            if (packetEventMap.ContainsKey(packetId))
             {
-                //Increment sliding window
-                outgoingWindow.FillFrame(eventId);
+                //Remove ACK'd Event Packet from Sent Events
+                foreach (int eventId in packetEventMap[packetId])
+                {
+                    //Increment sliding window
+                    outgoingWindow.FillFrame(eventId);
 
-                sentEvents.Remove(eventId);
+                    sentEvents.Remove(eventId);
+                }
             }
         } catch(Exception e)
         {

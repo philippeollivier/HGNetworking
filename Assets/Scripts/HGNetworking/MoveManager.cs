@@ -11,7 +11,7 @@ public static class MoveManager
 
     public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
-        return 1;
+        return 0;
     }
 
     public static void ReadFromPacket(int connectionId, Packet packet)

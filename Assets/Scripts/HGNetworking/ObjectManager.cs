@@ -32,7 +32,7 @@ public class ObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.18.58.72"), 6942));
+            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.15.133.160"), 6942));
         }
         if (Input.GetKeyDown(KeyCode.C))
         {

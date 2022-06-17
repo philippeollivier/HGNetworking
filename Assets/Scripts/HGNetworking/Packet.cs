@@ -446,7 +446,15 @@ public class Packet : IDisposable
         }
     }
     #endregion
-
+    public override string ToString()
+    {
+        string ret = "";
+        foreach(byte b in buffer)
+        {
+            ret += b;
+        }
+        return ret;
+    }
     private bool disposed = false;
 
     protected virtual void Dispose(bool _disposing)
