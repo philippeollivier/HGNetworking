@@ -74,6 +74,11 @@ public class Ghost : MonoBehaviour
         }
     }
 
+    public void Initialize(int ghostId)
+    {
+        this.ghostId = ghostId;
+    }
+
     public void NewPlayer(int connectionId)
     {
         flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;

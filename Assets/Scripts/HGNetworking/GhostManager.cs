@@ -40,7 +40,6 @@ public static class GhostManager
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
             Debug.Log($"Bytes remaining WriteToPacket GhostConnection: {remainingBytes}");
-            Debug.Log($"HasMoreDataToWrite {HasMoreDataToWrite(connectionId)}");
             if (HasMoreDataToWrite(connectionId))
             {
                 int size = 0;
@@ -73,7 +72,8 @@ public static class GhostManager
                 return size;
             } else
             {
-                return 0;
+                packet.Write(0);
+                return 1;
             }
             
         }
@@ -185,6 +185,7 @@ public static class GhostManager
     public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
     public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
     static Dictionary<ghostType, objectType> objectAssociation = new Dictionary<ghostType, objectType>();
+    static Dictionary<int, GameObject> localGhosts = new Dictionary<int, GameObject>();
     public static GameObject[] prefabs;
     public static void Connect(int connectionId)
     {
@@ -225,6 +226,14 @@ public static class GhostManager
         return ghost;
     }
 
+    public static GameObject NewGhostClient(ghostType ghostType, int ghostId)
+    {
+        Debug.Log($"Creating ghost with ghostId: {ghostIndex}");
+        Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        localGhosts[ghostId] = ghost.gameObject;
+        Object.Destroy(ghost);
+        return localGhosts[ghostId];
+    }
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
         int numGhosts = packet.ReadInt();
@@ -235,24 +244,24 @@ public static class GhostManager
             int flags = packet.ReadByte();
             if ((flags & NEWFLAG) > 0)
             {
-                NewGhost((ghostType)packet.ReadInt());
+                NewGhostClient((ghostType)packet.ReadInt(), ghostId);
             }
             if ((flags & DELFLAG) > 0)
             {
-                ObjectManager.Destroy(ghosts[ghostId]);
+                ObjectManager.Destroy(localGhosts[ghostId]);
                 return;
             }
             if ((flags & POSFLAG) > 0)
             {
-                ghosts[ghostId].gameObject.transform.position = packet.ReadVector3();
+                localGhosts[ghostId].gameObject.transform.position = packet.ReadVector3();
             }
             if ((flags & SCALEFLAG) > 0)
             {
-                ghosts[ghostId].gameObject.transform.localScale = packet.ReadVector3();
+                localGhosts[ghostId].gameObject.transform.localScale = packet.ReadVector3();
             }
             if ((flags & ROTFLAG) > 0)
             {
-                ghosts[ghostId].gameObject.transform.rotation = packet.ReadQuaternion();
+                localGhosts[ghostId].gameObject.transform.rotation = packet.ReadQuaternion();
             }
         } 
     }
