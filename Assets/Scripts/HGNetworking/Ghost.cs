@@ -45,17 +45,18 @@ public class Ghost : MonoBehaviour
         get { return rotation; }
         set
         {
-            rotation = value;
-            //if ((rotation.).magnitude > 0.01f)
-            //{
-            //    List<int> connectionIds = new List<int>(flags.Keys);
-            //    foreach (int key in connectionIds)
-            //    {
-            //        GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
-            //        flags[key] = flags[key] | GhostManager.ROTFLAG;
-            //    }
-            //    rotation = value;
-            //}
+            Quaternion diff = value * Quaternion.Inverse(rotation);
+            float diffMag = Mathf.Sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z + diff.w * diff.w);
+            if (diffMag > 0.01f)
+            {
+                List<int> connectionIds = new List<int>(flags.Keys);
+                foreach (int key in connectionIds)
+                {
+                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
+                    flags[key] = flags[key] | GhostManager.ROTFLAG;
+                }
+                rotation = value;
+            }
         }
     }
 
