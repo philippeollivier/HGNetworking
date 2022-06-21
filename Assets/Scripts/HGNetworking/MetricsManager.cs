@@ -79,10 +79,12 @@ public class MetricsManager : MonoBehaviour
             }
             metricsText.text = tempMetricsText;
 
+            string tempDebugText = "";
             foreach (Connection connection in ConnectionManager.connections.Values)
             {
-
+                tempDebugText += $"Connection ID: {connection.id}\nSliding Window:\n{connection.window.RenderSlidingWindow()}\nTimeout Window:\n{connection.RenderTimeout()}";
             }
+            debugText.text = tempDebugText;
         }
     }
     #endregion
