@@ -52,7 +52,6 @@ public class Ghost : MonoBehaviour
                 List<int> connectionIds = new List<int>(flags.Keys);
                 foreach (int key in connectionIds)
                 {
-                    GhostManager.ghostConnections[key].hasMoreDataToWrite = true;
                     flags[key] = flags[key] | GhostManager.ROTFLAG;
                 }
                 rotation = value;
