@@ -26,7 +26,13 @@ public class ObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
+            for (int i = 0; i < 40; i++)
+            {
+                Ghost g = GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
+                g.transform.position = new Vector3(UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f));
+                g.transform.localScale = new Vector3(UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(1f, 2f));
+                g.transform.rotation = new Quaternion(UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f));
+            }
         }
     }
 

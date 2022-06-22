@@ -1518,7 +1518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ipAddress: 25.15.133.160
-  selfConnection: 1
+  selfConnection: 0
 --- !u!1 &2083774738
 GameObject:
   m_ObjectHideFlags: 0
