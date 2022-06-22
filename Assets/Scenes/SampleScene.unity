@@ -1387,8 +1387,9 @@ GameObject:
   - component: {fileID: 1954534748}
   - component: {fileID: 1954534747}
   - component: {fileID: 1954534752}
+  - component: {fileID: 1954534753}
   m_Layer: 5
-  m_Name: MetricsCanvas
+  m_Name: GeneralNetworkingPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1504,6 +1505,20 @@ MonoBehaviour:
   metricsList: []
   metricsText: {fileID: 1061155187}
   debugText: {fileID: 442544999}
+--- !u!114 &1954534753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954534746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a737bae35dc9043a8ce9fcf4db7a55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ipAddress: 25.15.133.160
+  selfConnection: 1
 --- !u!1 &2083774738
 GameObject:
   m_ObjectHideFlags: 0

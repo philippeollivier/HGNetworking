@@ -21,23 +21,9 @@ public class ObjectManager : MonoBehaviour
     {
     }
 
-    private void FixedUpdate()
-    {
-        ConnectionManager.UpdateTick();
-        StreamManager.UpdateTick();
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("25.15.133.160"), 6942));
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ConnectionManager.OpenServer(1, 6942);
-        }
         if (Input.GetKeyDown(KeyCode.L))
         {
             GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
@@ -48,4 +34,5 @@ public class ObjectManager : MonoBehaviour
     {
         objectPrefabs[objectType.TestGhost] = prefabs[0];
     }
+
 }

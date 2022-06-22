@@ -7,11 +7,8 @@ using System.Net.Sockets;
 
 public static class PlatformPacketManager
 {
-    public static int Port { get; private set; }
-
     private static UdpClient udpListener;
     //This class handles establishing connection from player to server AND sending packet between server and player.
-
 
     //This function opens a UDP socket to receive incoming UDP data
     public static void OpenUDPSocket(int port)

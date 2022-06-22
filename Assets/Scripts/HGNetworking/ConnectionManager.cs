@@ -91,11 +91,10 @@ public static class ConnectionManager
     public static void ReadConnect(Packet packet, IPEndPoint endpoint)
     {
         ConnectState state = (ConnectState) packet.ReadByte();
-        Debug.Log(state);
         switch (state)
         {
             case ConnectState.Connect:
-                Debug.Log($"Received Connection from: {endpoint.ToString()}");
+                Debug.Log($"Received Connection from: {endpoint}");
                 // If this is a new connection
                 connections[connectionIndex].udp.Connect(endpoint);
                 GhostManager.Connect(connectionIndex);
@@ -110,12 +109,10 @@ public static class ConnectionManager
                 }
                 break;
             case (ConnectState.Acknowledge):
-                    Debug.Log(connectionIndex);
-                    Debug.Log(connections[connectionIndex]);
-                    Debug.Log($"Connection acknowledged from: {endpoint.ToString()}");
-                    connections[connectionIndex].udp.Connect(endpoint);
-                    connectionAddresses[connectionIndex] = endpoint.ToString();
-                    connectionIndex++;
+                Debug.Log($"Connection {connectionIndex} acknowledged from: {endpoint}");
+                connections[connectionIndex].udp.Connect(endpoint);
+                connectionAddresses[connectionIndex] = endpoint.ToString();
+                connectionIndex++;
                 break;
         }
     }
