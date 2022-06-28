@@ -47,7 +47,7 @@ public static class StreamManager
                 if (!validPacket) {  break; }
 
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
-                remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
+                //remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
 
@@ -70,7 +70,7 @@ public static class StreamManager
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        MoveManager.ReadFromPacket(connectionId, packet);
+        //MoveManager.ReadFromPacket(connectionId, packet);
         EventManager.ReadFromPacket(connectionId, packet);
         GhostManager.ReadFromPacket(connectionId, packet);
     }
