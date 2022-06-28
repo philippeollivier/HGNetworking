@@ -6,7 +6,7 @@ using UnityEngine;
 public static class StreamManager
 {
     //TODO don't magic number this
-    public static int MAX_PACKET_SIZE = 2048;
+    public static int MAX_PACKET_SIZE = 512;
     public static int MIN_HEADER_SIZE = 4 + 4 + 4 + 4 + 4; //4 Bytes for ConnectionId, PacketId, MoveManager Header, EventManager Header, GhostManager Header
 
     public static Dictionary<int, int> latestPacket = new Dictionary<int, int>();
@@ -34,11 +34,14 @@ public static class StreamManager
     public static void WriteToPacket(int connectionId)
     {
         bool hasInfo = MoreInfoToWrite(connectionId);
-        int remainingBytes = MAX_PACKET_SIZE - MIN_HEADER_SIZE;
+        int packetsSent = 0;
+
         while (hasInfo)
         {
             using (Packet packet = new Packet())
             {
+                int remainingBytes = MAX_PACKET_SIZE - MIN_HEADER_SIZE;
+
                 //Create new packet
                 bool validPacket = ConnectionManager.GetPacket(packet, PacketType.Regular, connectionId);
                 if (!validPacket) {  break; }
@@ -50,10 +53,17 @@ public static class StreamManager
 
                 //Send packet through connection manager
                 ConnectionManager.SendPacket(connectionId, packet);
+                packetsSent++;
 
                 //Check if there is more info that needs to be sent
                 hasInfo = MoreInfoToWrite(connectionId);
             }
+
+        }
+
+        if(packetsSent > 0)
+        {
+            Debug.Log($"packetsSent this frame: {packetsSent}");
         }
     }
 

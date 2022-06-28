@@ -38,9 +38,11 @@ public static class GhostManager
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
-            if (HasMoreDataToWrite(connectionId))
+            Debug.Log($"Writing Ghosts to packet {packet.PacketHeader.packetId}, remaining bytes {remainingBytes}");
+            if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
             {
-                int size = 0;
+                int size = 1;
+                int tempGhostSize = 0;
                 List<GhostState> ghostsToWrite = new List<GhostState>();
                 //Go through each ghost's list
                 foreach (Ghost ghost in ghosts.Values)
@@ -48,11 +50,12 @@ public static class GhostManager
                     //If it has unACKED changes
                     if (ghost.flags[connectionId] > 0)
                     {
-                        size += GetPacketSize(ghost.flags[connectionId]);
+                        tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
                         //Write the ghost if there is space
-                        if (remainingBytes - size >= 0)
+                        if (remainingBytes >= size + tempGhostSize)
                         {
                             ghostsToWrite.Add(AddState(packet.PacketHeader.packetId, ghost));
+                            size += tempGhostSize;
                         }
                     }
                 }
@@ -61,9 +64,12 @@ public static class GhostManager
                 {
                     WriteGhostToPacket(ghost, packet);
                 }
+
+                Debug.Log($"Writing {ghostsToWrite.Count} with size {size}");
                 return size;
             } else
             {
+                Debug.Log("Nothing to write for ghost manager");
                 packet.Write(0);
                 return 1;
             }
@@ -138,15 +144,14 @@ public static class GhostManager
         {
             if(success)
             {
-
-                ghostStates[packetId] = null;
-            } else if(ghostStates.ContainsKey(packetId))
+                ghostStates.Remove(packetId);
+            } 
+            else if(ghostStates.ContainsKey(packetId))
             {
                 foreach(GhostState state in ghostStates[packetId])
                 {
                     ghosts[state.ghostId].flags[connectionId] = ghosts[state.ghostId].flags[connectionId] | state.flags;
                 }
-
             }
         }
 
@@ -199,6 +204,7 @@ public static class GhostManager
         {
             if (ghost.flags[connectionId] > 0)
             {
+                Debug.Log($"Need to write ghost with id {ghost.ghostId}");
                 return true;
             }
         }

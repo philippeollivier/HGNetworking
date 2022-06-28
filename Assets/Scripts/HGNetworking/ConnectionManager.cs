@@ -44,14 +44,14 @@ public static class ConnectionManager
 
     public static void SendPacket(int connectionId, Packet packet)
     {
-        MetricsManager.AddDatapointToMetric($"Sent Packet Count [{connectionId}]", 1, true);
+        MetricsManager.AddDatapointToMetric($"Sent Packet Count [{connectionId}]", 1f, true);
         PlatformPacketManager.SendPacket(connections[connectionId].udp.endPoint, packet);
     }
 
     public static void ReadPacket(IPEndPoint connectionEndpoint, Packet packet)
     {
         int connectionId = Array.IndexOf(connectionAddresses, connectionEndpoint.ToString());
-        MetricsManager.AddDatapointToMetric($"Read Packet Count [{connectionId}]", 1, true);
+        MetricsManager.AddDatapointToMetric($"Read Packet Count [{connectionId}]", 1f, true);
 
         switch (packet.PacketHeader.packetType)
         {
@@ -141,19 +141,19 @@ public static class ConnectionManager
         switch (status)
         {
             case SlidingWindow.WindowStatus.Success:
-                MetricsManager.AddDatapointToMetric("ACK Successful", 1, true);
+                MetricsManager.AddDatapointToMetric("ACK Successful", 1f, true);
                 StreamManager.ProcessNotification(true, packet.packetId, connectionId);
                 break;
             case SlidingWindow.WindowStatus.OutOfOrder:
-                MetricsManager.AddDatapointToMetric("ACK Out of Order", 1, true);
+                MetricsManager.AddDatapointToMetric("ACK Out of Order", 1f, true);
                 StreamManager.ProcessNotification(false, packet.packetId, connectionId);
                 break;
             case SlidingWindow.WindowStatus.Duplicate:
-                MetricsManager.AddDatapointToMetric("ACK Duplicate", 1, true);
+                MetricsManager.AddDatapointToMetric("ACK Duplicate", 1f, true);
                 Debug.Log("Duplicate ACK received");
                 break;
             case SlidingWindow.WindowStatus.OutofBounds:
-                MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1, true);
+                MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1f, true);
                 Debug.Log("ACK Returned out of bounds");
                 break;
 

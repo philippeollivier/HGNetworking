@@ -61,9 +61,10 @@ public class EventConnection
         }
 
         //Figure out what events we will be writing to packet
+        int totalEventsSize = 1; //Store one byte used for number of events
         Queue<Event> eventsToSendInPacket = new Queue<Event>();
         int currEventSize = outgoingEventsQueue.Peek().GetSize();
-        while(remainingPacketSize > currEventSize)
+        while(remainingPacketSize > totalEventsSize + currEventSize)
         {
             //First see if Outgoing Sliding Window is full
             int nextValidId = outgoingWindow.AdvancePointer();
@@ -77,7 +78,7 @@ public class EventConnection
             currEvent.EventId = nextValidId;
 
             //Add Events to Sent Events
-            remainingPacketSize -= currEventSize;
+            totalEventsSize += currEventSize;
             sentEvents[nextValidId] = currEvent;
             AddEventToPacketEventMap(packet.PacketHeader.packetId, currEvent);
 
@@ -92,7 +93,7 @@ public class EventConnection
             outgoingEvent.WriteEventToPacket(packet);
         }
 
-        return remainingPacketSize;
+        return totalEventsSize;
     }
     public void ProcessNotification(bool success, int packetId)
     {
@@ -164,10 +165,13 @@ public class EventConnection
     public void NOACKEventPacket(int packetId)
     {
         //Add the failed events to the outgoing event queue
-        foreach (int eventId in packetEventMap[packetId])
-        {
-            outgoingEventsQueue.Enqueue(sentEvents[eventId]);
+        if (packetEventMap.ContainsKey(packetId)){
+            foreach (int eventId in packetEventMap[packetId])
+            {
+                outgoingEventsQueue.Enqueue(sentEvents[eventId]);
+            }
         }
+
     }
     #endregion
 }
