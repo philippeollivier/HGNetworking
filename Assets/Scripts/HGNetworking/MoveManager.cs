@@ -1,9 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class MoveManager
 {
+    public static bool isServer = false;
+
+    /*Client
+     *  List of Control Objects
+     *  Send packets for each control objects
+     *  Get info from ghostManager to make sure that server has received movement info?
+     */
+
     public static bool HasMoreDataToWrite(int connectionId)
     {
         return false;
@@ -11,15 +20,60 @@ public static class MoveManager
 
     public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
+        if(isServer)
+        {
+            return WriteToPacketServer();
+        } else
+        {
+            //return WriteToPacketClient(connectionId, remainingBytes, packet);
+
+        }
         return 0;
     }
 
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
+        if (isServer)
+        {
+            ReadFromPacketServer(connectionId, packet);
+        }
+        else
+        {
+            ReadFromPacketClient(connectionId, packet);
+        }
+    }
+
+    private static void ReadFromPacketServer(int connectionId, Packet packet)
+    {
 
     }
 
+    private static void ReadFromPacketClient(int connectionId, Packet packet)
+    {
+        int numMoves = packet.ReadInt();
+        for(int i = 0; i < numMoves; i++)
+        {
+                          
+        }
 
+    }
+
+    public static int WriteToPacketServer()
+    {
+        return 0;
+    }
+
+    //public static int WriteToPacketClient(int connectionId, int remainingBytes, Packet packet)
+    //{
+    //    //Write all control inputs to packets for each control
+
+    //    foreach (MoveObject control in connection.moveObjects.Values)
+    //    {
+    //        control.WriteToPacket(connectionId, packet);
+    //    }
+
+
+    //}
     //Store packet id -> moves 
     //Whenever we ack a packet id, remove it from that store
     //Update the outgoing moves store
