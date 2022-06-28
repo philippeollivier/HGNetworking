@@ -140,30 +140,36 @@ public static class ConnectionManager
         PlatformPacketManager.OpenUDPSocket(port);
     }
 
-    private static void ReadACK(int connectionId, PacketHeader packet)
+    private static void ReadACK(int connectionId, Packet packet)
     {
-        SlidingWindow.WindowStatus status = connections[connectionId].window.FillFrame(packet.packetId);
-        switch (status)
+        int ackCount = packet.ReadInt();
+        for(int i = 0; i < ackCount; i++)
         {
-            case SlidingWindow.WindowStatus.Success:
-                MetricsManager.AddDatapointToMetric("ACK Successful", 1f, true);
-                StreamManager.ProcessNotification(true, packet.packetId, connectionId);
-                break;
-            case SlidingWindow.WindowStatus.OutOfOrder:
-                MetricsManager.AddDatapointToMetric("ACK Out of Order", 1f, true);
-                StreamManager.ProcessNotification(false, packet.packetId, connectionId);
-                break;
-            case SlidingWindow.WindowStatus.Duplicate:
-                MetricsManager.AddDatapointToMetric("ACK Duplicate", 1f, true);
-                Debug.Log("Duplicate ACK received");
-                break;
-            case SlidingWindow.WindowStatus.OutofBounds:
-                MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1f, true);
-                Debug.Log("ACK Returned out of bounds");
-                break;
+            int ack = packet.ReadInt();
+            SlidingWindow.WindowStatus status = connections[connectionId].window.FillFrame(ack);
+            switch (status)
+            {
+                case SlidingWindow.WindowStatus.Success:
+                    MetricsManager.AddDatapointToMetric("ACK Successful", 1f, true);
+                    StreamManager.ProcessNotification(true, ack, connectionId);
+                    break;
+                case SlidingWindow.WindowStatus.OutOfOrder:
+                    MetricsManager.AddDatapointToMetric("ACK Out of Order", 1f, true);
+                    StreamManager.ProcessNotification(false, ack, connectionId);
+                    break;
+                case SlidingWindow.WindowStatus.Duplicate:
+                    MetricsManager.AddDatapointToMetric("ACK Duplicate", 1f, true);
+                    Debug.Log("Duplicate ACK received");
+                    break;
+                case SlidingWindow.WindowStatus.OutofBounds:
+                    MetricsManager.AddDatapointToMetric("ACK Out of Bounds", 1f, true);
+                    Debug.Log("ACK Returned out of bounds");
+                    break;
 
             }
         }
+    }
+        
     public static void InitializeServerData(int maxPlayers)
     {
         connectionAddresses = new string[maxPlayers + 1];
