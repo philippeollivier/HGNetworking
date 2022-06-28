@@ -29,7 +29,7 @@ public static class PlatformPacketManager
         }
         catch (Exception _ex)
         {
-            Debug.Log($"Error sending data to {endpoint} via UDP: {_ex}");
+            Debug.LogError($"Error sending data to {endpoint} via UDP: {_ex}");
         }
     }
 
@@ -52,7 +52,7 @@ public static class PlatformPacketManager
         }
         catch (Exception _ex)
         {
-            Debug.Log($"Error receiving UDP data: {_ex}");
+            Debug.LogError($"Error receiving UDP data: {_ex}");
         }
     }
 }

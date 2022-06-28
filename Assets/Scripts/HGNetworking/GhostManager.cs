@@ -23,7 +23,6 @@ public static class GhostManager
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
         public void Connect(int connectionId)
         {
-            Debug.Log($"Connection: {connectionId} connected to GhostManager");
             this.active = true;
             this.connectionId = connectionId;
             foreach (Ghost ghost in ghosts.Values)
@@ -39,26 +38,24 @@ public static class GhostManager
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
-            Debug.Log($"Bytes remaining WriteToPacket GhostConnection: {remainingBytes}");
-            if (HasMoreDataToWrite(connectionId))
+            Debug.Log($"Writing Ghosts to packet {packet.PacketHeader.packetId}, remaining bytes {remainingBytes}");
+            if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
             {
-                int size = 0;
+                int size = 1;
+                int tempGhostSize = 0;
                 List<GhostState> ghostsToWrite = new List<GhostState>();
                 //Go through each ghost's list
-                Debug.Log($"List of Ghosts to send: {ghosts.Values}");
                 foreach (Ghost ghost in ghosts.Values)
                 {
                     //If it has unACKED changes
                     if (ghost.flags[connectionId] > 0)
                     {
-                        Debug.Log($"Ghost {ghost.ghostId} found with flags");
-                        size += GetPacketSize(ghost.flags[connectionId]);
-                        Debug.Log($"Flags for ghost: {ghost.ghostId} are {ghost.flags[connectionId]} for connection: {connectionId}. Size is: {size}");
+                        tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
                         //Write the ghost if there is space
-                        Debug.Log($"Space remaining: {remainingBytes}, Size of packets: {size}");
-                        if (remainingBytes - size >= 0)
+                        if (remainingBytes >= size + tempGhostSize)
                         {
                             ghostsToWrite.Add(AddState(packet.PacketHeader.packetId, ghost));
+                            size += tempGhostSize;
                         }
                     }
                 }
@@ -67,11 +64,12 @@ public static class GhostManager
                 {
                     WriteGhostToPacket(ghost, packet);
                 }
-                Debug.Log($"Wrote: {ghostsToWrite.Count} to packet: {packet.PacketHeader.packetId}");
-                Debug.Log($"WriteToPacket: {packet}");
+
+                Debug.Log($"Writing {ghostsToWrite.Count} with size {size}");
                 return size;
             } else
             {
+                Debug.Log("Nothing to write for ghost manager");
                 packet.Write(0);
                 return 1;
             }
@@ -118,7 +116,6 @@ public static class GhostManager
         private void WriteGhostToPacket(GhostState ghost, Packet packet)
         {
             packet.Write(ghost.ghostId);
-            Debug.Log($"Packet: {packet.PacketHeader.packetId} | Writing {ghost.ghostId} with flags: {ghost.flags}");
             packet.Write((byte)ghost.flags);
             if ((ghost.flags & NEWFLAG) > 0)
             {
@@ -141,22 +138,20 @@ public static class GhostManager
             {
                 packet.Write(ghost.rotation);
             }
-            Debug.Log($"WriteGhostToPacket: {packet}");
         }
 
         public void ProcessNotification(bool success, int packetId)
         {
             if(success)
             {
-
-                ghostStates[packetId] = null;
-            } else if(ghostStates.ContainsKey(packetId))
+                ghostStates.Remove(packetId);
+            } 
+            else if(ghostStates.ContainsKey(packetId))
             {
                 foreach(GhostState state in ghostStates[packetId])
                 {
                     ghosts[state.ghostId].flags[connectionId] = ghosts[state.ghostId].flags[connectionId] | state.flags;
                 }
-
             }
         }
 
@@ -199,7 +194,6 @@ public static class GhostManager
 
     public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
-        Debug.Log($"Bytes remaining WriteToPacket GhostManager: {remainingBytes}");
         return ghostConnections[connectionId].WriteToPacket(packet, remainingBytes);
 
     }
@@ -210,6 +204,7 @@ public static class GhostManager
         {
             if (ghost.flags.ContainsKey(connectionId) && ghost.flags[connectionId] > 0)
             {
+                Debug.Log($"Need to write ghost with id {ghost.ghostId}");
                 return true;
             }
         }
@@ -218,7 +213,6 @@ public static class GhostManager
 
     public static Ghost NewGhost(ghostType ghostType)
     {
-        Debug.Log($"Creating ghost with ghostId: {ghostIndex}");
         Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
@@ -228,7 +222,6 @@ public static class GhostManager
 
     public static GameObject NewGhostClient(ghostType ghostType, int ghostId)
     {
-        Debug.Log($"Creating ghost with ghostId: {ghostIndex}");
         Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         localGhosts[ghostId] = ghost.gameObject;
         Object.Destroy(ghost);
@@ -237,7 +230,6 @@ public static class GhostManager
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
         int numGhosts = packet.ReadInt();
-        Debug.Log($"Reading information about {numGhosts} ghosts from packet {packet.PacketHeader.packetId}");
         for (int i = 0; i < numGhosts; i++)
         {
             int ghostId = packet.ReadInt();

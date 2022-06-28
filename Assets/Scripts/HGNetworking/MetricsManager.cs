@@ -37,17 +37,18 @@ public class MetricsManager : MonoBehaviour
     
     public static void AddDatapointToMetric(string metricName, float value, bool cumulative = false)
     {
+        Datapoint datapoint = new Datapoint(Time.time, value);
+
         //If metric is cumulative, increment the value by the previous value in the animation curve
-        if(cumulative && Instance.metricsDictionary.ContainsKey(metricName))
+        if (cumulative && Instance.metricsDictionary.ContainsKey(metricName) && datapoint.Time != Instance.metricsDictionary[metricName].lastVal)
         {
-            value += Instance.metricsDictionary[metricName].GetLastValue();
+            datapoint.Value += Instance.metricsDictionary[metricName].GetLastValue();
         }
 
         //If metric is not present add it to the dictionary
         AddMetricIfNotPresent(metricName);
 
         //Store the value in the dictionary
-        Datapoint datapoint = new Datapoint(Time.time, value);
         Instance.metricsDictionary[metricName].Add(datapoint);
     }
 
@@ -82,7 +83,7 @@ public class MetricsManager : MonoBehaviour
             string tempDebugText = "";
             foreach (Connection connection in ConnectionManager.connections.Values)
             {
-                tempDebugText += $"Connection ID: {connection.id}\nSliding Window:\n{connection.window.RenderSlidingWindow()}\nTimeout Window:\n{connection.RenderTimeout()}";
+                tempDebugText += $"\nConnection ID: {connection.id}\nSliding Window:\n{connection.window.RenderSlidingWindow()}\nTimeout Window:\n{connection.RenderTimeout()}";
             }
             debugText.text = tempDebugText;
         }
@@ -96,7 +97,8 @@ public class MetricsManager : MonoBehaviour
         [SerializeField]
         private string name;
         [SerializeField]
-        private AnimationCurve animationCurve;
+        private Dictionary<float, float> animationCurve;
+        public float lastVal = 0;
 
         private string color;
 
@@ -104,21 +106,29 @@ public class MetricsManager : MonoBehaviour
         {
             this.name = name;
             color = ColorUtility.ToHtmlStringRGBA(Random.ColorHSV(0f, 1f, 1f, 1f, 0.8f, 1f));
-            animationCurve = new AnimationCurve();
+            animationCurve = new Dictionary<float, float>();
         }
 
         public void Add(Datapoint datapoint)    
         {
-            animationCurve.AddKey(datapoint.Time, datapoint.Value);
+            lastVal = Mathf.Max(lastVal, datapoint.Time);
+            if (animationCurve.ContainsKey(datapoint.Time))
+            {
+                animationCurve[datapoint.Time] += datapoint.Value;
+            }
+            else
+            {
+                animationCurve.Add(datapoint.Time, datapoint.Value);
+            }
         }
 
         public float GetLastValue()
         {
-            if(animationCurve.length == 0)
+            if(animationCurve.ContainsKey(lastVal))
             {
-                return 0;
+                return animationCurve[lastVal];
             }
-            return animationCurve.keys[animationCurve.length-1].value;
+            return 0f;
         }
 
         #region Accessors

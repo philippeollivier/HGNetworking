@@ -65,7 +65,6 @@ public class Ghost : MonoBehaviour
         {
             if(GhostManager.ghostConnections[connectionId].active)
             {
-                Debug.Log($"Initializing Ghost: {ghostId}, setting flags for connection: {connectionId}");
                 flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
             }
 
