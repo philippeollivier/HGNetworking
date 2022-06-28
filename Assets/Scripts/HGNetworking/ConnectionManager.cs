@@ -191,7 +191,11 @@ public static class ConnectionManager
         foreach (Connection connection in connections.Values)
         {
             connection.UpdateTick();
-            RespondToPacketWithACK(connection.id);
+            if(acks[connection.id].Count > 0)
+            {
+                RespondToPacketWithACK(connection.id);
+                acks[connection.id].Clear();
+            }
         }
     }
 }
