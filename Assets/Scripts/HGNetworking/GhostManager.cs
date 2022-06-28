@@ -38,7 +38,6 @@ public static class GhostManager
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
-            Debug.Log($"Writing Ghosts to packet {packet.PacketHeader.packetId}, remaining bytes {remainingBytes}");
             if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
             {
                 int size = 1;
@@ -64,12 +63,9 @@ public static class GhostManager
                 {
                     WriteGhostToPacket(ghost, packet);
                 }
-
-                Debug.Log($"Writing {ghostsToWrite.Count} with size {size}");
                 return size;
             } else
             {
-                Debug.Log("Nothing to write for ghost manager");
                 packet.Write(0);
                 return 1;
             }
@@ -204,7 +200,6 @@ public static class GhostManager
         {
             if (ghost.flags.ContainsKey(connectionId) && ghost.flags[connectionId] > 0)
             {
-                Debug.Log($"Need to write ghost with id {ghost.ghostId}");
                 return true;
             }
         }

@@ -58,12 +58,6 @@ public static class StreamManager
                 //Check if there is more info that needs to be sent
                 hasInfo = MoreInfoToWrite(connectionId);
             }
-
-        }
-
-        if(packetsSent > 0)
-        {
-            Debug.Log($"packetsSent this frame: {packetsSent}");
         }
     }
 
