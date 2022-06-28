@@ -208,7 +208,7 @@ public static class GhostManager
     {
         foreach (Ghost ghost in ghosts.Values)
         {
-            if (ghost.flags[connectionId] > 0)
+            if (ghost.flags.ContainsKey(connectionId) && ghost.flags[connectionId] > 0)
             {
                 return true;
             }
