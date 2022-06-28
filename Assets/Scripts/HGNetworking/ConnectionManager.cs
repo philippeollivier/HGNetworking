@@ -121,6 +121,7 @@ public static class ConnectionManager
         using (Packet packet = new Packet())
         {
             packet.Write(Convert.ToByte(PacketType.ACK));
+            packet.Write(0);
             packet.Write(acks[connectionId].Count);
             foreach(int ack in acks[connectionId])
             {
@@ -176,6 +177,7 @@ public static class ConnectionManager
         for (int i = 1; i <= maxPlayers; i++)
         {
             connections.Add(i, new Connection(i));
+            acks.Add(i, new List<int>());
             GhostManager.Initialize();
             ObjectManager.Initialize();
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
