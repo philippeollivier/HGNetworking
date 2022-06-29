@@ -86,7 +86,8 @@ public static class GhostManager
 
         private int GetPacketSize(int flags)
         {
-            int size = 2 * sizeof(int);
+            //Ghost Id and Flags cast to Byte
+            int size = sizeof(int) + sizeof(byte);
             if ((flags & NEWFLAG) > 0)
             {
                 size += sizeof(int);
