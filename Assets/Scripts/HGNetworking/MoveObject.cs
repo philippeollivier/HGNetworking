@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MoveObject : MonoBehaviour
 {
+    int ghostId;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,8 +17,8 @@ public class MoveObject : MonoBehaviour
         
     }
 
-    public void Initialize()
+    public void Initialize(int ghostId)
     {
-        
+        this.ghostId = ghostId;
     }
 }

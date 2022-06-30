@@ -9,16 +9,36 @@ public enum objectType
 }
 public class ObjectManager : MonoBehaviour
 {
-    public static Dictionary<objectType, GameObject> objectPrefabs = new Dictionary<objectType, GameObject>();
+    #region Singleton Design
+    private static ObjectManager _instance;
+
+    public static ObjectManager Instance { get { return _instance; } }
+
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+    #endregion
+    public GameObject clientControllerPrefab;
+    public Dictionary<objectType, GameObject> objectPrefabs = new Dictionary<objectType, GameObject>();
     public GameObject[] prefabs;
 
-    public static GameObject CreateObject(objectType objectType)
+    public GameObject CreateObject(objectType objectType)
     {
         return Instantiate(objectPrefabs[objectType]);
     }
 
     public static void Initialize()
     {
+
     }
 
     // Update is called once per frame
@@ -39,6 +59,11 @@ public class ObjectManager : MonoBehaviour
     private void Start()
     {
         objectPrefabs[objectType.TestGhost] = prefabs[0];
+    }
+
+    public ClientMoveController CreateClientMoveController()
+    {
+       return Instantiate(clientControllerPrefab).GetComponent<ClientMoveController>();
     }
 
 }

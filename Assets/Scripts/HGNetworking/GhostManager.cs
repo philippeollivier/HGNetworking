@@ -208,16 +208,16 @@ public static class GhostManager
 
     public static Ghost NewGhost(ghostType ghostType)
     {
-        Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
         ghostIndex++;
         return ghost;
     }
-
+      
     public static GameObject NewGhostClient(ghostType ghostType, int ghostId)
     {
-        Ghost ghost = ObjectManager.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
         localGhosts[ghostId] = ghost.gameObject;
         Object.Destroy(ghost);
         return localGhosts[ghostId];

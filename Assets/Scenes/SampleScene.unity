@@ -510,7 +510,6 @@ GameObject:
   - component: {fileID: 455067039}
   - component: {fileID: 455067038}
   - component: {fileID: 455067037}
-  - component: {fileID: 455067041}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -566,20 +565,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &455067041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455067036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 993eee977d7aee7419a125ec9eaf43af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabs:
-  - {fileID: 7243319208513237791, guid: 28811349abdf03b4f8b68177bd89fd43, type: 3}
 --- !u!1 &653260035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,6 +1322,7 @@ GameObject:
   - component: {fileID: 1954534747}
   - component: {fileID: 1954534752}
   - component: {fileID: 1954534753}
+  - component: {fileID: 1954534754}
   m_Layer: 5
   m_Name: GeneralNetworkingPrefab
   m_TagString: Untagged
@@ -1468,6 +1454,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipAddress: 25.15.133.160
   selfConnection: 1
+--- !u!114 &1954534754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954534746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993eee977d7aee7419a125ec9eaf43af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientControllerPrefab: {fileID: 6887298347025293889, guid: 573c2f01e9e58d5428ff1454cd91df67, type: 3}
+  prefabs:
+  - {fileID: 7243319208513237791, guid: 28811349abdf03b4f8b68177bd89fd43, type: 3}
 --- !u!1 &2083774738
 GameObject:
   m_ObjectHideFlags: 0

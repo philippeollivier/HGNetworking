@@ -182,6 +182,7 @@ public static class ConnectionManager
             ObjectManager.Initialize();
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
             EventManager.eventConnections.Add(i, new EventConnection());
+            MoveManager.moveConnections.Add(i, new MoveConnection());
         }
     }
 
