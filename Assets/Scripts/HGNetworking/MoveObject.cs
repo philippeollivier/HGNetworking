@@ -4,21 +4,45 @@ using UnityEngine;
 
 public class MoveObject : MonoBehaviour
 {
-    int ghostId;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Initialize(int ghostId)
+    private List<int> currentMoves = new List<int>();
+    public int ghostId;
+    public int moveId;
+    public bool onClient;
+    public bool selected;
+    public void Initialize(int ghostId, int moveId, bool onClient)
     {
         this.ghostId = ghostId;
+        this.moveId = moveId;
+        this.onClient = onClient;
+        selected = true;
+    }
+
+    public List<int> GetMoves()
+    {
+        return currentMoves;
+    }
+
+    public void ClearMoves()
+    {
+        currentMoves.Clear();
+    }
+
+    public void KeyDown(KeybindingActions key)
+    {
+
+    }
+
+    public void KeyUp(KeybindingActions key)
+    {
+
+    }
+
+    public void Key(KeybindingActions key)
+    {
+        if (key == KeybindingActions.Forward)
+        {
+            transform.Translate(transform.forward);
+            currentMoves.Add((int)KeybindingActions.Forward);
+        }
     }
 }

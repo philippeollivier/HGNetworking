@@ -9,7 +9,8 @@ public class Event
     private enum EventType{
         Event_ERROR,
         Event_TEST_EVENT,
-        Event_SEND_USERNAME
+        Event_SEND_USERNAME,
+        Event_GIVE_CONTROL
     }
 
     public void WriteEventHeader(ref Packet packet)

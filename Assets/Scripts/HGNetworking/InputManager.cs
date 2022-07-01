@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] private Keybinds keybinds;
+    [SerializeField] public Keybinds keybinds;
 
     public KeyCode GetKeyForAction(KeybindingActions keybindingAction)
     {

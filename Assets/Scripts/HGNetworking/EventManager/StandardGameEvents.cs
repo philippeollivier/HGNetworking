@@ -17,4 +17,10 @@ namespace Events
         public Quaternion Quat { get; set; }
         public string Test { get; set; }
     }
+
+    public class Event_GIVE_CONTROL : Event
+    {
+        public int ghostId { get; set; }
+        public int moveId { get; set; }
+    }
 }

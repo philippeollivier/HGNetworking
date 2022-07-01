@@ -41,7 +41,6 @@ public static class GhostManager
             if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
             {
                 int size = 1;
-                int tempGhostSize = 0;
                 List<GhostState> ghostsToWrite = new List<GhostState>();
                 //Go through each ghost's list
                 foreach (Ghost ghost in ghosts.Values)
@@ -49,7 +48,7 @@ public static class GhostManager
                     //If it has unACKED changes
                     if (ghost.flags[connectionId] > 0)
                     {
-                        tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
+                        int tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
                         //Write the ghost if there is space
                         if (remainingBytes >= size + tempGhostSize)
                         {

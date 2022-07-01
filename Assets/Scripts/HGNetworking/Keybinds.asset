@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Keybinds
   m_EditorClassIdentifier: 
   keybindingChecks:
-  - keybindingActions: 0
+  - keybindingAction: 0
     keyCode: 119
-  - keybindingActions: 0
-    keyCode: 0
-  - keybindingActions: 1
+  - keybindingAction: 0
+    keyCode: 119
+  - keybindingAction: 0
     keyCode: 115
-  - keybindingActions: 0
+  - keybindingAction: 0
     keyCode: 0
