@@ -39,7 +39,7 @@ public static class MoveManager
         }
         else
         {
-            ReadFromPacketClient(connectionId, packet);
+            //ReadFromPacketClient(connectionId, packet);
         }
     }
 
@@ -57,10 +57,10 @@ public static class MoveManager
         return 0;
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
-    {
-        return moveController.WriteToPacket(remainingBytes, packet);
-    }
+    //public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
+    //{
+    //    return moveController.WriteToPacket(remainingBytes, packet);
+    //}
 
 
     public static void Initialize(bool isServer)
