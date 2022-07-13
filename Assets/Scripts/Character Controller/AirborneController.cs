@@ -4,20 +4,24 @@ using UnityEngine;
 public class AirborneController : StateCharacterController
 {
     #region State Character Controller
+    private bool jump;
     public AirborneController(FPController controller) : base(controller)
     {
 
     }
 
-    public override void UpdateController() {
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            AirJump();
-        }
+    public override void UpdateController() 
+    {
+        jump = Input.GetKeyDown(KeyCode.Space) || jump;
     }
 
     public override void FixedUpdateController() {
+        if(jump)
+        {
+            AirJump();
+            jump = false;
+        }
+
         controller.rb.AddForce(AirAccelerate(controller.rotatedMotion.normalized, controller.airMovementForce), ForceMode.VelocityChange);
 
         if (controller.climbContactCount > 0) //todo also add ortho movement is > val
@@ -60,9 +64,20 @@ public class AirborneController : StateCharacterController
 
     private void AirJump()
     {
+        Debug.Log($"1 {controller.rb.velocity.normalized}");
+
         controller.rb.velocity = Vector3.zero;
+
+        Debug.Log($"2 {controller.rb.velocity.normalized}");
+
+
         controller.rb.AddForce(Vector3.up * controller.airJumpForce, ForceMode.VelocityChange);
         controller.rb.AddForce(controller.rotatedMotion * controller.airJumpHorizontalForce, ForceMode.VelocityChange);
+        Debug.Log($"3 {controller.rotatedMotion * controller.airJumpHorizontalForce}");
+
+        Debug.Log($"4 {controller.rb.velocity.normalized}");
+
+
         controller.StartJumpCoroutines();
     }
 

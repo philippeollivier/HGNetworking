@@ -121,7 +121,7 @@ public class FPController : MonoBehaviour
         //Initialize and store all states
         controllers.Add(MoveState.Grounded, new GroundedController(this));
         controllers.Add(MoveState.Airborne, new AirborneController(this));
-        controllers.Add(MoveState.WallRun, new WallRunController(this));
+        //controllers.Add(MoveState.WallRun, new WallRunController(this));
         controllers.Add(MoveState.Slide, new SlideController(this));
 
         //Update references to components 
@@ -312,6 +312,8 @@ public class FPController : MonoBehaviour
     #region Shared Functions
     public void StartJumpCoroutines()
     {
+        StopCoroutine(JumpForceCoroutine());
+        StopCoroutine(JumpActiveTurningCoroutine());
         StartCoroutine(JumpForceCoroutine());
         StartCoroutine(JumpActiveTurningCoroutine());
     }
@@ -327,8 +329,10 @@ public class FPController : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpHoldForce * Time.fixedDeltaTime);
                 yield return new WaitForFixedUpdate();
             }
-
-            yield break;
+            else
+            {
+                yield break;
+            }
         }
     }
 
@@ -338,26 +342,28 @@ public class FPController : MonoBehaviour
         while (activeTimer <= jumpActiveTurningTimeWindow)
         {
             //Get angle between current velocity and desired angle
-            rotatedMotion.Normalize();
-
             Vector3 velocity = rb.velocity;
             velocity.y = 0;
             float magnitude = velocity.magnitude;
             velocity.Normalize();
 
+            float angle = Vector3.Angle(rotatedMotion, velocity);
+
             if (desiredMotion == Vector3.zero)
             {
 
             }
-            else if (Vector3.Angle(rotatedMotion, velocity) < jumpActiveTurningAngle)
+            else if (angle < jumpActiveTurningAngle && magnitude > 0.1f && angle > 0.01f)
             {
+                //Why is small deviation happening
+                Debug.Log($"Rot {rotatedMotion} Vel {velocity} Angle {Vector3.Angle(rotatedMotion, velocity)} Mag {magnitude} Force {magnitude * (rotatedMotion - velocity)}");
                 rb.AddForce(magnitude * (rotatedMotion - velocity), ForceMode.Impulse);
             }
-            else if (Vector3.Angle(rotatedMotion, velocity) > jumpActiveStoppingAngle)
-            {
-                rb.AddForce(-velocity * magnitude * jumpActiveTurningStopSpeed, ForceMode.Impulse);
-                yield break;
-            }
+            //else if (Vector3.Angle(rotatedMotion, velocity) > jumpActiveStoppingAngle)
+            //{
+            //    rb.AddForce(-velocity * magnitude * jumpActiveTurningStopSpeed, ForceMode.Impulse);
+            //    yield break;
+            //}
 
             activeTimer += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();

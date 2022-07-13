@@ -4,20 +4,25 @@ using UnityEngine;
 public class GroundedController : StateCharacterController
 {
     private Vector3 previousPosition;
+    private bool jump;
 
     public GroundedController(FPController controller) : base(controller)
     {
 
     }
 
-    public override void UpdateController() {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
+    public override void UpdateController()
+    {
+        jump = Input.GetKeyDown(KeyCode.Space) || jump;
     }
 
     public override void FixedUpdateController() {
+        if (jump)
+        {
+            Jump();
+            jump = false;
+        }
+
         if (controller.desiredMotion != Vector3.zero)
         {
             //Rotate move vector to be inline with camera direction and ground plane normal
@@ -111,7 +116,7 @@ public class GroundedController : StateCharacterController
 
     Vector3 AdjustVelocityDirection(Vector3 rawDirection)
     {
-        //Get the X and Z axis based on the grounded plane
+        //Get the X and Z axis based on the grounded plane  
         Vector3 xAxis = ProjectOnContactPlane(controller.cameraTransform.right).normalized;
         Vector3 zAxis = ProjectOnContactPlane(controller.cameraTransform.forward).normalized;
         return xAxis * rawDirection.x + zAxis * rawDirection.z;

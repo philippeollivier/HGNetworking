@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22655919, g: 0.3595459, b: 0.6286307, a: 1}
+  m_IndirectSpecularColor: {r: 0.2265627, g: 0.35955524, b: 0.62868583, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11022,8 +11022,8 @@ MonoBehaviour:
   standingHeight: {x: 0, y: 0.7, z: 0}
   crouchSmoothing: 0.1
   cameraCam: {fileID: 0}
-  mouseSensitivityX: 3
-  mouseSensitivityY: 3
+  mouseSensitivityX: 1
+  mouseSensitivityY: 1
   minPitch: -85
   maxPitch: 85
 --- !u!4 &1065596256
