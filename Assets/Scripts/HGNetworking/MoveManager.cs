@@ -15,7 +15,7 @@ public static class MoveManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
-        if (isServer == false && moveConnections[1].moveObjects.Count > 0)
+        if (isServer == false && moveConnections.ContainsKey(1) && moveConnections[1].moveObjects.Count > 0)
         {
             return true;
         } else
@@ -74,19 +74,21 @@ public static class MoveManager
 
     public static int WriteToPacketClient(int connectionId, int remainingBytes, Packet packet)
     {
+        
         return moveConnections[connectionId].WriteToPacket(remainingBytes, packet);
     }
 
 
     public static void Initialize(bool isServer)
     {
-        moveConnections = new Dictionary<int, MoveConnection>();
         MoveManager.isServer = isServer;
     }
 
     public static void GetControlOfGhost(int ghostId, int moveId)
     {
-        MoveObject controller = GhostManager.ghosts[ghostId].gameObject.AddComponent<MoveObject>();
+       
+        MoveObject controller = GhostManager.localGhosts[ghostId].gameObject.AddComponent<MoveObject>();
+        GhostManager.localGhosts[ghostId].isControlled = true;
         controller.Initialize(ghostId, moveId, true);
         moveConnections[1].moveObjects[moveId] = controller;
         //This should pass by reference

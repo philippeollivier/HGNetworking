@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class GiveControlEventHandler : EventHandler
 
     public override void HandleEvent(Event currEvent)
     {
-        MoveManager.GetControlOfGhost(((Events.Event_GIVE_CONTROL)currEvent).ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
+        if(currEvent.GetType().Equals(Type.GetType("Events.Event_GIVE_CONTROL")))
+        {
+            MoveManager.GetControlOfGhost(((Events.Event_GIVE_CONTROL)currEvent).ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
+        }
     }
 }

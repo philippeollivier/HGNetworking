@@ -6,7 +6,7 @@ public class Event
 {
     public int EventId { get; set; }
 
-    private enum EventType{
+    public enum EventType{
         Event_ERROR,
         Event_TEST_EVENT,
         Event_SEND_USERNAME,

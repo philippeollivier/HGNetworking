@@ -9,18 +9,19 @@ public static class EventManager
     #region General Data Manager Functions
     public static bool HasMoreDataToWrite(int connectionId)
     {
+
         return eventConnections[connectionId].HasMoreToWrite();
     }
 
     public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
+
         return eventConnections[connectionId].WriteEvents(packet, remainingBytes);
     }
 
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
         int numEvents = packet.ReadInt();
-
         List<Event> allEvents = new List<Event>();
 
         for (int i = 0; i < numEvents; i++)

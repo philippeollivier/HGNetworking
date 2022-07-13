@@ -35,6 +35,6 @@ public class DebugTextEventHandler : EventHandler
 
     public override void HandleEvent(Event currEvent)
     {
-        text.text = $"{currEvent}\n{text.text}";
+        //text.text = $"{currEvent}\n{text.text}";
     }
 }

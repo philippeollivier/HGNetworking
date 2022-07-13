@@ -46,7 +46,7 @@ public class ObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Ghost g = GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
                 g.transform.position = new Vector3(UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f));

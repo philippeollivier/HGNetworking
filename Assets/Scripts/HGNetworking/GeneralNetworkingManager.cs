@@ -29,15 +29,15 @@ public class GeneralNetworkingManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            ConnectionManager.OpenServer(5, SERVER_PORT);
+            ConnectionManager.OpenServer(5, SERVER_PORT, true);
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            ConnectionManager.OpenServer(5, CLIENT_PORT);
+            ConnectionManager.OpenServer(5, CLIENT_PORT, false);
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            MoveManager.GetControlOfGhost(1, 1);
+            MoveManager.GiveControlOfGhost(1, 1);
         }
     }
 }

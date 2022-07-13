@@ -1367,6 +1367,8 @@ GameObject:
   - component: {fileID: 1954534752}
   - component: {fileID: 1954534753}
   - component: {fileID: 1954534754}
+  - component: {fileID: 1954534756}
+  - component: {fileID: 1954534755}
   m_Layer: 5
   m_Name: GeneralNetworkingPrefab
   m_TagString: Untagged
@@ -1513,6 +1515,30 @@ MonoBehaviour:
   clientControllerPrefab: {fileID: 6887298347025293889, guid: 573c2f01e9e58d5428ff1454cd91df67, type: 3}
   prefabs:
   - {fileID: 7243319208513237791, guid: 28811349abdf03b4f8b68177bd89fd43, type: 3}
+--- !u!114 &1954534755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954534746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55596fdd93d77a4fb56e155b9d5188f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1954534756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954534746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b92eafde67ab7543b86ed9387a48f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2083774738
 GameObject:
   m_ObjectHideFlags: 0

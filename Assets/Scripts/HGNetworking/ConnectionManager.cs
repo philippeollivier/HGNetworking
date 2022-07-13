@@ -132,10 +132,10 @@ public static class ConnectionManager
         }
     }
 
-    public static void OpenServer(int maxPlayers, int port)
+    public static void OpenServer(int maxPlayers, int port, bool isServer)
     {
         MaxPlayers = maxPlayers;
-        InitializeServerData(maxPlayers);
+        InitializeServerData(maxPlayers, isServer);
         Debug.Log("Starting server...");
 
         PlatformPacketManager.OpenUDPSocket(port);
@@ -171,15 +171,16 @@ public static class ConnectionManager
         }
     }
         
-    public static void InitializeServerData(int maxPlayers)
+    public static void InitializeServerData(int maxPlayers, bool isServer)
     {
         connectionAddresses = new string[maxPlayers + 1];
+        GhostManager.Initialize();
+        ObjectManager.Initialize();
+        MoveManager.Initialize(isServer);
         for (int i = 1; i <= maxPlayers; i++)
         {
             connections.Add(i, new Connection(i));
             acks.Add(i, new List<int>());
-            GhostManager.Initialize();
-            ObjectManager.Initialize();
             GhostManager.ghostConnections.Add(i, new GhostManager.GhostConnection());
             EventManager.eventConnections.Add(i, new EventConnection());
             MoveManager.moveConnections.Add(i, new MoveConnection());

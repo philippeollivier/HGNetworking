@@ -176,7 +176,7 @@ public static class GhostManager
     public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
     public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
     static Dictionary<ghostType, objectType> objectAssociation = new Dictionary<ghostType, objectType>();
-    static Dictionary<int, GameObject> localGhosts = new Dictionary<int, GameObject>();
+    public static Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
     public static GameObject[] prefabs;
     public static void Connect(int connectionId)
     {
@@ -215,11 +215,11 @@ public static class GhostManager
         return ghost;
     }
       
-    public static GameObject NewGhostClient(ghostType ghostType, int ghostId)
+    public static Ghost NewGhostClient(ghostType ghostType, int ghostId)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
-        localGhosts[ghostId] = ghost.gameObject;
-        Object.Destroy(ghost);
+        localGhosts[ghostId] = ghost;
+        ghost.onClient = true;
         return localGhosts[ghostId];
     }
     public static void ReadFromPacket(int connectionId, Packet packet)
@@ -235,20 +235,33 @@ public static class GhostManager
             }
             if ((flags & DELFLAG) > 0)
             {
-                ObjectManager.Destroy(localGhosts[ghostId]);
+                ObjectManager.Destroy(localGhosts[ghostId].gameObject);
                 return;
             }
             if ((flags & POSFLAG) > 0)
             {
-                localGhosts[ghostId].gameObject.transform.position = packet.ReadVector3();
+                Vector3 postiion = packet.ReadVector3();
+                if (!localGhosts[ghostId].isControlled) {
+
+                    localGhosts[ghostId].gameObject.transform.position = postiion;
+                }
             }
             if ((flags & SCALEFLAG) > 0)
             {
-                localGhosts[ghostId].gameObject.transform.localScale = packet.ReadVector3();
+                Vector3 scale = packet.ReadVector3();
+                if (!localGhosts[ghostId].isControlled)
+                {
+
+                    localGhosts[ghostId].gameObject.transform.localScale = scale;
+                }
             }
             if ((flags & ROTFLAG) > 0)
             {
-                localGhosts[ghostId].gameObject.transform.rotation = packet.ReadQuaternion();
+                Quaternion rotation = packet.ReadQuaternion();
+                if (!localGhosts[ghostId].isControlled)
+                {
+                    localGhosts[ghostId].gameObject.transform.rotation = rotation;
+                }
             }
         } 
     }

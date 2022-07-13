@@ -10,7 +10,7 @@ public class MoveConnection
     {
         int size = sizeof(int);
         packet.Write(moveObjects.Count);
-        foreach(int moveId in moveObjects.Keys)
+        foreach (int moveId in moveObjects.Keys)
         {
             if(size + sizeof(int) + 3*sizeof(int) + 4*sizeof(int) < remainingBytes)
             {

@@ -6,6 +6,8 @@ public class Ghost : MonoBehaviour
 {
     public Dictionary<int, int> flags = new Dictionary<int, int>();
     public int ghostId;
+    public bool onClient = false;
+    public bool isControlled = false;
     public GhostManager.ghostType ghostType = 0;
     public Vector3 Position
     {

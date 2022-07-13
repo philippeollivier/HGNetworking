@@ -50,7 +50,6 @@ public static class StreamManager
                 remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
-
                 //Send packet through connection manager
                 ConnectionManager.SendPacket(connectionId, packet);
                 packetsSent++;
@@ -64,7 +63,7 @@ public static class StreamManager
     public static void ReadFromPacket(int connectionId, Packet packet)
     {
         //Read info and send to appropriate manager (Event, Move, Ghost)
-        //MoveManager.ReadFromPacket(connectionId, packet);
+        MoveManager.ReadFromPacket(connectionId, packet);
         EventManager.ReadFromPacket(connectionId, packet);
         GhostManager.ReadFromPacket(connectionId, packet);
     }
