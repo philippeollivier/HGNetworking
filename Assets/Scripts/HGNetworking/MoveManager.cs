@@ -7,7 +7,6 @@ public static class MoveManager
 {
     public static bool isServer = false;
     public static Dictionary<int, MoveConnection> moveConnections = new Dictionary<int, MoveConnection>();
-    public static ClientMoveController moveController;
     /*Client
      *  List of Control Objects
      *  Send packets for each control objects
@@ -16,18 +15,24 @@ public static class MoveManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
-        return false;
+        if (isServer == false && moveConnections[1].moveObjects.Count > 0)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
     public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
         if(isServer)
         {
-            return WriteToPacketServer();
+            return 0;
+            //return WriteToPacketServer();
         } else
         {
-            return 0;
-            //return WriteToPacketClient(connectionid, remainingbytes, packet);
+            return WriteToPacketClient(connectionId, remainingBytes, packet);
         }
     }
 
@@ -39,44 +44,69 @@ public static class MoveManager
         }
         else
         {
-            ReadFromPacketClient(connectionId, packet);
+            //ReadFromPacketClient(connectionId, packet);
         }
     }
 
     private static void ReadFromPacketServer(int connectionId, Packet packet)
     {
-        int numMoves = packet.ReadInt();
-        for (int i = 0; i < numMoves; i++)
+        int numObjects = packet.ReadInt();
+        for (int i = 0; i < numObjects; i++)
         {
-
+            int moveId = packet.ReadInt();
+            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.position = packet.ReadVector3();
+            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.rotation = packet.ReadQuaternion();
         }
     }
 
+
+    private static void ReadFromPacketClient(int connectionId, Packet packet)
+    {
+        //No Implementation for client side
+    }
+
+
     public static int WriteToPacketServer()
     {
+        //No implementation for client side
         return 0;
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
+    public static int WriteToPacketClient(int connectionId, int remainingBytes, Packet packet)
     {
-        return moveController.WriteToPacket(remainingBytes, packet);
+        return moveConnections[connectionId].WriteToPacket(remainingBytes, packet);
     }
 
 
     public static void Initialize(bool isServer)
     {
+        moveConnections = new Dictionary<int, MoveConnection>();
         MoveManager.isServer = isServer;
-        if(isServer)
-        {
-            moveConnections = new Dictionary<int, MoveConnection>();
-        } else
-        {
-           moveController = ObjectManager.Instance.CreateClientMoveController();
-        }
+    }
 
+    public static void GetControlOfGhost(int ghostId, int moveId)
+    {
+        MoveObject controller = GhostManager.ghosts[ghostId].gameObject.AddComponent<MoveObject>();
+        controller.Initialize(ghostId, moveId, true);
+        moveConnections[1].moveObjects[moveId] = controller;
+        //This should pass by reference
+    }
+
+
+    public static void GiveControlOfGhost(int connectionId, int ghostId)
+    {
+        int moveId = moveConnections[connectionId].objectId;
+        moveConnections[connectionId].objectId++;
+        MoveObject controller = GhostManager.ghosts[ghostId].gameObject.AddComponent<MoveObject>();
+        controller.Initialize(ghostId, moveId, false);
+        moveConnections[connectionId].moveObjects[moveId] = controller;
+        Events.Event_GIVE_CONTROL giveControl = new Events.Event_GIVE_CONTROL();
+        giveControl.ghostId = ghostId;
+        giveControl.moveId = moveId;
+        EventManager.QueueOutgoingEvent(giveControl, connectionId);
     }
 
 
 
 
-    }
+}

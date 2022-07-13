@@ -61,9 +61,4 @@ public class ObjectManager : MonoBehaviour
         objectPrefabs[objectType.TestGhost] = prefabs[0];
     }
 
-    public ClientMoveController CreateClientMoveController()
-    {
-       return Instantiate(clientControllerPrefab).GetComponent<ClientMoveController>();
-    }
-
 }

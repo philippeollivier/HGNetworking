@@ -35,5 +35,9 @@ public class GeneralNetworkingManager : MonoBehaviour
         {
             ConnectionManager.OpenServer(5, CLIENT_PORT);
         }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            MoveManager.GetControlOfGhost(1, 1);
+        }
     }
 }

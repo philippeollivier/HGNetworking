@@ -62,5 +62,11 @@ public static class EventManager
             eventConnection.QueueOutgoingEvent(outgoingEvent);
         }
     }
+
+    public static void QueueOutgoingEvent(Event outgoingEvent, int connectionId)
+    {
+        eventConnections[connectionId].QueueOutgoingEvent(outgoingEvent);
+
+    }
     #endregion
 }

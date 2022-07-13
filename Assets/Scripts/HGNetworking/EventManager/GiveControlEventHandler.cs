@@ -12,6 +12,6 @@ public class GiveControlEventHandler : EventHandler
 
     public override void HandleEvent(Event currEvent)
     {
-        MoveManager.moveController.GiveControlOfGhost(((Events.Event_GIVE_CONTROL)currEvent).ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
+        MoveManager.GetControlOfGhost(((Events.Event_GIVE_CONTROL)currEvent).ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
     }
 }

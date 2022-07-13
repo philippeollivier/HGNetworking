@@ -47,7 +47,7 @@ public static class StreamManager
                 if (!validPacket) {  break; }
 
                 //Write info from each manager into packet in priority order (Move, Event, Ghost)
-                //remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
+                remainingBytes -= MoveManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= EventManager.WriteToPacket(connectionId, remainingBytes, packet);
                 remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
 
