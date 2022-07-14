@@ -17,13 +17,12 @@ public enum MoveState
 
 public class FPController : MonoBehaviour
 {
-    public FirstPersonCameraController FPCameraController;
-
     #region Variables
 
     [Header("State Settings (DO NOT MODIFY DIRECTLY)")]
     public MoveState moveState;
     [HideInInspector] public Vector3 desiredMotion;
+    [HideInInspector] public FirstPersonCameraController firstPersonCameraController;
     [HideInInspector] public Vector3 rotatedMotion;
     [HideInInspector] public bool sprinting = false;
     [HideInInspector] public bool crouching = false;
@@ -111,6 +110,7 @@ public class FPController : MonoBehaviour
         //Update references to components 
         cameraTransform = Camera.main.transform;
         capsuleCollider = GetComponentInChildren<CapsuleCollider>();
+        firstPersonCameraController = GetComponent<FirstPersonCameraController>();
 
         //Set default state
         SetMoveState(MoveState.Airborne);

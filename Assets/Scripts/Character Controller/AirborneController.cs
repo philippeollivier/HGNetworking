@@ -83,7 +83,7 @@ public class AirborneController : StateCharacterController
 
     private void ImpactTransition()
     {
-        controller.FPCameraController.PlayImpactAnimation(Mathf.Abs(controller.averageYVelocity) / controller.impactAnimationForce);
+        controller.firstPersonCameraController.PlayImpactAnimation(Mathf.Abs(controller.averageYVelocity) / controller.impactAnimationForce);
     }
 
     #endregion

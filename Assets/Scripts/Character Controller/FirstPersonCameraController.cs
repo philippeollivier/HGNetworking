@@ -10,7 +10,7 @@ public enum CameraState
 
 public class FirstPersonCameraController : MonoBehaviour
 {
-    public FPController firstPController;
+    public FPController fpController;
 
     //CUSTOM SETTINGS
     [Header("Cursor Settings")]
@@ -52,6 +52,7 @@ public class FirstPersonCameraController : MonoBehaviour
 
     private void Start()
     {
+        fpController = GetComponent<FPController>();
         cameraTransform = Camera.main.transform;
         cameraAnimator = Camera.main.transform.parent.GetComponent<Animator>();
         cameraBaseTransform = Camera.main.transform.parent.parent;
@@ -77,8 +78,8 @@ public class FirstPersonCameraController : MonoBehaviour
             cameraTransform.localEulerAngles = currentRotation;
             cameraBaseTransform.eulerAngles = new Vector3(0, yaw, 0);
 
-            currentFov = Mathf.SmoothDamp(currentFov, (firstPController.sprinting) ? (runFov) : (walkFov), ref fovVelocity, fovSmoothing);
-            currentOffset = Vector3.SmoothDamp(currentOffset, (firstPController.crouching || firstPController.moveState == MoveState.Slide) ? (crouchHeight) : (standingHeight), ref crouchVelocity, crouchSmoothing);
+            currentFov = Mathf.SmoothDamp(currentFov, (fpController.sprinting) ? (runFov) : (walkFov), ref fovVelocity, fovSmoothing);
+            currentOffset = Vector3.SmoothDamp(currentOffset, (fpController.crouching || fpController.moveState == MoveState.Slide) ? (crouchHeight) : (standingHeight), ref crouchVelocity, crouchSmoothing);
 
             cameraCam.fieldOfView = currentFov;
             cameraTransform.localPosition = currentOffset;
