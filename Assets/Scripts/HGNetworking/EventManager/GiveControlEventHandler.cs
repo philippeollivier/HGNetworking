@@ -15,7 +15,13 @@ public class GiveControlEventHandler : EventHandler
     {
         if(currEvent.GetType().Equals(Type.GetType("Events.Event_GIVE_CONTROL")))
         {
-            MoveManager.GetControlOfGhost(((Events.Event_GIVE_CONTROL)currEvent).ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
+            int ghostId = ((Events.Event_GIVE_CONTROL)currEvent).ghostId;
+
+            GhostManager.localGhosts[ghostId].GetComponent<FirstPersonCameraController>().enabled = true;
+            GhostManager.localGhosts[ghostId].GetComponent<FPController>().enabled = true;
+            GhostManager.localGhosts[ghostId].GetComponentInChildren<Camera>().enabled = true;
+
+            MoveManager.GetControlOfGhost(ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
         }
     }
 }

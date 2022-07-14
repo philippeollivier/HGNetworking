@@ -20,22 +20,6 @@ public class GeneralNetworkingManager : MonoBehaviour
         StreamManager.UpdateTick();
         MoveManager.tickAdvance();
     }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-        }
-    }
     
     public void StartServer()
     {
@@ -58,6 +42,6 @@ public class GeneralNetworkingManager : MonoBehaviour
 
     public void GiveControlOfGhost()
     {
-        MoveManager.GiveControlOfGhost(1, 1);
+        MoveManager.GiveControlOfGhost(1, 0);
     }
 }

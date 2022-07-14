@@ -5,7 +5,9 @@ using System.Net;
 using UnityEngine;
 public enum objectType
 {
-    TestGhost
+    TestGhost,
+    ClientPlayer,
+    ServerPlayer
 }
 public class ObjectManager : MonoBehaviour
 {
@@ -27,9 +29,8 @@ public class ObjectManager : MonoBehaviour
         }
     }
     #endregion
-    public GameObject clientControllerPrefab;
     public Dictionary<objectType, GameObject> objectPrefabs = new Dictionary<objectType, GameObject>();
-    public GameObject[] prefabs;
+    public GameObject[] prefabs = new GameObject[3];
 
     public GameObject CreateObject(objectType objectType)
     {
@@ -46,19 +47,15 @@ public class ObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            for (int i = 0; i < 2; i++)
-            {
-                Ghost g = GhostManager.NewGhost(GhostManager.ghostType.TestGhost);
-                g.transform.position = new Vector3(UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f));
-                g.transform.localScale = new Vector3(UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(1f, 2f), UnityEngine.Random.Range(1f, 2f));
-                g.transform.rotation = new Quaternion(UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f), UnityEngine.Random.Range(-20f, 20f));
-            }
+            Ghost g = GhostManager.NewGhost(GhostManager.ghostType.Player);
         }
     }
 
     private void Start()
     {
         objectPrefabs[objectType.TestGhost] = prefabs[0];
+        objectPrefabs[objectType.ClientPlayer] = prefabs[(int)objectType.ClientPlayer];
+        objectPrefabs[objectType.ServerPlayer] = prefabs[(int)objectType.ServerPlayer];
     }
 
 }

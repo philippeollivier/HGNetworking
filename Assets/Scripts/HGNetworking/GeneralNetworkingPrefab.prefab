@@ -553,9 +553,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993eee977d7aee7419a125ec9eaf43af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientControllerPrefab: {fileID: 6887298347025293889, guid: 573c2f01e9e58d5428ff1454cd91df67, type: 3}
   prefabs:
   - {fileID: 7243319208513237791, guid: 28811349abdf03b4f8b68177bd89fd43, type: 3}
+  - {fileID: 2035229022557130003, guid: 57bccb9f3ef28ff438df12131deb4f6e, type: 3}
+  - {fileID: 2035229022557130003, guid: 9c850cb3a9155284691832401444c4f7, type: 3}
 --- !u!114 &8345181591629707775
 MonoBehaviour:
   m_ObjectHideFlags: 0
