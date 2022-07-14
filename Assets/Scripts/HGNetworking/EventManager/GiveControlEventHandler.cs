@@ -20,6 +20,7 @@ public class GiveControlEventHandler : EventHandler
             GhostManager.localGhosts[ghostId].GetComponent<FirstPersonCameraController>().enabled = true;
             GhostManager.localGhosts[ghostId].GetComponent<FPController>().enabled = true;
             GhostManager.localGhosts[ghostId].GetComponentInChildren<Camera>().enabled = true;
+            GhostManager.localGhosts[ghostId].GetComponentInChildren<AudioListener>().enabled = true;
 
             MoveManager.GetControlOfGhost(ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
         }
