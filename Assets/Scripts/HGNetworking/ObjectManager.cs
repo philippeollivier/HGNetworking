@@ -47,7 +47,7 @@ public class ObjectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            Ghost g = GhostManager.NewGhost(GhostManager.ghostType.Player);
+            Ghost g = GhostManager.NewGhost(GhostManager.GhostType.Player);
         }
     }
 

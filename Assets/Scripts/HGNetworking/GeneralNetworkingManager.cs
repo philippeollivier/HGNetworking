@@ -44,4 +44,16 @@ public class GeneralNetworkingManager : MonoBehaviour
     {
         MoveManager.GiveControlOfGhost(1, 0);
     }
+
+    public void GiveGhost0To1()
+    {
+        GhostManager.NewGhost(GhostManager.GhostType.Player);
+        //MoveManager.GiveControlOfGhost(1, 0);
+    }
+
+    public void GiveGhost1To2()
+    {
+        GhostManager.NewGhost(GhostManager.GhostType.Player);
+        MoveManager.GiveControlOfGhost(2, 1);
+    }
 }

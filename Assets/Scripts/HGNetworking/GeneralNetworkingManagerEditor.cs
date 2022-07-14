@@ -33,12 +33,20 @@ public class GeneralNetworkingManagerEditor : Editor
         if (GUILayout.Button("Start Client and Connect To Local Server"))
         {
             myTarget.StartClient();
-            myTarget.ConnectClientToServer();
+            myTarget.ConnectLocally();
         }
         EditorGUILayout.LabelField("MISC");
         if (GUILayout.Button("Give Control Of Ghost"))
         {
             myTarget.GiveControlOfGhost();
+        }
+        if (GUILayout.Button("Give Control 0 to 1"))
+        {
+            myTarget.GiveGhost0To1();
+        }
+        if (GUILayout.Button("Give Control 1 to 2"))
+        {
+            myTarget.GiveGhost1To2();
         }
     }
 }

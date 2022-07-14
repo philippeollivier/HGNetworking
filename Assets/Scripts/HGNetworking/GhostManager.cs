@@ -5,7 +5,7 @@ using UnityEngine;
 public static class GhostManager
 {
     private static int ghostIndex = 0;
-    public enum ghostType
+    public enum GhostType
     {
         TestGhost,
         Player
@@ -158,7 +158,7 @@ public static class GhostManager
     {
         public int ghostId;
         public int flags = 0;
-        public ghostType ghostType = ghostType.TestGhost;
+        public GhostType ghostType = GhostType.TestGhost;
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 scale = new Vector3(1, 1, 1);
         public Quaternion rotation = new Quaternion(0, 0, 0, 0);
@@ -176,8 +176,8 @@ public static class GhostManager
 
     public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
     public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
-    static Dictionary<ghostType, objectType> objectAssociation = new Dictionary<ghostType, objectType>();
-    static Dictionary<ghostType, objectType> clientObjectAssociation = new Dictionary<ghostType, objectType>();
+    static Dictionary<GhostType, objectType> objectAssociation = new Dictionary<GhostType, objectType>();
+    static Dictionary<GhostType, objectType> clientObjectAssociation = new Dictionary<GhostType, objectType>();
 
     public static Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
     public static GameObject[] prefabs;
@@ -209,7 +209,7 @@ public static class GhostManager
         return false;
     }
 
-    public static Ghost NewGhost(ghostType ghostType)
+    public static Ghost NewGhost(GhostType ghostType)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
@@ -218,7 +218,7 @@ public static class GhostManager
         return ghost;
     }
       
-    public static Ghost NewGhostClient(ghostType ghostType, int ghostId)
+    public static Ghost NewGhostClient(GhostType ghostType, int ghostId)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(clientObjectAssociation[ghostType]).GetComponent<Ghost>();
         localGhosts[ghostId] = ghost;
@@ -234,7 +234,7 @@ public static class GhostManager
             int flags = packet.ReadByte();
             if ((flags & NEWFLAG) > 0)
             {
-                NewGhostClient((ghostType)packet.ReadInt(), ghostId);
+                NewGhostClient((GhostType)packet.ReadInt(), ghostId);
             }
             if ((flags & DELFLAG) > 0)
             {
@@ -276,9 +276,9 @@ public static class GhostManager
 
     public static void Initialize()
     {
-        objectAssociation[ghostType.TestGhost] = objectType.TestGhost;
-        clientObjectAssociation[ghostType.TestGhost] = objectType.TestGhost;
-        objectAssociation[ghostType.Player] = objectType.ServerPlayer;
-        clientObjectAssociation[ghostType.Player] = objectType.ClientPlayer;
+        objectAssociation[GhostType.TestGhost] = objectType.TestGhost;
+        clientObjectAssociation[GhostType.TestGhost] = objectType.TestGhost;
+        objectAssociation[GhostType.Player] = objectType.ServerPlayer;
+        clientObjectAssociation[GhostType.Player] = objectType.ClientPlayer;
     }
 }

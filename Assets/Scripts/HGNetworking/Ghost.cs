@@ -8,7 +8,7 @@ public class Ghost : MonoBehaviour
     public int ghostId;
     public bool onClient = false;
     public bool isControlled = false;
-    public GhostManager.ghostType ghostType = 0;
+    public GhostManager.GhostType ghostType = 0;
     public Vector3 Position
     {
         get { return position; }
@@ -59,7 +59,7 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    public void Initialize(int ghostId, GhostManager.ghostType ghostType)
+    public void Initialize(int ghostId, GhostManager.GhostType ghostType)
     {
         this.ghostId = ghostId;
         this.ghostType = ghostType;
