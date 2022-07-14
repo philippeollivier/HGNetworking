@@ -64,18 +64,18 @@ public class AirborneController : StateCharacterController
 
     private void AirJump()
     {
-        Debug.Log($"1 {controller.rb.velocity.normalized}");
+        //Debug.Log($"1 {controller.rb.velocity.normalized}");
 
         controller.rb.velocity = Vector3.zero;
 
-        Debug.Log($"2 {controller.rb.velocity.normalized}");
+        //Debug.Log($"2 {controller.rb.velocity.normalized}");
 
 
         controller.rb.AddForce(Vector3.up * controller.airJumpForce, ForceMode.VelocityChange);
         controller.rb.AddForce(controller.rotatedMotion * controller.airJumpHorizontalForce, ForceMode.VelocityChange);
-        Debug.Log($"3 {controller.rotatedMotion * controller.airJumpHorizontalForce}");
+        //Debug.Log($"3 {controller.rotatedMotion * controller.airJumpHorizontalForce}");
 
-        Debug.Log($"4 {controller.rb.velocity.normalized}");
+        //Debug.Log($"4 {controller.rb.velocity.normalized}");
 
 
         controller.StartJumpCoroutines();

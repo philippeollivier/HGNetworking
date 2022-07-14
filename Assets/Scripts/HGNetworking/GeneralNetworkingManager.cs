@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Net;
-
+using UnityEngine;
 
 public class GeneralNetworkingManager : MonoBehaviour
 {
     [Header("Testing Values")]
     [SerializeField]
-    private string ipAddress = "25.15.133.160";
+    public string ipAddress = "25.15.133.160";
     [SerializeField]
     private bool selfConnection = true;
 
@@ -24,21 +23,41 @@ public class GeneralNetworkingManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse((selfConnection)?("127.0.0.1"):(ipAddress)), SERVER_PORT));
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ConnectionManager.OpenServer(5, SERVER_PORT, true);
-        }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            ConnectionManager.OpenServer(5, CLIENT_PORT, false);
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            MoveManager.GiveControlOfGhost(1, 1);
         }
+    }
+    
+    public void StartServer()
+    {
+        ConnectionManager.OpenServer(5, SERVER_PORT, false);
+    }
+
+    public void StartClient()
+    {
+        ConnectionManager.OpenServer(5, CLIENT_PORT, true);
+    }
+
+    public void ConnectClientToServer()
+    {
+        ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), SERVER_PORT));
+    }
+    public void ConnectLocally()
+    {
+        ConnectionManager.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), SERVER_PORT));
+    }
+
+    public void GiveControlOfGhost()
+    {
+        MoveManager.GiveControlOfGhost(1, 1);
     }
 }
