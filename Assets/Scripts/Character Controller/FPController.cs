@@ -119,6 +119,7 @@ public class FPController : MonoBehaviour
     private void Start()
     {
         rb = gameObject.AddComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         //Initialize and store all states
         controllers.Add(MoveState.Grounded, new GroundedController(this));
         controllers.Add(MoveState.Airborne, new AirborneController(this));
@@ -195,7 +196,7 @@ public class FPController : MonoBehaviour
 
     private void UpdateFixedState()
     {
-        UpdateImpactAnimationValues();
+        //UpdateImpactAnimationValues();
         stepsSinceLastGrounded++;
 
         if (contactObject)
@@ -356,7 +357,7 @@ public class FPController : MonoBehaviour
             else if (angle < jumpActiveTurningAngle && magnitude > 0.1f && angle > 0.01f)
             {
                 //Why is small deviation happening
-                Debug.Log($"Rot {rotatedMotion} Vel {velocity} Angle {Vector3.Angle(rotatedMotion, velocity)} Mag {magnitude} Force {magnitude * (rotatedMotion - velocity)}");
+                //Debug.Log($"Rot {rotatedMotion} Vel {velocity} Angle {Vector3.Angle(rotatedMotion, velocity)} Mag {magnitude} Force {magnitude * (rotatedMotion - velocity)}");
                 rb.AddForce(magnitude * (rotatedMotion - velocity), ForceMode.Impulse);
             }
             //else if (Vector3.Angle(rotatedMotion, velocity) > jumpActiveStoppingAngle)

@@ -60,7 +60,7 @@ public class GroundedController : StateCharacterController
         //Update controller move state
         if (controller.climbContactCount > 0) //todo also add ortho movement is > val
         {
-            controller.SetMoveState(MoveState.WallRun);
+            //controller.SetMoveState(MoveState.WallRun);
         }
         else if (controller.sprinting && controller.crouching && controller.rb.velocity.magnitude > controller.minSlideSpeed)
         {

@@ -26,7 +26,7 @@ public class AirborneController : StateCharacterController
 
         if (controller.climbContactCount > 0) //todo also add ortho movement is > val
         {
-            controller.SetMoveState(MoveState.WallRun);
+            //controller.SetMoveState(MoveState.WallRun);
         }
         else if (controller.grounded)
         {

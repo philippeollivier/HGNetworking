@@ -245,7 +245,6 @@ public static class GhostManager
             {
                 Vector3 postiion = packet.ReadVector3();
                 if (!localGhosts[ghostId].isControlled) {
-
                     localGhosts[ghostId].gameObject.transform.position = postiion;
                 }
             }
