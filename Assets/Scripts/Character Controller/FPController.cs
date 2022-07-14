@@ -99,18 +99,16 @@ public class FPController : MonoBehaviour
 
     private void Start()
     {
-        rb = gameObject.AddComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-        //Initialize and store all states
-        controllers.Add(MoveState.Grounded, new GroundedController(this));
-        controllers.Add(MoveState.Airborne, new AirborneController(this));
-        //controllers.Add(MoveState.WallRun, new WallRunController(this));
-        controllers.Add(MoveState.Slide, new SlideController(this));
-
         //Update references to components 
         cameraTransform = Camera.main.transform;
         capsuleCollider = GetComponentInChildren<CapsuleCollider>();
         firstPersonCameraController = GetComponent<FirstPersonCameraController>();
+        rb = GetComponent<Rigidbody>();
+
+        //Initialize and store all states
+        controllers.Add(MoveState.Grounded, new GroundedController(this));
+        controllers.Add(MoveState.Airborne, new AirborneController(this));
+        controllers.Add(MoveState.Slide, new SlideController(this));
 
         //Set default state
         SetMoveState(MoveState.Airborne);
