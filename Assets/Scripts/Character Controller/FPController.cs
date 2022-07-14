@@ -17,25 +17,7 @@ public enum MoveState
 
 public class FPController : MonoBehaviour
 {
-    #region Singleton Pattern
-    private static FPController _instance;
-
-    public static FPController Instance { get { return _instance; } }
-
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
-    #endregion
-
+    public FirstPersonCameraController FPCameraController;
 
     #region Variables
 
