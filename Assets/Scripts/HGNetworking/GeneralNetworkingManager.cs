@@ -19,6 +19,7 @@ public class GeneralNetworkingManager : MonoBehaviour
     {
         ConnectionManager.UpdateTick();
         StreamManager.UpdateTick();
+        MoveManager.tickAdvance();
     }
 
     void Update()

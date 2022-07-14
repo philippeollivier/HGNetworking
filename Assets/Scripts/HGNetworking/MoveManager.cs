@@ -7,6 +7,7 @@ public static class MoveManager
 {
     public static bool isServer = false;
     public static Dictionary<int, MoveConnection> moveConnections = new Dictionary<int, MoveConnection>();
+    private static bool nextTick = true;
     /*Client
      *  List of Control Objects
      *  Send packets for each control objects
@@ -15,7 +16,7 @@ public static class MoveManager
 
     public static bool HasMoreDataToWrite(int connectionId)
     {
-        if (isServer == false && moveConnections.ContainsKey(1) && moveConnections[1].moveObjects.Count > 0)
+        if (isServer == false && moveConnections.ContainsKey(1) && moveConnections[1].moveObjects.Count > 0 && nextTick)
         {
             return true;
         } else
@@ -32,6 +33,7 @@ public static class MoveManager
             //return WriteToPacketServer();
         } else
         {
+            nextTick = false;
             return WriteToPacketClient(connectionId, remainingBytes, packet);
         }
     }
@@ -106,6 +108,11 @@ public static class MoveManager
         giveControl.ghostId = ghostId;
         giveControl.moveId = moveId;
         EventManager.QueueOutgoingEvent(giveControl, connectionId);
+    }
+
+    public static void tickAdvance()
+    {
+        nextTick = true;
     }
 
 
