@@ -23,12 +23,12 @@ public class GeneralNetworkingManager : MonoBehaviour
     
     public void StartServer()
     {
-        ConnectionManager.OpenServer(5, SERVER_PORT, false);
+        ConnectionManager.OpenServer(5, SERVER_PORT, true);
     }
 
     public void StartClient()
     {
-        ConnectionManager.OpenServer(5, CLIENT_PORT, true);
+        ConnectionManager.OpenServer(5, CLIENT_PORT, false);
     }
 
     public void ConnectClientToServer()
@@ -48,7 +48,7 @@ public class GeneralNetworkingManager : MonoBehaviour
     public void GiveGhost0To1()
     {
         GhostManager.NewGhost(GhostManager.GhostType.Player);
-        //MoveManager.GiveControlOfGhost(1, 0);
+        MoveManager.GiveControlOfGhost(1, 0);
     }
 
     public void GiveGhost1To2()
