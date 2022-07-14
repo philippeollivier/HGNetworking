@@ -36,9 +36,9 @@ public class GeneralNetworkingManagerEditor : Editor
             myTarget.ConnectLocally();
         }
         EditorGUILayout.LabelField("MISC");
-        if (GUILayout.Button("Give Control Of Ghost"))
+        if (GUILayout.Button("Create A Ghost"))
         {
-            myTarget.GiveControlOfGhost();
+            myTarget.CreateGhost();
         }
         if (GUILayout.Button("Give Control 0 to 1"))
         {
