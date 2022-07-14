@@ -8,7 +8,8 @@ public enum objectType
     CubeGhost,
     ClientPlayer,
     ServerPlayer,
-    Ball
+    ServerBall,
+    ClientBall
 }
 public class ObjectManager : MonoBehaviour
 {
@@ -46,10 +47,6 @@ public class ObjectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Ghost g = GhostManager.NewGhost(GhostManager.GhostType.Player);
-        }
     }
 
     private void Start()
@@ -57,7 +54,9 @@ public class ObjectManager : MonoBehaviour
         objectPrefabs[objectType.CubeGhost] = prefabs[(int)objectType.CubeGhost];
         objectPrefabs[objectType.ClientPlayer] = prefabs[(int)objectType.ClientPlayer];
         objectPrefabs[objectType.ServerPlayer] = prefabs[(int)objectType.ServerPlayer];
-        objectPrefabs[objectType.Ball] = prefabs[(int)objectType.Ball];
+        objectPrefabs[objectType.ServerBall] = prefabs[(int)objectType.ServerBall];
+        objectPrefabs[objectType.ClientBall] = prefabs[(int)objectType.ClientBall];
+
     }
 
 }

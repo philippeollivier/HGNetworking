@@ -42,7 +42,7 @@ public class GeneralNetworkingManager : MonoBehaviour
 
     public void CreateGhost()
     {
-        GhostManager.NewGhost(GhostManager.GhostType.Player);
+        GhostManager.NewGhost(GhostManager.GhostType.Player, new Vector3(0,10,0));
     }
 
     public void GiveGhost0To1()
@@ -53,5 +53,9 @@ public class GeneralNetworkingManager : MonoBehaviour
     public void GiveGhost1To2()
     {
         MoveManager.GiveControlOfGhost(2, 1);
+    }
+    public void Ball()
+    {
+        GhostManager.NewGhost(GhostManager.GhostType.Ball, new Vector3(0, 10, 0));
     }
 }

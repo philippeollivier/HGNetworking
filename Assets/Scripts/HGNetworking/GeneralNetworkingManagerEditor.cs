@@ -40,6 +40,10 @@ public class GeneralNetworkingManagerEditor : Editor
         {
             myTarget.CreateGhost();
         }
+        if (GUILayout.Button("Ball"))
+        {
+            myTarget.Ball();
+        }
         if (GUILayout.Button("Give Control 0 to 1"))
         {
             myTarget.GiveGhost0To1();
@@ -48,5 +52,6 @@ public class GeneralNetworkingManagerEditor : Editor
         {
             myTarget.GiveGhost1To2();
         }
+ 
     }
 }

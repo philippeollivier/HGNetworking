@@ -210,10 +210,11 @@ public static class GhostManager
         return false;
     }
 
-    public static Ghost NewGhost(GhostType ghostType)
+    public static Ghost NewGhost(GhostType ghostType, Vector3 position)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
+        ghost.gameObject.transform.position = position;
         ghosts[ghostIndex] = ghost;
         ghostIndex++;
         return ghost;
@@ -289,6 +290,8 @@ public static class GhostManager
         clientObjectAssociation[GhostType.CubeGhost] = objectType.CubeGhost;
         objectAssociation[GhostType.Player] = objectType.ServerPlayer;
         clientObjectAssociation[GhostType.Player] = objectType.ClientPlayer;
-        objectAssociation[GhostType.Ball] = objectType.Ball;
+        objectAssociation[GhostType.Ball] = objectType.ServerBall;
+        clientObjectAssociation[GhostType.Ball] = objectType.ClientBall;
+
     }
 }
