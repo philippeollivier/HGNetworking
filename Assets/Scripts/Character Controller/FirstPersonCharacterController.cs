@@ -184,8 +184,8 @@ public class FirstPersonCharacterController : MonoBehaviour
                 break;
             case MoveState.WallRun:
                 canWallRun = false;
-                if (wallRunLeft) { FirstPersonCameraController.Instance.WallRunR(); }
-                else { FirstPersonCameraController.Instance.WallRunL(); }
+                //if (wallRunLeft) { FirstPersonCameraController.Instance.WallRunR(); }
+                //else { FirstPersonCameraController.Instance.WallRunL(); }
                 break;
             case MoveState.WallClimb:
                 WallClimb();
@@ -440,7 +440,7 @@ public class FirstPersonCharacterController : MonoBehaviour
 
     private void ImpactTransition()
     {
-        FirstPersonCameraController.Instance.PlayImpactAnimation(Mathf.Abs(averageYVelocity) / impactAnimationForce);
+        //FirstPersonCameraController.Instance.PlayImpactAnimation(Mathf.Abs(averageYVelocity) / impactAnimationForce);
     }
 
 
