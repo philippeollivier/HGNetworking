@@ -7,7 +7,8 @@ public static class GhostManager
     private static int ghostIndex = 0;
     public enum ghostType
     {
-        TestGhost
+        TestGhost,
+        Player
     }
 
     public const int NEWFLAG = 1; //1
@@ -176,6 +177,8 @@ public static class GhostManager
     public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
     public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
     static Dictionary<ghostType, objectType> objectAssociation = new Dictionary<ghostType, objectType>();
+    static Dictionary<ghostType, objectType> clientObjectAssociation = new Dictionary<ghostType, objectType>();
+
     public static Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
     public static GameObject[] prefabs;
     public static void Connect(int connectionId)
@@ -208,7 +211,7 @@ public static class GhostManager
 
     public static Ghost NewGhost(ghostType ghostType)
     {
-        Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
         ghostIndex++;
@@ -217,7 +220,7 @@ public static class GhostManager
       
     public static Ghost NewGhostClient(ghostType ghostType, int ghostId)
     {
-        Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType.TestGhost]).GetComponent<Ghost>();
+        Ghost ghost = ObjectManager.Instance.CreateObject(clientObjectAssociation[ghostType]).GetComponent<Ghost>();
         localGhosts[ghostId] = ghost;
         ghost.onClient = true;
         return localGhosts[ghostId];
@@ -274,5 +277,8 @@ public static class GhostManager
     public static void Initialize()
     {
         objectAssociation[ghostType.TestGhost] = objectType.TestGhost;
+        clientObjectAssociation[ghostType.TestGhost] = objectType.TestGhost;
+        objectAssociation[ghostType.Player] = objectType.ServerPlayer;
+        clientObjectAssociation[ghostType.Player] = objectType.ClientPlayer;
     }
 }

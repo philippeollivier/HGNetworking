@@ -38,7 +38,7 @@ public class GeneralNetworkingManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            MoveManager.GiveControlOfGhost(1, 1);
+            MoveManager.GiveControlOfGhost(1, 0);
         }
     }
 }
