@@ -7,8 +7,9 @@ public static class GhostManager
     private static int ghostIndex = 0;
     public enum GhostType
     {
-        TestGhost,
-        Player
+        CubeGhost,
+        Player,
+        Ball
     }
 
     public const int NEWFLAG = 1; //1
@@ -158,7 +159,7 @@ public static class GhostManager
     {
         public int ghostId;
         public int flags = 0;
-        public GhostType ghostType = GhostType.TestGhost;
+        public GhostType ghostType = GhostType.CubeGhost;
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 scale = new Vector3(1, 1, 1);
         public Quaternion rotation = new Quaternion(0, 0, 0, 0);
@@ -212,6 +213,15 @@ public static class GhostManager
     public static Ghost NewGhost(GhostType ghostType)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType]).GetComponent<Ghost>();
+        ghost.Initialize(ghostIndex, ghostType);
+        ghosts[ghostIndex] = ghost;
+        ghostIndex++;
+        return ghost;
+    }
+
+    public static Ghost ApplyGhostToObject(GameObject newGhost, GhostType ghostType)
+    {
+        Ghost ghost = newGhost.AddComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
         ghosts[ghostIndex] = ghost;
         ghostIndex++;
@@ -275,9 +285,10 @@ public static class GhostManager
 
     public static void Initialize()
     {
-        objectAssociation[GhostType.TestGhost] = objectType.TestGhost;
-        clientObjectAssociation[GhostType.TestGhost] = objectType.TestGhost;
+        objectAssociation[GhostType.CubeGhost] = objectType.CubeGhost;
+        clientObjectAssociation[GhostType.CubeGhost] = objectType.CubeGhost;
         objectAssociation[GhostType.Player] = objectType.ServerPlayer;
         clientObjectAssociation[GhostType.Player] = objectType.ClientPlayer;
+        objectAssociation[GhostType.Ball] = objectType.Ball;
     }
 }

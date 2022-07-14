@@ -5,9 +5,10 @@ using System.Net;
 using UnityEngine;
 public enum objectType
 {
-    TestGhost,
+    CubeGhost,
     ClientPlayer,
-    ServerPlayer
+    ServerPlayer,
+    Ball
 }
 public class ObjectManager : MonoBehaviour
 {
@@ -53,9 +54,10 @@ public class ObjectManager : MonoBehaviour
 
     private void Start()
     {
-        objectPrefabs[objectType.TestGhost] = prefabs[0];
+        objectPrefabs[objectType.CubeGhost] = prefabs[(int)objectType.CubeGhost];
         objectPrefabs[objectType.ClientPlayer] = prefabs[(int)objectType.ClientPlayer];
         objectPrefabs[objectType.ServerPlayer] = prefabs[(int)objectType.ServerPlayer];
+        objectPrefabs[objectType.Ball] = prefabs[(int)objectType.Ball];
     }
 
 }

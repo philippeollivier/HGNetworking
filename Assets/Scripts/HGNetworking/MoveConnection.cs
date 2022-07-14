@@ -15,8 +15,8 @@ public class MoveConnection
             if(size + sizeof(int) + 3*sizeof(int) + 4*sizeof(int) < remainingBytes)
             {
                 packet.Write(moveId);
-                packet.Write(moveObjects[moveId].gameObject.transform.position);
-                packet.Write(moveObjects[moveId].gameObject.transform.rotation);
+                packet.Write(moveObjects[moveId].gameObject.transform.localPosition);
+                packet.Write(moveObjects[moveId].gameObject.transform.localRotation);
                 size += sizeof(int) + 3 * sizeof(int) + 4 * sizeof(int);
             } else
             {

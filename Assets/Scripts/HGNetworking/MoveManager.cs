@@ -56,8 +56,8 @@ public static class MoveManager
         for (int i = 0; i < numObjects; i++)
         {
             int moveId = packet.ReadInt();
-            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.position = packet.ReadVector3();
-            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.rotation = packet.ReadQuaternion();
+            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.localPosition = packet.ReadVector3();
+            moveConnections[connectionId].moveObjects[moveId].gameObject.transform.localRotation = packet.ReadQuaternion();
         }
     }
 
