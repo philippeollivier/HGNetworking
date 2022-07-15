@@ -23,4 +23,10 @@ namespace Events
         public int ghostId { get; set; }
         public int moveId { get; set; }
     }
+    public class Event_KICK_BALL : Event
+    {
+        public Vector3 kickVector { get; set; }
+
+        public int ghostId { get; set; }
+    }
 }

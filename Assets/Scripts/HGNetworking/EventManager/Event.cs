@@ -10,7 +10,8 @@ public class Event
         Event_ERROR,
         Event_TEST_EVENT,
         Event_SEND_USERNAME,
-        Event_GIVE_CONTROL
+        Event_GIVE_CONTROL,
+        Event_KICK_BALL
     }
 
     public void WriteEventHeader(ref Packet packet)

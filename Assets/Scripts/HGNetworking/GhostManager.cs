@@ -232,6 +232,7 @@ public static class GhostManager
     public static Ghost NewGhostClient(GhostType ghostType, int ghostId)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(clientObjectAssociation[ghostType]).GetComponent<Ghost>();
+        ghost.Initialize(ghostId);
         localGhosts[ghostId] = ghost;
         ghost.onClient = true;
         return localGhosts[ghostId];

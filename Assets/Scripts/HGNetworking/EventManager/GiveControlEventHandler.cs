@@ -25,5 +25,13 @@ public class GiveControlEventHandler : EventHandler
 
             MoveManager.GetControlOfGhost(ghostId, ((Events.Event_GIVE_CONTROL)currEvent).moveId);
         }
+        else if (currEvent.GetType().Equals(Type.GetType("Events.Event_KICK_BALL")))
+        {
+            Debug.Log("received event");
+            int ghostId = ((Events.Event_KICK_BALL)currEvent).ghostId;
+            Vector3 force = ((Events.Event_KICK_BALL)currEvent).kickVector;
+
+            GhostManager.ghosts[ghostId].GetComponent<Rigidbody>().AddForce(force);
+        }
     }
 }

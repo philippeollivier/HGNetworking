@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4281830120542935511}
   - component: {fileID: 5697141602635831715}
   - component: {fileID: 612109882653150836}
+  - component: {fileID: 4746932143946602933}
   m_Layer: 7
   m_Name: ClientBall
   m_TagString: Untagged
@@ -112,3 +113,17 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4746932143946602933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535630954698499275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad51e82e0a94fe4c82f8693bc2e7dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kickForce: 200
+  upKickForce: 200
