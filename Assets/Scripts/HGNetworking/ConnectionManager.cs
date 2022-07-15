@@ -137,7 +137,10 @@ public static class ConnectionManager
         MaxPlayers = maxPlayers;
         InitializeServerData(maxPlayers, isServer);
         Debug.Log("Starting server...");
-
+        if(!isServer)
+        {
+            Physics.IgnoreLayerCollision(LayerMask.NameToLayer("ServerPhysics"), LayerMask.NameToLayer("ServerPhysics"));
+        }
         PlatformPacketManager.OpenUDPSocket(port);
     }
 
