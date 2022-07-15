@@ -83,7 +83,7 @@ public class MetricsManager : MonoBehaviour
             string tempDebugText = "";
             foreach (Connection connection in ConnectionManager.connections.Values)
             {
-                tempDebugText += $"\nConnection ID: {connection.id}\nSliding Window:\n{connection.window.RenderSlidingWindow()}\nTimeout Window:\n{connection.RenderTimeout()}";
+                tempDebugText += $"\nConnection ID: {connection.id} | Ping: {(int) (connection.GetAveragePing() * 1000)}";
             }
             debugText.text = tempDebugText;
         }

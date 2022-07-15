@@ -80,6 +80,19 @@ public class Connection
 
         return retVal;
     }
+
+    public float GetAveragePing()
+    {
+        float ping = 0;
+        for (int i = 0; i < timeouts.Length; i++)
+        {
+            ping += timeouts[i];
+        }
+
+        ping *= Time.fixedDeltaTime / timeouts.Length;
+
+        return ping;
+    }
     #endregion
 
     private void Disconnect()
