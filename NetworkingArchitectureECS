@@ -1,0 +1,106 @@
+Component : Monobehavior
+{
+	public information
+	public variables
+}
+
+
+
+ViewerClass: Component
+{
+	public component
+}
+
+
+
+EntityManager
+Map<EntityId, Entity>
+Map<ComponentType, List<Components>>
+
+
+Entity
+Id
+List<Components>
+
+
+SingletonComponent
+Map<EntityId, Component>
+
+Abstract the default positions
+
+
+
+
+
+List Client Systems
+{
+	EntityComponentSystem (Populate singleton component which has list of components and Map<EntityId, Entity>) 
+				Entity is {EntityId; Map<ComponentType, Component>;}
+
+	Network Read
+		EventManager Read (Write to events to queues singleton components)
+		GhostManager Read (Ghost component, which has transform, ghost history etcs) (This has #frame number, #entity id, components values, conditionally write it to reconciler singleton)
+
+	InputManager (Writes to input singleton (just a buncha bools))
+
+	EventHandlers 1 (reads from events list singleton)
+	EventHandlers 2
+	EventHandlers 3
+
+	PlatformSystem ?? TBD
+
+	ClientPhysicsReconciler (reads ghost information and compares to historical state component)
+	ControllerObjectsReconciller (same ^)
+
+	PlayerStateManager (sets state grounded)
+	PlayerMovementManager (reads from input manager, apply forces)
+
+	Physics Tick
+
+	Network Write
+		EventManager Write (Read from outgoing queues singleton)
+		MoveManager Write (Writes from input singleton)
+
+#	Frame Draw
+}
+
+
+
+Singleton Components will singleton monobehaviour so we can see the values {
+	
+}
+
+Components : Monobehavior on a game object {
+	
+}
+
+
+List Server Systems
+{
+	EntityComponentSystem (Populate singleton component which has list of components and Map<EntityId, Entity>) 
+				Entity is {EntityId; Map<ComponentType, Component>;}
+
+	Network Read
+		EventManager Read (Write to events to queues singleton components)
+		MoveManager Read (Update player input component for EntityId and Frame)
+
+	EventHandlers 1 (reads from events list singleton)
+	EventHandlers 2
+	EventHandlers 3
+
+	InputBufferSystem (updates player move manager component figures out buffer + RTT stuff)
+	ServerPlayerMovementManager (reads from player move manager component figures, apply forces)
+
+	Physics Tick
+
+	Network Write
+		EventManager Write (Read from outgoing queues singleton)
+		GhostManager Write (For each ghost that changed, write its component information into packet)
+
+#	Frame Draw
+}
+
+
+2 types of ghost
+Physics Ghosts
+Server Ghosts

@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 
-public class GeneralNetworkingManager : MonoBehaviour
+public class GeneralNetworkingInterface : MonoBehaviour
 {
-    [Header("Testing Values")]
     [SerializeField]
     public string ipAddress = "25.15.133.160";
-    [SerializeField]
-    private bool selfConnection = true;
-
     private const int SERVER_PORT = 6942;
     private const int CLIENT_PORT = 6943;
 

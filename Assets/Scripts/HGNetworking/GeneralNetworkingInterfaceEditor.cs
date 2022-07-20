@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(GeneralNetworkingManager))]
-public class GeneralNetworkingManagerEditor : Editor
+[CustomEditor(typeof(GeneralNetworkingInterface))]
+public class GeneralNetworkingInterfaceEditor : Editor
 {
     SerializedProperty serverIpAddress;
 
@@ -15,7 +15,7 @@ public class GeneralNetworkingManagerEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        GeneralNetworkingManager myTarget = (GeneralNetworkingManager)target;
+        GeneralNetworkingInterface myTarget = (GeneralNetworkingInterface)target;
         serializedObject.Update();
         EditorGUILayout.PropertyField(serverIpAddress);
         serializedObject.ApplyModifiedProperties();
