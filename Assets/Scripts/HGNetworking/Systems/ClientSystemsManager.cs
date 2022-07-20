@@ -16,8 +16,7 @@ public class ClientSystemsManager : MonoBehaviour
     {
 		ECSSystem.TestingSystem.FixedUpdate();
 		
-		//EntityComponentSystem(Populate singleton component which has list of components and Map<EntityId, Entity>)
-		//		Entity is { EntityId; Map<ComponentType, Component>;
+		//EntityComponentSystem (Reads queues of objects to create, creates them, reads destroy queue, destroys them, components crud)
 
 		//Network Read
 		//EventManager Read(Write to events to queues singleton components)

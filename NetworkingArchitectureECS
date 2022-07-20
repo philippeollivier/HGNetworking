@@ -104,3 +104,22 @@ List Server Systems
 2 types of ghost
 Physics Ghosts
 Server Ghosts
+
+
+EntityComponentSystem - Evan
+Change to all existing systems to use ECS architecture. 
+RTT busnez - Philippe 
+InputBufferSystem - Evan
+ServerPlayMoveManager 
+ClientPhysicsReconciler - Philippe 
+How are we storing history
+
+
+
+
+
+
+
+
+
+
