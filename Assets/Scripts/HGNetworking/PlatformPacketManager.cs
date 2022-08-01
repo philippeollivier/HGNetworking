@@ -41,11 +41,15 @@ public static class PlatformPacketManager
             IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);
-            ThreadManager.ExecuteOnMainThread(() =>
+            Utils.ExecuteOnMainThread(() =>
             {
                 using (Packet _packet = new Packet(_data, true))
                 {
-                    ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
+                    ECSComponent.PacketQueueComponent.PacketQueueTuple tuple = new ECSComponent.PacketQueueComponent.PacketQueueTuple();
+                    tuple.packet = _packet;
+                    tuple.connectionEndpoint = _connectionEndPoint;
+                    ECSComponent.PacketQueueComponent.packetQueue.Enqueue(tuple);
+                    //ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
                 }
             });
 

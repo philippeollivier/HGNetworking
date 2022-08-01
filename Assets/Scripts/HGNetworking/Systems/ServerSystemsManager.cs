@@ -16,7 +16,7 @@ public class ServerSystemsManager : MonoBehaviour
     {
 		ECSSystem.SynchronizedClockSystem.FixedUpdate();
 		ECSSystem.TestingSystem.FixedUpdate();
-
+		
 		//	EntityComponentSystem(Populate singleton component which has list of components and Map<EntityId, Entity>)
 		//For each component type, we have a Map<EntityId, Component>;
 

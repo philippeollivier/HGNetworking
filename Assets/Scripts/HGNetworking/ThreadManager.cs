@@ -1,53 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ThreadManager : MonoBehaviour
+﻿namespace ECSSystem
 {
-    private static readonly List<Action> executeOnMainThread = new List<Action>();
-    private static readonly List<Action> executeCopiedOnMainThread = new List<Action>();
-    private static bool actionToExecuteOnMainThread = false;
 
-    private void FixedUpdate()
+    public static class ThreadManager
     {
-        UpdateMain();
-    }
-
-    /// <summary>Sets an action to be executed on the main thread.</summary>
-    /// <param name="_action">The action to be executed on the main thread.</param>
-    public static void ExecuteOnMainThread(Action _action)
-    {
-        if (_action == null)
+        public static void FixedUpdate()
         {
-            Console.WriteLine("No action to execute on main thread!");
-            return;
+            UpdateMain();
         }
 
-        lock (executeOnMainThread)
-        {
-            executeOnMainThread.Add(_action);
-            actionToExecuteOnMainThread = true;
-        }
-    }
 
-    /// <summary>Executes all code meant to run on the main thread. NOTE: Call this ONLY from the main thread.</summary>
-    public static void UpdateMain()
-    {
-        if (actionToExecuteOnMainThread)
+        /// <summary>Executes all code meant to run on the main thread. NOTE: Call this ONLY from the main thread.</summary>
+        public static void UpdateMain()
         {
-            executeCopiedOnMainThread.Clear();
-            lock (executeOnMainThread)
+            if (ECSComponent.ThreadManagerComponent.actionToExecuteOnMainThread)
             {
-                executeCopiedOnMainThread.AddRange(executeOnMainThread);
-                executeOnMainThread.Clear();
-                actionToExecuteOnMainThread = false;
-            }
+                ECSComponent.ThreadManagerComponent.executeCopiedOnMainThread.Clear();
+                lock (ECSComponent.ThreadManagerComponent.executeOnMainThread)
+                {
+                    ECSComponent.ThreadManagerComponent.executeCopiedOnMainThread.AddRange(ECSComponent.ThreadManagerComponent.executeOnMainThread);
+                    ECSComponent.ThreadManagerComponent.executeOnMainThread.Clear();
+                    ECSComponent.ThreadManagerComponent.actionToExecuteOnMainThread = false;
+                }
 
-            for (int i = 0; i < executeCopiedOnMainThread.Count; i++)
-            {
-                executeCopiedOnMainThread[i]();
+                for (int i = 0; i < ECSComponent.ThreadManagerComponent.executeCopiedOnMainThread.Count; i++)
+                {
+                    ECSComponent.ThreadManagerComponent.executeCopiedOnMainThread[i]();
+                }
             }
         }
     }
 }
+
