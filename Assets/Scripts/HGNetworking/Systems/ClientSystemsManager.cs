@@ -15,9 +15,11 @@ public class ClientSystemsManager : MonoBehaviour
 	private void FixedUpdateClientSystems()
     {
 		ECSSystem.SynchronizedClockSystem.FixedUpdate();
-		ECSSystem.TestingSystem.FixedUpdate();
+
+		//Read/Process all incoming UDP packets for this frame on main thread
+		NetworkingThreadManager.ReadAsyncPackets();
+
 		
-		//EntityComponentSystem (Reads queues of objects to create, creates them, reads destroy queue, destroys them, components crud)
 
 		//Network Read
 		//EventManager Read(Write to events to queues singleton components)
@@ -54,8 +56,7 @@ public class ClientSystemsManager : MonoBehaviour
 
 		ECSSystem.PhysicsSystem.FixedUpdate();
 
-		//Network Write
-		//EventManager Write(Read from outgoing queues singleton)
-		//MoveManager Write(Writes from input singleton)
+		ConnectionManager.UpdateTick();
+		StreamManager.WriteToAllConnections();
 	}
 }

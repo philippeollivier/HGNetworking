@@ -1,15 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public static class StreamManager
 {
     //TODO don't magic number this
     public static int MAX_PACKET_SIZE = 512;
     public static int MIN_HEADER_SIZE = 4 + 4 + 4 + 4 + 4; //4 Bytes for ConnectionId, PacketId, MoveManager Header, EventManager Header, GhostManager Header
-
-    public static Dictionary<int, int> latestPacket = new Dictionary<int, int>();
 
     #region General Information For Development
 
@@ -34,7 +27,6 @@ public static class StreamManager
     public static void WriteToPacket(int connectionId)
     {
         bool hasInfo = MoreInfoToWrite(connectionId);
-        int packetsSent = 0;
 
         while (hasInfo)
         {
@@ -52,7 +44,6 @@ public static class StreamManager
                 remainingBytes -= GhostManager.WriteToPacket(connectionId, remainingBytes, packet);
                 //Send packet through connection manager
                 ConnectionManager.SendPacket(connectionId, packet);
-                packetsSent++;
 
                 //Check if there is more info that needs to be sent
                 hasInfo = MoreInfoToWrite(connectionId);
@@ -75,7 +66,7 @@ public static class StreamManager
     }
 
     //Fixed Tick Update.
-    public static void UpdateTick()
+    public static void WriteToAllConnections()
     {
         //Write Packets to all Outgoing Connections
         foreach(int connectionId in ConnectionManager.connections.Keys)

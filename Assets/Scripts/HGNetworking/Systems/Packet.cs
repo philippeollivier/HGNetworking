@@ -27,7 +27,7 @@ public enum PacketType : byte
 {
     Regular,
     ACK,
-    Connect,
+    Connection,
     NoACK
 }
 public struct PacketHeader
