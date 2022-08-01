@@ -14,6 +14,7 @@ public class ClientSystemsManager : MonoBehaviour
 
 	private void FixedUpdateClientSystems()
     {
+		ECSSystem.ThreadManager.FixedUpdate();
 		ECSSystem.TestingSystem.FixedUpdate();
 		
 		//EntityComponentSystem (Reads queues of objects to create, creates them, reads destroy queue, destroys them, components crud)
