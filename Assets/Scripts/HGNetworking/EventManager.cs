@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public static class EventManager
 {
     public static Dictionary<int, EventConnection> eventConnections = new Dictionary<int, EventConnection>();
-    public static List<EventHandler> eventHandlers = new List<EventHandler>();
 
     #region General Data Manager Functions
     public static bool HasMoreDataToWrite(int connectionId)
@@ -43,17 +41,9 @@ public static class EventManager
     #endregion
 
     #region Event Handler Business
-    public static void NotifyEventHandlers(Event e)
+    public static void QueueIncomingEvent(Event e)
     {
-        foreach (EventHandler eventHandler in eventHandlers)
-        {
-            eventHandler.HandleEvent(e);
-        }
-    }
-
-    public static void SubscribeHandler(EventHandler handler)
-    {
-        eventHandlers.Add(handler);
+        ECSComponent.EventComponent.incomingEvents.Enqueue(e);
     }
 
     public static void QueueOutgoingEvent(Event outgoingEvent)

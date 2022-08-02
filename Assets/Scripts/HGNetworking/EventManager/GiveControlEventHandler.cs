@@ -8,7 +8,7 @@ public class GiveControlEventHandler : EventHandler
     void Start()
     {
         //Subscribe to EventManager
-        EventManager.SubscribeHandler(this);
+        //EventManager.SubscribeHandler(this);
     }
 
     public override void HandleEvent(Event currEvent)

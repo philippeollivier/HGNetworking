@@ -20,9 +20,15 @@ class ComponentDictionary
         ((Dictionary<int, T>)dict[typeof(T)]).Remove(index);
     }
 
-    public void Contains<T>(int index)
+    public bool Contains<T>(int index)
     {
-        ((Dictionary<int, T>)dict[typeof(T)]).ContainsKey(index);
+        return ((Dictionary<int, T>)dict[typeof(T)]).ContainsKey(index);
+    }
+
+    public bool Contains(Type t, int index)
+    {
+        return true;
+        //return ((Dictionary<int, (typeof(ComponentDictionary))>)dict[t]).ContainsKey(index);
     }
 
     public T GetValueAtIndex<T>(int index)

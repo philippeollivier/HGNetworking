@@ -19,25 +19,6 @@ public class ClientSystemsManager : MonoBehaviour
 		//Read/Process all incoming UDP packets for this frame on main thread
 		NetworkingThreadManager.ReadAsyncPackets();
 
-		
-
-		//Network Read
-		//EventManager Read(Write to events to queues singleton components)
-
-		/*
-		What does Event Manager Do?
-
-		Reads component with event information and updates handlers accordingly. 
-
-		How does server event manager differ?
-
-		it is reading multiple events from multiple client Id
-		
-		For each connectionId it has a Queue of Incoming Events populated by Stream Manager
-
-		Event Manager "Handles incoming event"
-		*/
-
 		//GhostManager Read(Ghost component, which has transform, ghost history etcs) (This has #frame number, #entity id, components values, conditionally write it to reconciler singleton)
 
 		//InputManager(Writes to input singleton(just a buncha bools))

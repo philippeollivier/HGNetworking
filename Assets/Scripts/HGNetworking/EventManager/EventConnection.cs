@@ -47,8 +47,8 @@ public class EventConnection
         Event eventToProcess = receivedEvents[eventId];
         receivedEvents.Remove(eventId);
 
-        //Send Events to Handlers
-        EventManager.NotifyEventHandlers(eventToProcess);
+        //Add processed event to events component for other systems to access
+        EventManager.QueueIncomingEvent(eventToProcess);
     }
 
     public int WriteEvents(Packet packet, int remainingPacketSize)
