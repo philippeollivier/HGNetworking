@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class ComponentDictionary
+public class ComponentDictionary
 {
     Dictionary<Type, dynamic> dict;
 
@@ -13,6 +13,11 @@ class ComponentDictionary
     public void Add<T>(int index, T component)
     {
         ((Dictionary<int, T>)dict[typeof(T)])[index] = component;
+    }
+
+    public void AddComponentType<T>()
+    {
+        dict[typeof(T)] = new Dictionary<int, T>();
     }
 
     public void Delete<T>(int index)
