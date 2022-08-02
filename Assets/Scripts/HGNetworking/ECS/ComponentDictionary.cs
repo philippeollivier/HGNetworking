@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECSSkeleton;
+using System;
 using System.Collections.Generic;
 
 public class ComponentDictionary
@@ -24,16 +25,20 @@ public class ComponentDictionary
     {
         ((Dictionary<int, T>)dict[typeof(T)]).Remove(index);
     }
+    public bool Contains(Type type, int index)
+    {
+        switch (type)
+        {
+            case Type RigidBodyComponent:
+                return Contains<RigidBodyComponent>(index);
+            default:
+                throw new ArgumentException($"Type is not currently handled by Contains: {type}");
+        }
+    }
 
     public bool Contains<T>(int index)
     {
         return ((Dictionary<int, T>)dict[typeof(T)]).ContainsKey(index);
-    }
-
-    public bool Contains(Type t, int index)
-    {
-        return true;
-        //return ((Dictionary<int, (typeof(ComponentDictionary))>)dict[t]).ContainsKey(index);
     }
 
     public T GetValueAtIndex<T>(int index)
