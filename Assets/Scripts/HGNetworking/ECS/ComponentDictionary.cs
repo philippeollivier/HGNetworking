@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class ComponentDictionary
+public class ComponentDictionary
 {
     Dictionary<Type, dynamic> dict;
 
@@ -15,14 +15,19 @@ class ComponentDictionary
         ((Dictionary<int, T>)dict[typeof(T)])[index] = component;
     }
 
+    public void AddComponentType<T>()
+    {
+        dict[typeof(T)] = new Dictionary<int, T>();
+    }
+
     public void Delete<T>(int index)
     {
         ((Dictionary<int, T>)dict[typeof(T)]).Remove(index);
     }
 
-    public void Contains<T>(int index)
+    public bool Contains<T>(int index)
     {
-        ((Dictionary<int, T>)dict[typeof(T)]).ContainsKey(index);
+        return ((Dictionary<int, T>)dict[typeof(T)]).ContainsKey(index);
     }
 
     public T GetValueAtIndex<T>(int index)
