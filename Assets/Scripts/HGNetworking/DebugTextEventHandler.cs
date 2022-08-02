@@ -11,7 +11,7 @@ public class DebugTextEventHandler : EventHandler
     void Start()
     {
         //Subscribe to EventManager
-        EventManager.SubscribeHandler(this);
+        //EventManager.SubscribeHandler(this);
 
         StartCoroutine(testPolling());
     }

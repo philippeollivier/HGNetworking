@@ -91,6 +91,10 @@ namespace ECSSkeleton
 
         public void MatchArchetype(int entityId, Archetype a)
         {
+            Dictionary<int, Type> test;
+
+            ComponentLists.componentDictionary.Contains<test[1]>(1);
+
             bool doesArchetypeMatch = true;
             foreach(Type type in a.pattern)
             {

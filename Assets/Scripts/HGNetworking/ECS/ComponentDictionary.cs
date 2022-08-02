@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECSSkeleton;
+using System;
 using System.Collections.Generic;
 
 public class ComponentDictionary
@@ -23,6 +24,16 @@ public class ComponentDictionary
     public void Delete<T>(int index)
     {
         ((Dictionary<int, T>)dict[typeof(T)]).Remove(index);
+    }
+    public bool Contains(Type type, int index)
+    {
+        switch (type)
+        {
+            case Type RigidBodyComponent:
+                return Contains<RigidBodyComponent>(index);
+            default:
+                throw new ArgumentException($"Type is not currently handled by Contains: {type}");
+        }
     }
 
     public bool Contains<T>(int index)
