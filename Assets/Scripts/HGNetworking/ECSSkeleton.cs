@@ -32,6 +32,9 @@ namespace ECSSkeleton
         {
             this.entityId = entityId;
         }
+        public GameObjectComponent()
+        {
+        }
     }
 
     public class RigidBodyComponent : EComponent
@@ -46,7 +49,7 @@ namespace ECSSkeleton
     public abstract class Archetype
     {
         public List<int> entities = new List<int>();
-        public List<Type> pattern = new List<Type>();
+        public List<EComponent> pattern = new List<EComponent>();
     }
 
     public class PhysicsEntityArchetype : Archetype
@@ -64,6 +67,7 @@ namespace ECSSkeleton
 
     public static class ComponentLists
     {
+        public static GameObjectComponent dummyGameObjectComponent = new GameObjectComponent();
         public static List<Archetype> archetypes = new List<Archetype>();
         public static Dictionary<int, GameObjectComponent> gameObjectComponents = new Dictionary<int, GameObjectComponent>();
         public static Dictionary<int, RigidBodyComponent> rigidBodyComponents = new Dictionary<int, RigidBodyComponent>();
