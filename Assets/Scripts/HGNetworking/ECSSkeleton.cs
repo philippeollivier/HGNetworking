@@ -91,11 +91,16 @@ namespace ECSSkeleton
 
         public void MatchArchetype(int entityId, Archetype a)
         {
+            bool doesArchetypeMatch = true;
             foreach(Type type in a.pattern)
             {
-                if(ComponentLists.componentDictionary.Contains<type.GetType()>(entityId))
+                switch (type)
                 {
-
+                    case Type RigidBodyComponent:
+                        doesArchetypeMatch |= ComponentLists.componentDictionary.Contains<RigidBodyComponent>(entityId);
+                        break;
+                    default:
+                        throw new ArgumentException($"Type is not currently handled by MatchArchetype: {type}");
                 }
             }
         }
