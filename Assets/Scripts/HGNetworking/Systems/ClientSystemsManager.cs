@@ -4,7 +4,8 @@ public class ClientSystemsManager : MonoBehaviour
 {
     public void Awake()
     {
-		ECSSystem.PhysicsSystem.Awake();   
+		ECSSystem.PhysicsSystem.Awake();
+		ECSSystem.ClientInputBufferSystem.Initialize();
     }
 
     public void FixedUpdate()
@@ -15,7 +16,6 @@ public class ClientSystemsManager : MonoBehaviour
 	private void FixedUpdateClientSystems()
     {
 		ECSSystem.SynchronizedClockSystem.FixedUpdate();
-
 		//Read/Process all incoming UDP packets for this frame on main thread
 		NetworkingThreadManager.ReadAsyncPackets();
 

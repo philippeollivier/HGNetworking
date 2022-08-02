@@ -57,16 +57,17 @@ public class InputManager : MonoBehaviour
         return false;
     }
 
-    public bool GetKey(KeybindingActions key)
+    public BitArray GetKeys() 
     {
-        foreach (Keybinds.KeybindingCheck keybindingCheck in keybinds.keybindingChecks)
+        BitArray flags = new BitArray(ECSComponent.InputComponent.keybindingChecks.Count);
+        for(int i = 0; i < ECSComponent.InputComponent.keybindingChecks.Count; i++)
         {
-            if (keybindingCheck.keybindingAction == key)
+            if(Input.GetKey(ECSComponent.InputComponent.keybindingChecks[i].keyCode))
             {
-                return Input.GetKey(keybindingCheck.keyCode);
+                flags[i] = true;
             }
         }
-        return false;
+        return flags;
     }
 
     public bool GetKeyUp(KeybindingActions key)
@@ -76,6 +77,18 @@ public class InputManager : MonoBehaviour
             if (keybindingCheck.keybindingAction == key)
             {
                 return Input.GetKeyUp(keybindingCheck.keyCode);
+            }
+        }
+        return false;
+    }
+
+    public bool GetKey(KeybindingActions key)
+    {
+        foreach (Keybinds.KeybindingCheck keybindingCheck in keybinds.keybindingChecks)
+        {
+            if (keybindingCheck.keybindingAction == key)
+            {
+                return Input.GetKey(keybindingCheck.keyCode);
             }
         }
         return false;
