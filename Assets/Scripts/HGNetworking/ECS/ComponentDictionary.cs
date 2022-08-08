@@ -29,8 +29,12 @@ public class ComponentDictionary
     {
         switch (type)
         {
-            case Type RigidBodyComponent:
+            case Type RigidBodyComponent when type == typeof(RigidBodyComponent):
                 return Contains<RigidBodyComponent>(index);
+            case Type GameObjectComponent when type == typeof(GameObjectComponent):
+                return Contains<GameObjectComponent>(index);
+            case Type ColliderComponent when type == typeof(ColliderComponent):
+                return Contains<ColliderComponent>(index);
             default:
                 throw new ArgumentException($"Type is not currently handled by Contains: {type}");
         }
