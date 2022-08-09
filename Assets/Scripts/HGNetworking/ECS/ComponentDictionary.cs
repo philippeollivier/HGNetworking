@@ -1,6 +1,7 @@
 ﻿using ECSSkeleton;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ComponentDictionary
 {
