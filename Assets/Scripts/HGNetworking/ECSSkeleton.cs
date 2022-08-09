@@ -4,12 +4,6 @@ using UnityEngine;
 
 namespace ECSSkeleton
 {
-    public enum ComponentId
-    {
-        gameObjectComponent,
-        rigidBodyComponent,
-        colliderComponent
-    }
     public class Test
     {
 
@@ -61,7 +55,8 @@ namespace ECSSkeleton
             this.entityId = entityId;
         }
     }
-
+    #region Archetypes
+    //When adding an archetype. Add any component types to its pattern and nothing else. If an archetype cannot have a component, add it to the antiPattern
     public abstract class Archetype
     {
         public List<int> entities = new List<int>();
@@ -83,11 +78,11 @@ namespace ECSSkeleton
     {
 
     }
+    #endregion
 
     public static class ComponentLists
     {
         public static List<int> entities = new List<int>();
-        public static GameObjectComponent dummyGameObjectComponent = new GameObjectComponent();
         public static List<Archetype> archetypes = new List<Archetype>();
         public static ComponentDictionary componentDictionary = new ComponentDictionary();
 
@@ -97,10 +92,12 @@ namespace ECSSkeleton
     {
         public static void Init()
         {
+            //Components: When you add a component, add its type to the component dictionary.
             ComponentLists.componentDictionary.AddComponentType<GameObjectComponent>();
             ComponentLists.componentDictionary.AddComponentType<ColliderComponent>();
             ComponentLists.componentDictionary.AddComponentType<RigidBodyComponent>();
 
+            //Archetypes: When you add an archetype, add it to the dictionary.
             ComponentLists.archetypes.Add(new PhysicsEntityArchetype());
             //ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
         }
@@ -148,7 +145,7 @@ namespace ECSSkeleton
         }
 
         #region Component Adding Functions
-        //To add a function 
+        // A function needs to add to the dictionary list and must call MatchArchetypes at the end.
         public static void AddGameObjectComponent(int entityId)
         {
             if(!ComponentLists.componentDictionary.Contains(typeof(GameObjectComponent), entityId))
