@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Net;
 
-namespace ECSComponent
+namespace ECS.Components
 {
     public static class PacketQueueComponent
     {

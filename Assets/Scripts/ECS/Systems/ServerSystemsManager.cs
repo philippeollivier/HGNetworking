@@ -4,8 +4,8 @@ public class ServerSystemsManager : MonoBehaviour
 {
     public void Awake()
     {
-		ECSSystem.PhysicsSystem.Awake();
-		Init();
+		ECS.Methods.InitializeComponentArchetypeLists();
+		ECS.Systems.PhysicsSystem.Awake();
 	}
 
 	public void FixedUpdate()
@@ -15,8 +15,8 @@ public class ServerSystemsManager : MonoBehaviour
 
     private void FixedUpdateServerSystems()
     {
-		ECSSystem.SynchronizedClockSystem.FixedUpdate();
-		ECSSystem.TestingSystem.FixedUpdate();
+		ECS.Systems.SynchronizedClockSystem.FixedUpdate();
+		ECS.Systems.TestingSystem.FixedUpdate();
 		
 		//	EntityComponentSystem(Populate singleton component which has list of components and Map<EntityId, Entity>)
 		//For each component type, we have a Map<EntityId, Component>;
@@ -33,22 +33,10 @@ public class ServerSystemsManager : MonoBehaviour
 		//ServerPlayerMovementManager(reads from player move manager component figures, apply forces)
 
 		//Physics Tick
-		ECSSystem.PhysicsSystem.FixedUpdate();
+		ECS.Systems.PhysicsSystem.FixedUpdate();
 
 		//Network Write
 		//	EventManager Write(Read from outgoing queues singleton)
 		//	GhostManager Write(For each ghost that changed, write its component information into packet)
-	}
-
-	public static void Init()
-	{
-		//Components: When you add a component, add its type to the component dictionary.
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.GameObjectComponent>();
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.ColliderComponent>();
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.RigidBodyComponent>();
-
-		//Archetypes: When you add an archetype, add it to the dictionary.
-		ComponentLists.archetypes.Add(new ECSArchetype.PhysicsEntityArchetype());
-		//ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
 	}
 }

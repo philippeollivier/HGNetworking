@@ -43,7 +43,7 @@ public static class EventManager
     #region Event Handler Business
     public static void QueueIncomingEvent(Event e)
     {
-        ECSComponent.EventComponent.incomingEvents.Enqueue(e);
+        //ECS.Components.EventComponent.incomingEvents.Enqueue(e);
     }
 
     public static void QueueOutgoingEvent(Event outgoingEvent)

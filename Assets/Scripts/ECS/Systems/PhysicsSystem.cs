@@ -1,8 +1,8 @@
-using ECSComponent;
+using ECS.Components;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ECSSystem
+namespace ECS.Systems
 {
     public static class PhysicsSystem
     {
