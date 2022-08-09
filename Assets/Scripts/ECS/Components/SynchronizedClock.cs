@@ -1,4 +1,4 @@
-namespace ECSComponent
+namespace ECS.Components
 {
     public static class SynchronizedClock
     {

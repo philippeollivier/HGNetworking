@@ -4,9 +4,11 @@ public class ClientSystemsManager : MonoBehaviour
 {
     public void Awake()
     {
-		ECSSystem.PhysicsSystem.Awake();
-//		ECSSystem.ClientInputBufferSystem.Initialize();
-		Init();
+		ECS.Methods.InitializeComponentArchetypeLists();
+		//		ECS.Systems.ClientInputBufferSystem.Initialize();
+
+		ECS.Systems.PhysicsSystem.Awake();
+
 	}
 
 	public void FixedUpdate()
@@ -16,7 +18,7 @@ public class ClientSystemsManager : MonoBehaviour
 
 	private void FixedUpdateClientSystems()
     {
-		ECSSystem.SynchronizedClockSystem.FixedUpdate();
+		ECS.Systems.SynchronizedClockSystem.FixedUpdate();
 		//Read/Process all incoming UDP packets for this frame on main thread
 		NetworkingThreadManager.ReadAsyncPackets();
 
@@ -36,21 +38,9 @@ public class ClientSystemsManager : MonoBehaviour
 		//PlayerStateManager(sets state grounded)
 		//PlayerMovementManager(reads from input manager, apply forces)
 
-		ECSSystem.PhysicsSystem.FixedUpdate();
+		ECS.Systems.PhysicsSystem.FixedUpdate();
 
 		ConnectionManager.UpdateTick();
 		StreamManager.WriteToAllConnections();
-	}
-
-	public static void Init()
-	{
-		//Components: When you add a component, add its type to the component dictionary.
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.GameObjectComponent>();
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.ColliderComponent>();
-		ComponentLists.componentDictionary.AddComponentType<ECSComponent.RigidBodyComponent>();
-
-		//Archetypes: When you add an archetype, add it to the dictionary.
-		ComponentLists.archetypes.Add(new ECSArchetype.PhysicsEntityArchetype());
-		//ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
 	}
 }

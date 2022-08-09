@@ -1,17 +1,19 @@
-namespace ECSSystem
+using UnityEngine;
+
+namespace ECS.Systems
 {
-    public static class SynchronizedClockSystem
+    public static class TestingSystem
     {
         #region Generic Systems Code
 
         public static void Awake()
         {
-            ECSComponent.SynchronizedClock.CommandFrame = 0;
+
         }
 
         public static void FixedUpdate()
         {
-            ECSComponent.SynchronizedClock.CommandFrame++;
+            Debug.Log("frog");
         }
 
         #endregion

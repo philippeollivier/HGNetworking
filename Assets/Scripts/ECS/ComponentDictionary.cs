@@ -29,12 +29,12 @@ public class ComponentDictionary
     {
         switch (type)
         {
-            case Type RigidBodyComponent when type == typeof(ECSComponent.RigidBodyComponent):
-                return Contains<ECSComponent.RigidBodyComponent>(index);
-            case Type GameObjectComponent when type == typeof(ECSComponent.GameObjectComponent):
-                return Contains<ECSComponent.GameObjectComponent>(index);
-            case Type ColliderComponent when type == typeof(ECSComponent.ColliderComponent):
-                return Contains<ECSComponent.ColliderComponent>(index);
+            case Type RigidBodyComponent when type == typeof(ECS.Components.RigidbodyComponent):
+                return Contains<ECS.Components.RigidbodyComponent>(index);
+            case Type GameObjectComponent when type == typeof(ECS.Components.GameObjectComponent):
+                return Contains<ECS.Components.GameObjectComponent>(index);
+            case Type ColliderComponent when type == typeof(ECS.Components.ColliderComponent):
+                return Contains<ECS.Components.ColliderComponent>(index);
             default:
                 throw new ArgumentException($"Type is not currently handled by Contains: {type}");
         }
