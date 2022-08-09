@@ -1,5 +1,4 @@
-﻿using ECSSkeleton;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,12 +29,12 @@ public class ComponentDictionary
     {
         switch (type)
         {
-            case Type RigidBodyComponent when type == typeof(RigidBodyComponent):
-                return Contains<RigidBodyComponent>(index);
-            case Type GameObjectComponent when type == typeof(GameObjectComponent):
-                return Contains<GameObjectComponent>(index);
-            case Type ColliderComponent when type == typeof(ColliderComponent):
-                return Contains<ColliderComponent>(index);
+            case Type RigidBodyComponent when type == typeof(ECSComponent.RigidBodyComponent):
+                return Contains<ECSComponent.RigidBodyComponent>(index);
+            case Type GameObjectComponent when type == typeof(ECSComponent.GameObjectComponent):
+                return Contains<ECSComponent.GameObjectComponent>(index);
+            case Type ColliderComponent when type == typeof(ECSComponent.ColliderComponent):
+                return Contains<ECSComponent.ColliderComponent>(index);
             default:
                 throw new ArgumentException($"Type is not currently handled by Contains: {type}");
         }

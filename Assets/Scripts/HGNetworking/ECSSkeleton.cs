@@ -1,18 +1,10 @@
+using ECSArchetype;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ECSSkeleton
+namespace ECSComponent
 {
-    public class Test
-    {
-
-    }
-    public class Entity
-    {
-
-    }
-    #region Components
     public class EComponent
     {
         public int entityId;
@@ -54,8 +46,10 @@ namespace ECSSkeleton
             this.entityId = entityId;
         }
     }
-    #endregion
-    #region Archetypes
+}
+
+namespace ECSArchetype
+{
     //When adding an archetype. Add any component types to its pattern and nothing else. If an archetype cannot have a component, add it to the antiPattern
     public abstract class Archetype
     {
@@ -68,9 +62,9 @@ namespace ECSSkeleton
     {
         public PhysicsEntityArchetype()
         {
-            pattern.Add(typeof(GameObjectComponent));
-            pattern.Add(typeof(RigidBodyComponent));
-            pattern.Add(typeof(ColliderComponent));
+            pattern.Add(typeof(ECSComponent.GameObjectComponent));
+            pattern.Add(typeof(ECSComponent.RigidBodyComponent));
+            pattern.Add(typeof(ECSComponent.ColliderComponent));
         }
     }
 
@@ -78,31 +72,20 @@ namespace ECSSkeleton
     {
 
     }
-    #endregion
+}
+    
 
     public static class ComponentLists
     {
         public static List<int> entities = new List<int>();
-        public static List<Archetype> archetypes = new List<Archetype>();
+        public static List<ECSArchetype.Archetype> archetypes = new List<ECSArchetype.Archetype>();
         public static ComponentDictionary componentDictionary = new ComponentDictionary();
 
     }
 
     public static class Methods
     {
-        public static void Init()
-        {
-            //Components: When you add a component, add its type to the component dictionary.
-            ComponentLists.componentDictionary.AddComponentType<GameObjectComponent>();
-            ComponentLists.componentDictionary.AddComponentType<ColliderComponent>();
-            ComponentLists.componentDictionary.AddComponentType<RigidBodyComponent>();
-
-            //Archetypes: When you add an archetype, add it to the dictionary.
-            ComponentLists.archetypes.Add(new PhysicsEntityArchetype());
-            //ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
-        }
-
-        public static void MatchArchetype(int entityId, Archetype a)
+        public static void MatchArchetype(int entityId, ECSArchetype.Archetype a)
         {
             foreach(Type type in a.pattern)
             {
@@ -148,9 +131,9 @@ namespace ECSSkeleton
         // A function needs to add to the dictionary list and must call MatchArchetypes at the end.
         public static void AddGameObjectComponent(int entityId)
         {
-            if(!ComponentLists.componentDictionary.Contains(typeof(GameObjectComponent), entityId))
+            if(!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
             {
-                GameObjectComponent g = new GameObjectComponent(entityId);
+                ECSComponent.GameObjectComponent g = new ECSComponent.GameObjectComponent(entityId);
                 g.gameObject = new GameObject("Test");
                 ComponentLists.componentDictionary.Add(entityId, g);
             } else
@@ -159,48 +142,103 @@ namespace ECSSkeleton
             }
             MatchArchetypes(entityId);
         }
+        public static void AddGameObjectComponent(int entityId, GameObject gameObject)
+        {
+            if (!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
+            {
+            ECSComponent.GameObjectComponent g = new ECSComponent.GameObjectComponent(entityId);
+                g.gameObject = gameObject;
+                ComponentLists.componentDictionary.Add(entityId, g);
+            }
+            else
+            {
+                Debug.Log("Entity already has gameObject associated");
+            }
+            MatchArchetypes(entityId);
+        }
 
         public static void AddRigidbodyComponent(int entityId)
         {
-            if (!ComponentLists.componentDictionary.Contains(typeof(GameObjectComponent), entityId))
+            if (!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
             {
                 Debug.Log("Entity has no gameObject associated");
             }
-            else if(ComponentLists.componentDictionary.Contains(typeof(RigidBodyComponent), entityId))
+            else if(ComponentLists.componentDictionary.Contains(typeof(ECSComponent.RigidBodyComponent), entityId))
             {
                 Debug.Log("Entity already has rigidbody associated");
             }
             else
             {
-                RigidBodyComponent rbc = new RigidBodyComponent(entityId);
-                rbc.rb = ComponentLists.componentDictionary.GetValueAtIndex<GameObjectComponent>(entityId).gameObject.AddComponent<Rigidbody>();
+            ECSComponent.RigidBodyComponent rbc = new ECSComponent.RigidBodyComponent(entityId);
+                rbc.rb = ComponentLists.componentDictionary.GetValueAtIndex<ECSComponent.GameObjectComponent>(entityId).gameObject.AddComponent<Rigidbody>();
                 ComponentLists.componentDictionary.Add(entityId, rbc);
+            }
+            MatchArchetypes(entityId);
+        }
+
+        public static void AddRigidbodyComponent(int entityId, Rigidbody rb)
+        {
+            if (!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
+            {
+                Debug.Log("Entity has no gameObject associated");
+            }
+            else if (ComponentLists.componentDictionary.Contains(typeof(ECSComponent.RigidBodyComponent), entityId))
+            {
+                Debug.Log("Entity already has rigidbody associated");
+            }
+            else
+            {
+            ECSComponent.RigidBodyComponent rbc = new ECSComponent.RigidBodyComponent(entityId);
+                rbc.rb = rb;
+                ComponentLists.componentDictionary.Add(entityId, rb);
             }
             MatchArchetypes(entityId);
         }
 
         public static void AddColliderComponent(int entityId)
         {
-            if (!ComponentLists.componentDictionary.Contains(typeof(GameObjectComponent), entityId))
+            if (!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
             {
                 Debug.Log("Entity has no gameObject associated");
             }
-            else if (ComponentLists.componentDictionary.Contains(typeof(ColliderComponent), entityId))
+            else if (ComponentLists.componentDictionary.Contains(typeof(ECSComponent.ColliderComponent), entityId))
             {
                 Debug.Log("Entity already has collider associated");
             }
             else
             {
-                ColliderComponent cc = new ColliderComponent(entityId);
-                cc.col = ComponentLists.componentDictionary.GetValueAtIndex<GameObjectComponent>(entityId).gameObject.AddComponent<BoxCollider>();
+            ECSComponent.ColliderComponent cc = new ECSComponent.ColliderComponent(entityId);
+                cc.col = ComponentLists.componentDictionary.GetValueAtIndex<ECSComponent.GameObjectComponent>(entityId).gameObject.AddComponent<BoxCollider>();
                 ComponentLists.componentDictionary.Add(entityId, cc);
             }
             MatchArchetypes(entityId);
         }
+
+        public static void AddColliderComponent(int entityId, Collider collider)
+        {
+            if (!ComponentLists.componentDictionary.Contains(typeof(ECSComponent.GameObjectComponent), entityId))
+            {
+                Debug.Log("Entity has no gameObject associated");
+            }
+            else if (ComponentLists.componentDictionary.Contains(typeof(ECSComponent.ColliderComponent), entityId))
+            {
+                Debug.Log("Entity already has collider associated");
+            }
+            else
+            {
+            ECSComponent.ColliderComponent cc = new ECSComponent.ColliderComponent(entityId);
+                cc.col = collider;
+                ComponentLists.componentDictionary.Add(entityId, cc);
+            }
+            MatchArchetypes(entityId);
+        }
+
+    public static int AddEntity()
+    {
+        int id = ComponentLists.entities.Count;
+        ComponentLists.entities.Add(id);
+        return id;
+    } 
         #endregion
 
     }
-
-
-
-}

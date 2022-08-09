@@ -5,9 +5,10 @@ public class ServerSystemsManager : MonoBehaviour
     public void Awake()
     {
 		ECSSystem.PhysicsSystem.Awake();
-    }
+		Init();
+	}
 
-    public void FixedUpdate()
+	public void FixedUpdate()
     {
         FixedUpdateServerSystems();
     }
@@ -37,5 +38,17 @@ public class ServerSystemsManager : MonoBehaviour
 		//Network Write
 		//	EventManager Write(Read from outgoing queues singleton)
 		//	GhostManager Write(For each ghost that changed, write its component information into packet)
+	}
+
+	public static void Init()
+	{
+		//Components: When you add a component, add its type to the component dictionary.
+		ComponentLists.componentDictionary.AddComponentType<ECSComponent.GameObjectComponent>();
+		ComponentLists.componentDictionary.AddComponentType<ECSComponent.ColliderComponent>();
+		ComponentLists.componentDictionary.AddComponentType<ECSComponent.RigidBodyComponent>();
+
+		//Archetypes: When you add an archetype, add it to the dictionary.
+		ComponentLists.archetypes.Add(new ECSArchetype.PhysicsEntityArchetype());
+		//ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
 	}
 }

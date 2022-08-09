@@ -1,5 +1,4 @@
 using ECSComponent;
-using ECSSkeleton;
 using System.Collections.Generic;
 using UnityEngine;
 

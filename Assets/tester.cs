@@ -12,9 +12,11 @@ public class tester : MonoBehaviour
         {
             int entityId = 1;
             GameObject go = GameObject.Instantiate(physicsCube);
-            ECSSkeleton.ComponentLists.entities.Add(1);
-            ECSSkeleton.Methods.AddGameObjectComponent(1);
-
+            ComponentLists.entities.Add(1);
+            Methods.AddGameObjectComponent(1, go);
+            Methods.AddRigidbodyComponent(1, go.GetComponent<Rigidbody>());
+            Methods.AddColliderComponent(1, go.GetComponent<BoxCollider>());
+            
         }
     }
 }
