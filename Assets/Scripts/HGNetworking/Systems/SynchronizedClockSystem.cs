@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace ECSSystem
 {
     public static class SynchronizedClockSystem

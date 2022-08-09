@@ -5,7 +5,7 @@ public class ClientSystemsManager : MonoBehaviour
     public void Awake()
     {
 		ECSSystem.PhysicsSystem.Awake();
-		ECSSystem.ClientInputBufferSystem.Initialize();
+		//ECSSystem.ClientInputBufferSystem.Initialize();
     }
 
     public void FixedUpdate()

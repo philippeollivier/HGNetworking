@@ -1,3 +1,5 @@
+using ECSComponent;
+using ECSSkeleton;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +9,8 @@ namespace ECSSystem
     {
         #region Generic Systems Code
 
+        static bool oneTime = true, asdTime = true;
+
         public static void Awake()
         {
             Physics.autoSimulation = false;
@@ -15,37 +19,59 @@ namespace ECSSystem
         public static void FixedUpdate()
         {
             Physics.Simulate(Time.fixedDeltaTime);
-        }
+            UpdateAllPhysicsGhostFrames();
 
-        public static void FixedUpdateFrame()
-        {
-
+            if(Input.GetKey(KeyCode.Space) && oneTime)
+            {
+                Debug.Log("Rewinding 10 frames");
+                ReplayNFrames(10);
+                oneTime = false;
+            }
+            if (Input.GetKey(KeyCode.E) && asdTime)
+            {
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                go.transform.position = Vector3.up;
+                asdTime = false;
+            }
         }
 
         public static void UpdateAllPhysicsGhostFrames()
         {
+            foreach (KeyValuePair<int, PhysicsGhostComponent> entry in ComponentLists.componentDictionary.GetDict<PhysicsGhostComponent>())
+            {
+                Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<Rigidbody>(entry.Key);
 
+                entry.Value.historicalState.Add(SynchronizedClock.CommandFrame, new PhysicsState(rigidbody));
+                entry.Value.historicalState.Remove(SynchronizedClock.CommandFrame - SynchronizedClock.PhysicsGhostFrames);
+            }
         }
 
-        public static void RewindStateNFrames(int rewindFrames)
+        public static void ReplayNFrames(int replayFrames)
         {
-            //For every PhysicsGhostObject in the scene
-            List<PhysicsGhostComponent> unloadedPhysicsObjects = new List<PhysicsGhostComponent>(); // = GEtcomponents<whatever>
-            List<PhysicsGhostComponent> loadedPhysicsObjects = new List<PhysicsGhostComponent>();
-
-            foreach (PhysicsGhostComponent physicsGhostComponent in unloadedPhysicsObjects)
+            for(int i = SynchronizedClock.CommandFrame - replayFrames; i <= SynchronizedClock.CommandFrame; i++)
             {
-                //Get player controller if it has one
-                //Get physics controller if it has one
-                //Get rigidbody
-                //Get gameobject associated with it
-                GameObject gameObject;
-                Rigidbody rb = null;
-                
+                foreach(KeyValuePair<int, PhysicsGhostComponent> entry in ComponentLists.componentDictionary.GetDict<PhysicsGhostComponent>())
+                {
+                    Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<Rigidbody>(entry.Key);
+                    GameObject gameObject = ComponentLists.componentDictionary.GetValueAtIndex<GameObject>(entry.Key);
+                    //If player movement controller
+                    //If other move controller do the stuff here as well
 
-                //Some physics objects might not have been initialized here, so we need to do frame, load all that can be loaded.
-                //Update all that have been loaded
-                //
+                    if (entry.Value.historicalState.ContainsKey(entry.Key) && gameObject.activeInHierarchy == false)
+                    {
+                        rigidbody.rotation = entry.Value.historicalState[i].rotation;
+                        rigidbody.position = entry.Value.historicalState[i].position;
+                        rigidbody.velocity = entry.Value.historicalState[i].velocity;
+                        rigidbody.angularVelocity = entry.Value.historicalState[i].velocity;
+                        gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gameObject.SetActive(false);
+                    }
+                }
+
+                Physics.Simulate(Time.fixedDeltaTime);
             }
         }
 

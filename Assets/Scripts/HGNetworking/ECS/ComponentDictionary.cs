@@ -56,4 +56,17 @@ public class ComponentDictionary
         Type t = typeof(T);
         return ((Dictionary<int, T>)dict[typeof(T)]).Values;
     }
+
+    public Dictionary<int, T> GetDict<T>()
+    {
+        Type t = typeof(T);
+        if (dict.ContainsKey(t))
+        {
+            return ((Dictionary<int, T>)dict[typeof(T)]);
+        }
+        else
+        {
+            return new Dictionary<int, T>();
+        }
+    }
 }

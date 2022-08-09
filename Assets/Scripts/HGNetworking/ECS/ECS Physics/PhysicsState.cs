@@ -1,13 +1,13 @@
 using UnityEngine;
 public class PhysicsState
 {
-    public Vector3 localPosition, velocity, angularVelocity;
+    public Vector3 position, velocity, angularVelocity;
     public Quaternion rotation;
 
-    public PhysicsState(Quaternion rotation, Vector3 localPosition, Vector3 velocity, Vector3 angularVelocity)
+    public PhysicsState(Quaternion rotation, Vector3 position, Vector3 velocity, Vector3 angularVelocity)
     {
         this.rotation = rotation;
-        this.localPosition = localPosition;
+        this.position = position;
         this.velocity = velocity;
         this.angularVelocity = angularVelocity;
     }
@@ -15,7 +15,7 @@ public class PhysicsState
     public PhysicsState(Rigidbody rigidbody)
     {
         this.rotation = rigidbody.rotation;
-        this.localPosition = rigidbody.position;
+        this.position = rigidbody.position;
         this.velocity = rigidbody.velocity;
         this.angularVelocity = rigidbody.angularVelocity;
     }
