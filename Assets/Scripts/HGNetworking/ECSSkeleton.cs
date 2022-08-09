@@ -12,12 +12,11 @@ namespace ECSSkeleton
     {
 
     }
-
+    #region Components
     public class EComponent
     {
         public int entityId;
     }
-
     public class GameObjectComponent : EComponent
     {
         public GameObject gameObject;
@@ -55,6 +54,7 @@ namespace ECSSkeleton
             this.entityId = entityId;
         }
     }
+    #endregion
     #region Archetypes
     //When adding an archetype. Add any component types to its pattern and nothing else. If an archetype cannot have a component, add it to the antiPattern
     public abstract class Archetype
@@ -197,8 +197,9 @@ namespace ECSSkeleton
             }
             MatchArchetypes(entityId);
         }
+        #endregion
+
     }
-    #endregion
 
 
 
