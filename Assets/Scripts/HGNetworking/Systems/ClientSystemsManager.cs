@@ -6,9 +6,10 @@ public class ClientSystemsManager : MonoBehaviour
     {
 		ECSSystem.PhysicsSystem.Awake();
 		ECSSystem.ClientInputBufferSystem.Initialize();
-    }
+		Init();
+	}
 
-    public void FixedUpdate()
+	public void FixedUpdate()
     {
 		FixedUpdateClientSystems();
 	}
@@ -39,5 +40,17 @@ public class ClientSystemsManager : MonoBehaviour
 
 		ConnectionManager.UpdateTick();
 		StreamManager.WriteToAllConnections();
+	}
+
+	public static void Init()
+	{
+		//Components: When you add a component, add its type to the component dictionary.
+		ECSSkeleton.ComponentLists.componentDictionary.AddComponentType<ECSSkeleton.GameObjectComponent>();
+		ECSSkeleton.ComponentLists.componentDictionary.AddComponentType<ECSSkeleton.ColliderComponent>();
+		ECSSkeleton.ComponentLists.componentDictionary.AddComponentType<ECSSkeleton.RigidBodyComponent>();
+
+		//Archetypes: When you add an archetype, add it to the dictionary.
+		ECSSkeleton.ComponentLists.archetypes.Add(new ECSSkeleton.PhysicsEntityArchetype());
+		//ComponentLists.archetypes.Add(new ConnectionEntityArchetype());
 	}
 }
