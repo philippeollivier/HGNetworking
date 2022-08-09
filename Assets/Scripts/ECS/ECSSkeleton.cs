@@ -5,16 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /* NEW COMPONENT CHECKLIST
- * 1) Create new component class deriving from BaseClass (Look at GameObjectComponent as example)
+ * 1) Create new component class deriving from BaseComponent (Look at GameObjectComponent as example)
  * 2) Add new component class to ComponentDictionary contains function
- * 3) Add new component type in InitializeComponentLists
- * 
-*/ 
+ * 3) Add new component type in InitializeComponentArchetypeLists
+*/
 
 /* NEW ARCHETYPE CHECKLIST
- * 
- * 
- * 
+ * 1) Create new archetype class deriving from Archetype (Look at PhysicsObjectArchetype as an example)
+ * 2) Add new archetype in InitializeComponentArchetypeLists
  */
 
 namespace ECS
@@ -71,7 +69,7 @@ namespace ECS
             MatchArchetypes(entityId);
         }
 
-        public static void AddColliderComponent(int entityId, Collider collider)
+        public static void AddColliderComponent(int entityId, Collider collider = null)
         {
             if (ValidateComponentExists(entityId, typeof(GameObjectComponent), true) && ValidateComponentExists(entityId, typeof(ColliderComponent), false))
             {
