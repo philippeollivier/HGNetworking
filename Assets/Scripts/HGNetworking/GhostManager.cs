@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GhostManager
+public class GhostManager
 {
-    private static int ghostIndex = 0;
+    private int ghostIndex = 0;
     public enum GhostType
     {
         CubeGhost,
@@ -25,132 +25,134 @@ public static class GhostManager
         public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
         public void Connect(int connectionId)
         {
-            this.active = true;
-            this.connectionId = connectionId;
-            foreach (Ghost ghost in ghosts.Values)
-            {
-                ghost.NewPlayer(connectionId);
+            //this.active = true;
+            //this.connectionId = connectionId;
+            //foreach (Ghost ghost in ghosts.Values)
+            //{
+            //    ghost.NewPlayer(connectionId);
                 
-            }
+            //}
         }
         public void Disconnect()
         {
-            this.active = false;
-            this.connectionId = -1;
+            //this.active = false;
+            //this.connectionId = -1;
         }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
-            if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
-            {
-                int size = 1;
-                List<GhostState> ghostsToWrite = new List<GhostState>();
-                //Go through each ghost's list
-                foreach (Ghost ghost in ghosts.Values)
-                {
-                    //If it has unACKED changes
-                    if (ghost.flags[connectionId] > 0)
-                    {
-                        int tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
-                        //Write the ghost if there is space
-                        if (remainingBytes >= size + tempGhostSize)
-                        {
-                            ghostsToWrite.Add(AddState(packet.PacketHeader.packetId, ghost));
-                            size += tempGhostSize;
-                        }
-                    }
-                }
-                packet.Write(ghostsToWrite.Count);
-                foreach(GhostState ghost in ghostsToWrite)
-                {
-                    WriteGhostToPacket(ghost, packet);
-                }
-                return size;
-            } else
-            {
-                packet.Write(0);
-                return 1;
-            }
-            
+            //if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
+            //{
+            //    int size = 1;
+            //    List<GhostState> ghostsToWrite = new List<GhostState>();
+            //    //Go through each ghost's list
+            //    foreach (Ghost ghost in ghosts.Values)
+            //    {
+            //        //If it has unACKED changes
+            //        if (ghost.flags[connectionId] > 0)
+            //        {
+            //            int tempGhostSize = GetPacketSize(ghost.flags[connectionId]);
+            //            //Write the ghost if there is space
+            //            if (remainingBytes >= size + tempGhostSize)
+            //            {
+            //                ghostsToWrite.Add(AddState(packet.PacketHeader.packetId, ghost));
+            //                size += tempGhostSize;
+            //            }
+            //        }
+            //    }
+            //    packet.Write(ghostsToWrite.Count);
+            //    foreach(GhostState ghost in ghostsToWrite)
+            //    {
+            //        WriteGhostToPacket(ghost, packet);
+            //    }
+            //    return size;
+            //} else
+            //{
+            //    packet.Write(0);
+            //    return 1;
+            //}
+            return 0;
         }
 
         public GhostState AddState(int packetId, Ghost ghost)
         {
-            GhostState state = new GhostState(ghost, connectionId);
-            if(!ghostStates.ContainsKey(packetId) || ghostStates[packetId] == null)
-            {
-                ghostStates[packetId] = new List<GhostState>();
-            }
-            ghostStates[packetId].Add(state);
-            ghost.flags[connectionId] = 0;
-            return state;
+            //GhostState state = new GhostState(ghost, connectionId);
+            //if(!ghostStates.ContainsKey(packetId) || ghostStates[packetId] == null)
+            //{
+            //    ghostStates[packetId] = new List<GhostState>();
+            //}
+            //ghostStates[packetId].Add(state);
+            //ghost.flags[connectionId] = 0;
+            //return state;
+            return null;
         }
 
         private int GetPacketSize(int flags)
         {
-            //Ghost Id and Flags cast to Byte
-            int size = sizeof(int) + sizeof(byte);
-            if ((flags & NEWFLAG) > 0)
-            {
-                size += sizeof(int);
-            }
-            if((flags & DELFLAG) > 0)
-            {
-                //Delete doesn't add any data
-            }
-            if ((flags & POSFLAG) > 0)
-            {
-                size += 3 * sizeof(float);
-            }
-            if ((flags & SCALEFLAG) > 0)
-            {
-                size += 3 * sizeof(float);
-            }
-            if ((flags & ROTFLAG) > 0)
-            {
-                size += 4 * sizeof(float);
-            }
-            return size;
+            ////Ghost Id and Flags cast to Byte
+            //int size = sizeof(int) + sizeof(byte);
+            //if ((flags & NEWFLAG) > 0)
+            //{
+            //    size += sizeof(int);
+            //}
+            //if((flags & DELFLAG) > 0)
+            //{
+            //    //Delete doesn't add any data
+            //}
+            //if ((flags & POSFLAG) > 0)
+            //{
+            //    size += 3 * sizeof(float);
+            //}
+            //if ((flags & SCALEFLAG) > 0)
+            //{
+            //    size += 3 * sizeof(float);
+            //}
+            //if ((flags & ROTFLAG) > 0)
+            //{
+            //    size += 4 * sizeof(float);
+            //}
+            //return size;
+            return 0;
         }
         private void WriteGhostToPacket(GhostState ghost, Packet packet)
         {
-            packet.Write(ghost.ghostId);
-            packet.Write((byte)ghost.flags);
-            if ((ghost.flags & NEWFLAG) > 0)
-            {
-                packet.Write((int)ghost.ghostType);
-            }
-            if ((ghost.flags & DELFLAG) > 0)
-            {
-                //Delete doesn't add any data
-                return;
-            }
-            if ((ghost.flags & POSFLAG) > 0)
-            {
-                packet.Write(ghost.position);
-            }
-            if ((ghost.flags & SCALEFLAG) > 0)
-            {
-                packet.Write(ghost.scale);
-            }
-            if ((ghost.flags & ROTFLAG) > 0)
-            {
-                packet.Write(ghost.rotation);
-            }
+            //packet.Write(ghost.ghostId);
+            //packet.Write((byte)ghost.flags);
+            //if ((ghost.flags & NEWFLAG) > 0)
+            //{
+            //    packet.Write((int)ghost.ghostType);
+            //}
+            //if ((ghost.flags & DELFLAG) > 0)
+            //{
+            //    //Delete doesn't add any data
+            //    return;
+            //}
+            //if ((ghost.flags & POSFLAG) > 0)
+            //{
+            //    packet.Write(ghost.position);
+            //}
+            //if ((ghost.flags & SCALEFLAG) > 0)
+            //{
+            //    packet.Write(ghost.scale);
+            //}
+            //if ((ghost.flags & ROTFLAG) > 0)
+            //{
+            //    packet.Write(ghost.rotation);
+            //}
         }
 
         public void ProcessNotification(bool success, int packetId)
         {
-            if(success)
-            {
-                ghostStates.Remove(packetId);
-            } 
-            else if(ghostStates.ContainsKey(packetId))
-            {
-                foreach(GhostState state in ghostStates[packetId])
-                {
-                    ghosts[state.ghostId].flags[connectionId] = ghosts[state.ghostId].flags[connectionId] | state.flags;
-                }
-            }
+            //if(success)
+            //{
+            //    ghostStates.Remove(packetId);
+            //} 
+            //else if(ghostStates.ContainsKey(packetId))
+            //{
+            //    foreach(GhostState state in ghostStates[packetId])
+            //    {
+            //        ghosts[state.ghostId].flags[connectionId] = ghosts[state.ghostId].flags[connectionId] | state.flags;
+            //    }
+            //}
         }
 
     }
@@ -175,42 +177,42 @@ public static class GhostManager
     }
 
 
-    public static Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
-    public static Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
-    static Dictionary<GhostType, objectType> objectAssociation = new Dictionary<GhostType, objectType>();
-    static Dictionary<GhostType, objectType> clientObjectAssociation = new Dictionary<GhostType, objectType>();
+    public Dictionary<int, GhostConnection> ghostConnections = new Dictionary<int, GhostConnection>();
+    public Dictionary<int, Ghost> ghosts = new Dictionary<int, Ghost>();
+    Dictionary<GhostType, objectType> objectAssociation = new Dictionary<GhostType, objectType>();
+    Dictionary<GhostType, objectType> clientObjectAssociation = new Dictionary<GhostType, objectType>();
 
-    public static Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
-    public static GameObject[] prefabs;
-    public static void Connect(int connectionId)
+    public Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
+    public GameObject[] prefabs;
+    public void Connect(int connectionId)
     {
         ghostConnections[connectionId].Connect(connectionId);
     }
 
-    public static void Disconnect(int connectionid)
+    public void Disconnect(int connectionid)
     {
         ghostConnections[connectionid].Disconnect();
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
+    public int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
     {
         return ghostConnections[connectionId].WriteToPacket(packet, remainingBytes);
 
     }
 
-    public static bool HasMoreDataToWrite(int connectionId)
+    public bool HasMoreDataToWrite()
     {
-        foreach (Ghost ghost in ghosts.Values)
-        {
-            if (ghost.flags.ContainsKey(connectionId) && ghost.flags[connectionId] > 0)
-            {
-                return true;
-            }
-        }
+        //foreach (Ghost ghost in ghosts.Values)
+        //{
+        //    if (ghost.flags.ContainsKey(connectionId) && ghost.flags[connectionId] > 0)
+        //    {
+        //        return true;
+        //    }
+        //}
         return false;
     }
 
-    public static Ghost NewGhost(GhostType ghostType, Vector3 position)
+    public Ghost NewGhost(GhostType ghostType, Vector3 position)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(objectAssociation[ghostType]).GetComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
@@ -220,7 +222,7 @@ public static class GhostManager
         return ghost;
     }
 
-    public static Ghost ApplyGhostToObject(GameObject newGhost, GhostType ghostType)
+    public Ghost ApplyGhostToObject(GameObject newGhost, GhostType ghostType)
     {
         Ghost ghost = newGhost.AddComponent<Ghost>();
         ghost.Initialize(ghostIndex, ghostType);
@@ -229,7 +231,7 @@ public static class GhostManager
         return ghost;
     }
       
-    public static Ghost NewGhostClient(GhostType ghostType, int ghostId)
+    public Ghost NewGhostClient(GhostType ghostType, int ghostId)
     {
         Ghost ghost = ObjectManager.Instance.CreateObject(clientObjectAssociation[ghostType]).GetComponent<Ghost>();
         ghost.Initialize(ghostId);
@@ -237,7 +239,7 @@ public static class GhostManager
         ghost.onClient = true;
         return localGhosts[ghostId];
     }
-    public static void ReadFromPacket(int connectionId, Packet packet)
+    public void ReadFromPacket(int connectionId, Packet packet)
     {
         int numGhosts = packet.ReadInt();
         for (int i = 0; i < numGhosts; i++)
@@ -280,12 +282,12 @@ public static class GhostManager
         } 
     }
 
-    public static void ProcessNotification(bool success, int packetId, int connectionId)
+    public void ProcessNotification(bool success, int packetId, int connectionId)
     {
         ghostConnections[connectionId].ProcessNotification(success, packetId);
     }
 
-    public static void Initialize()
+    public void Initialize()
     {
         objectAssociation[GhostType.CubeGhost] = objectType.CubeGhost;
         clientObjectAssociation[GhostType.CubeGhost] = objectType.CubeGhost;

@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 995325592}
   - component: {fileID: 995325591}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: NetworkingBasePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,10 +338,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 995325590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 953a5c8a1b868854e8aaaf0b1fa3eba0, type: 3}
+  m_Script: {fileID: 11500000, guid: 27a737bae35dc9043a8ce9fcf4db7a55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  physicsCube: {fileID: 4842984031885437420, guid: 839df40681ff99440b8dc47237c8cef5, type: 3}
+  ipAddress: 25.15.133.160
+  serverSystem: {fileID: 7304478371639962638, guid: 8e351ca4a72484047b106681b9d1184f, type: 3}
+  clientSystem: {fileID: 6335495944621504189, guid: c96153556b52c374fb8fa3519efa2f5e, type: 3}
 --- !u!4 &995325592
 Transform:
   m_ObjectHideFlags: 0
@@ -368,7 +370,6 @@ GameObject:
   - component: {fileID: 1174364445}
   - component: {fileID: 1174364444}
   - component: {fileID: 1174364448}
-  - component: {fileID: 1174364447}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -441,18 +442,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1174364447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1174364443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e290163c0eca6c45b046de97e15f901, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1174364448
 MonoBehaviour:
   m_ObjectHideFlags: 0

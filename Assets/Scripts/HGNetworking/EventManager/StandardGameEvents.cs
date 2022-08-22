@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Events
 {
-    public class Event_SEND_USERNAME : Event
+    public class SEND_USERNAME : Event
     {
         public string Username { get; set; }
     }
 
-    public class Event_TEST_EVENT : Event
+    public class TEST_EVENT : Event
     {
         public string Username { get; set; }
         public int Number { get; set; }
@@ -18,12 +18,12 @@ namespace Events
         public string Test { get; set; }
     }
 
-    public class Event_GIVE_CONTROL : Event
+    public class GIVE_CONTROL : Event
     {
         public int ghostId { get; set; }
         public int moveId { get; set; }
     }
-    public class Event_KICK_BALL : Event
+    public class KICK_BALL : Event
     {
         public Vector3 kickVector { get; set; }
 

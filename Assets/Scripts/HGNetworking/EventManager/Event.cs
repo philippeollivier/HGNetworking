@@ -7,11 +7,11 @@ public class Event
     public int EventId { get; set; }
 
     public enum EventType{
-        Event_ERROR,
-        Event_TEST_EVENT,
-        Event_SEND_USERNAME,
-        Event_GIVE_CONTROL,
-        Event_KICK_BALL
+        ERROR,
+        TEST_EVENT,
+        SEND_USERNAME,
+        GIVE_CONTROL,
+        KICK_BALL
     }
 
     public void WriteEventHeader(ref Packet packet)

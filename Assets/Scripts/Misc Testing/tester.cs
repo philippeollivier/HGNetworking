@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class tester : MonoBehaviour
@@ -10,13 +8,16 @@ public class tester : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            //int entityId = 1;
-            //GameObject go = GameObject.Instantiate(physicsCube);
-            //ComponentLists.entities.Add(1);
-            //Methods.AddGameObjectComponent(1, go);
-            //Methods.AddRigidbodyComponent(1, go.GetComponent<Rigidbody>());
-            //Methods.AddColliderComponent(1, go.GetComponent<BoxCollider>());
-            
+            for(int i = 0; i < 20; i++)
+            {
+                int entityId = ECS.Utils.AddEntity();
+                GameObject go = Instantiate(physicsCube);
+                go.transform.position = Vector3.up * 5f + Vector3.forward * i * 1.5f;
+                ECS.Utils.AddGameObjectComponent(entityId, go);
+                ECS.Utils.AddRigidbodyComponent(entityId, go.GetComponent<Rigidbody>());
+                ECS.Utils.AddColliderComponent(entityId, go.GetComponent<BoxCollider>());
+                ECS.Utils.AddPhysicsGhostComponent(entityId);
+            }
         }
     }
 }

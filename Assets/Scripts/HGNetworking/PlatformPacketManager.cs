@@ -42,11 +42,11 @@ public static class PlatformPacketManager
             IPEndPoint _connectionEndPoint = new IPEndPoint(IPAddress.Any, 0);
             byte[] _data = udpListener.EndReceive(_result, ref _connectionEndPoint);
             udpListener.BeginReceive(UDPReceiveCallback, null);
-            NetworkingThreadManager.ExecuteOnMainThread(() =>
+            HG.Networking.NetworkingThreadManager.ExecuteOnMainThread(() =>
             {
                 using (Packet _packet = new Packet(_data, true))
                 {
-                    ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
+                    HG.Networking.ConnectionManager.ReadPacket(_connectionEndPoint, _packet);
                 }
             });
 

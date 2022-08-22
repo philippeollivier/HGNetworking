@@ -8,24 +8,24 @@ public class KickableBallable : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            Events.Event_KICK_BALL e = new Events.Event_KICK_BALL();
-            Vector3 kickVec = Vector3.zero;
+        //if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        //{
+        //    Events.Event_KICK_BALL e = new Events.Event_KICK_BALL();
+        //    Vector3 kickVec = Vector3.zero;
 
-            Vector3 difference = transform.position - collision.gameObject.transform.position;
+        //    Vector3 difference = transform.position - collision.gameObject.transform.position;
 
-            difference.y = 0;
-            difference.Normalize();
+        //    difference.y = 0;
+        //    difference.Normalize();
 
-            difference *= kickForce;
-            difference += upKickForce * Vector3.up;
+        //    difference *= kickForce;
+        //    difference += upKickForce * Vector3.up;
 
-            e.kickVector = difference;
+        //    e.kickVector = difference;
 
-            e.ghostId = GetComponent<Ghost>().ghostId;
+        //    e.ghostId = GetComponent<Ghost>().ghostId;
 
-            EventManager.QueueOutgoingEvent(e);
-        }
+        //    EventManager.QueueOutgoingEvent(e);
+        //}
     }
 }

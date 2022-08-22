@@ -11,6 +11,6 @@ public class EventHandler : MonoBehaviour
 
     public void QueueOutgoingEvent(Event currEvent)
     {
-        EventManager.QueueOutgoingEvent(currEvent);
+        //EventManager.QueueOutgoingEvent(currEvent);
     }
 }

@@ -20,11 +20,11 @@ namespace ECS
     public static class ComponentLists
     {
         public static List<int> entities = new List<int>();
-        public static List<Archetype> archetypes = new List<Archetype>();
+        public static Dictionary<Type, Archetype> archetypes = new Dictionary<Type, Archetype>();
         public static ComponentDictionary componentDictionary = new ComponentDictionary();
     }
 
-    public static class Methods
+    public static class Utils
     {
         public static int AddEntity()
         {
@@ -34,18 +34,20 @@ namespace ECS
             return id;
         }
 
-        #region Component Related Functions
         public static void InitializeComponentArchetypeLists()
         {
             //Components: When you add a component, add its type to the component dictionary.
-            ComponentLists.componentDictionary.AddComponentType<ECS.Components.GameObjectComponent>();
-            ComponentLists.componentDictionary.AddComponentType<ECS.Components.ColliderComponent>();
-            ComponentLists.componentDictionary.AddComponentType<ECS.Components.RigidbodyComponent>();
+            ComponentLists.componentDictionary.AddComponentType<GameObjectComponent>();
+            ComponentLists.componentDictionary.AddComponentType<ColliderComponent>();
+            ComponentLists.componentDictionary.AddComponentType<RigidbodyComponent>();
+            ComponentLists.componentDictionary.AddComponentType<PhysicsGhostComponent>();
 
             //Archetypes: When you add an archetype, add it to the dictionary.
-            ComponentLists.archetypes.Add(new ECS.Archetypes.PhysicsEntityArchetype());
+            ComponentLists.archetypes.Add(typeof(PhysicsEntityArchetype), new PhysicsEntityArchetype());
+            ComponentLists.archetypes.Add(typeof(GhostedPhysicsEntityArchetype), new GhostedPhysicsEntityArchetype());
         }
 
+        #region Component Related Functions
         // A function needs to add to the dictionary list and must call MatchArchetypes at the end.
         public static void AddGameObjectComponent(int entityId, GameObject gameObject = null)
         {
@@ -76,6 +78,17 @@ namespace ECS
                 ColliderComponent cc = new ColliderComponent(entityId);
                 cc.col = (collider == null) ? (ComponentLists.componentDictionary.GetValueAtIndex<GameObjectComponent>(entityId).gameObject.AddComponent<BoxCollider>()) : (collider);
                 ComponentLists.componentDictionary.Add(entityId, cc);
+            }
+            MatchArchetypes(entityId);
+        }
+
+        public static void AddPhysicsGhostComponent(int entityId, PhysicsGhostComponent physicsGhostComponent = null)
+        {
+            if (ValidateComponentExists(entityId, typeof(GameObjectComponent), true) && ValidateComponentExists(entityId, typeof(RigidbodyComponent), true) && ValidateComponentExists(entityId, typeof(PhysicsGhostComponent), false))
+            {
+                PhysicsGhostComponent pgc = (physicsGhostComponent == null)?(new PhysicsGhostComponent(entityId)):(physicsGhostComponent);
+                pgc.entityId = entityId;
+                ComponentLists.componentDictionary.Add(entityId, pgc);
             }
             MatchArchetypes(entityId);
         }
@@ -112,13 +125,12 @@ namespace ECS
                     return;
                 }
             }
-            Debug.Log($"Added ${entityId} to ${a}");
             a.entities.Add(entityId);
         }
 
         private static void MatchArchetypes(int entityId)
         {
-            foreach (Archetype a in ComponentLists.archetypes)
+            foreach (Archetype a in ComponentLists.archetypes.Values)
             {
                 MatchArchetype(entityId, a);
             }
