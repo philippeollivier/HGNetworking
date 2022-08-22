@@ -34,22 +34,25 @@ public struct PacketHeader
 {
     public PacketType packetType;
     public int packetId;
+    public int packetCommandFrame;
 
     public PacketHeader(Packet packet)
     {
         packetType = (PacketType)packet.ReadByte();
         packetId = packet.ReadInt();
+        packetCommandFrame = packet.ReadInt();
     }
-    public PacketHeader(PacketType packetType, int packetId)
+    public PacketHeader(PacketType packetType, int packetId, int packetCommandFrame)
     {
         this.packetType = packetType;
         this.packetId = packetId;
+        this.packetCommandFrame = packetCommandFrame;
     }
 
 
     public override string ToString()
     {
-        return $"{{PacketId: {packetId}, PacketType: {packetType}}}";
+        return $"{{PacketId: {packetId}, PacketType: {packetType}, PacketCommandFrame: {packetCommandFrame}}}";
     }
 }
 
@@ -104,6 +107,7 @@ public class Packet : IDisposable
     {
         Write(Convert.ToByte(PacketHeader.packetType));
         Write(PacketHeader.packetId);
+        Write(PacketHeader.packetCommandFrame);
     }
 
     /// <summary>Sets the packet's content and prepares it to be read.</summary>

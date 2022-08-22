@@ -3,9 +3,11 @@ using UnityEngine;
 public class ServerSystemsManager : MonoBehaviour
 {
     public void Awake()
-    {
-		ECS.Methods.InitializeComponentArchetypeLists();
+	{
+		ECS.Utils.InitializeComponentArchetypeLists();
 		ECS.Systems.PhysicsSystem.Awake();
+
+		HG.Networking.StartNetworkingClient(HG.NetworkingConstants.SERVER_PORT, true);
 	}
 
 	public void FixedUpdate()
@@ -15,9 +17,12 @@ public class ServerSystemsManager : MonoBehaviour
 
     private void FixedUpdateServerSystems()
     {
+		//Updates the command frame
 		ECS.Systems.SynchronizedClockSystem.FixedUpdate();
-		ECS.Systems.TestingSystem.FixedUpdate();
-		
+
+		//Read/Process all incoming UDP packets for this frame on main thread
+		HG.Networking.NetworkingThreadManager.ReadAsyncPackets();
+
 		//	EntityComponentSystem(Populate singleton component which has list of components and Map<EntityId, Entity>)
 		//For each component type, we have a Map<EntityId, Component>;
 
@@ -38,5 +43,10 @@ public class ServerSystemsManager : MonoBehaviour
 		//Network Write
 		//	EventManager Write(Read from outgoing queues singleton)
 		//	GhostManager Write(For each ghost that changed, write its component information into packet)
+
+
+		ECS.Systems.PhysicsSystem.FixedUpdate();
+
+		HG.Networking.ConnectionManager.FixedUpdate();
 	}
 }

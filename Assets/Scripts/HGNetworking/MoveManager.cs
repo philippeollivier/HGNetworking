@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class MoveManager
+public class MoveManager
 {
-    public static bool isServer = false;
-    public static Dictionary<int, MoveConnection> moveConnections = new Dictionary<int, MoveConnection>();
-    private static bool nextTick = true;
+    public bool isServer = false;
+    public Dictionary<int, MoveConnection> moveConnections = new Dictionary<int, MoveConnection>();
+    private bool nextTick = true;
     /*Client
      *  List of Control Objects
      *  Send packets for each control objects
      *  Get info from ghostManager to make sure that server has received movement info?
      */
 
-    public static bool HasMoreDataToWrite(int connectionId)
+    public bool HasMoreDataToWrite()
     {
         if (isServer == false && moveConnections.ContainsKey(1) && moveConnections[1].moveObjects.Count > 0 && nextTick)
         {
@@ -25,7 +25,7 @@ public static class MoveManager
         }
     }
 
-    public static int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
+    public int WriteToPacket(int remainingBytes, Packet packet)
     {
         if(isServer)
         {
@@ -34,11 +34,11 @@ public static class MoveManager
         } else
         {
             nextTick = false;
-            return WriteToPacketClient(connectionId, remainingBytes, packet);
+            return WriteToPacketClient(remainingBytes, packet);
         }
     }
 
-    public static void ReadFromPacket(int connectionId, Packet packet)
+    public void ReadFromPacket(int connectionId, Packet packet)
     {
         if (isServer)
         {
@@ -50,7 +50,7 @@ public static class MoveManager
         }
     }
 
-    private static void ReadFromPacketServer(int connectionId, Packet packet)
+    private void ReadFromPacketServer(int connectionId, Packet packet)
     {
         int numObjects = packet.ReadInt();
         for (int i = 0; i < numObjects; i++)
@@ -62,55 +62,55 @@ public static class MoveManager
     }
 
 
-    private static void ReadFromPacketClient(int connectionId, Packet packet)
+    private void ReadFromPacketClient(int connectionId, Packet packet)
     {
         //No Implementation for client side
     }
 
 
-    public static int WriteToPacketServer()
+    public int WriteToPacketServer()
     {
         //No implementation for client side
         return 0;
     }
 
-    public static int WriteToPacketClient(int connectionId, int remainingBytes, Packet packet)
+    public int WriteToPacketClient(int remainingBytes, Packet packet)
     {
-        
-        return moveConnections[connectionId].WriteToPacket(remainingBytes, packet);
+        return 0;
+        //return moveConnections[connectionId].WriteToPacket(remainingBytes, packet);
     }
 
 
-    public static void Initialize(bool isServer)
+    public void Initialize(bool isServer)
     {
-        MoveManager.isServer = isServer;
+        //HG.Networking.MoveManager.isServer = isServer;
     }
 
-    public static void GetControlOfGhost(int ghostId, int moveId)
+    public void GetControlOfGhost(int ghostId, int moveId)
     {
        
-        MoveObject controller = GhostManager.localGhosts[ghostId].gameObject.AddComponent<MoveObject>();
-        GhostManager.localGhosts[ghostId].isControlled = true;
-        controller.Initialize(ghostId, moveId, true);
-        moveConnections[1].moveObjects[moveId] = controller;
-        //This should pass by reference
+        //MoveObject controller = HG.Networking.GhostManager.localGhosts[ghostId].gameObject.AddComponent<MoveObject>();
+        //HG.Networking.GhostManager.localGhosts[ghostId].isControlled = true;
+        //controller.Initialize(ghostId, moveId, true);
+        //moveConnections[1].moveObjects[moveId] = controller;
+        ////This should pass by reference
     }
 
 
-    public static void GiveControlOfGhost(int connectionId, int ghostId)
+    public void GiveControlOfGhost(int connectionId, int ghostId)
     {
-        int moveId = moveConnections[connectionId].objectId;
-        moveConnections[connectionId].objectId++;
-        MoveObject controller = GhostManager.ghosts[ghostId].gameObject.AddComponent<MoveObject>();
-        controller.Initialize(ghostId, moveId, false);
-        moveConnections[connectionId].moveObjects[moveId] = controller;
-        Events.Event_GIVE_CONTROL giveControl = new Events.Event_GIVE_CONTROL();
-        giveControl.ghostId = ghostId;
-        giveControl.moveId = moveId;
-        EventManager.QueueOutgoingEvent(giveControl, connectionId);
+        //int moveId = moveConnections[connectionId].objectId;
+        //moveConnections[connectionId].objectId++;
+        //MoveObject controller = HG.Networking.GhostManager.ghosts[ghostId].gameObject.AddComponent<MoveObject>();
+        //controller.Initialize(ghostId, moveId, false);
+        //moveConnections[connectionId].moveObjects[moveId] = controller;
+        //Events.Event_GIVE_CONTROL giveControl = new Events.Event_GIVE_CONTROL();
+        //giveControl.ghostId = ghostId;
+        //giveControl.moveId = moveId;
+        //HG.Networking.EventManager.QueueOutgoingEvent(giveControl, connectionId);
     }
 
-    public static void tickAdvance()
+    public void tickAdvance()
     {
         nextTick = true;
     }

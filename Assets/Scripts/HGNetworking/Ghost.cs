@@ -61,16 +61,16 @@ public class Ghost : MonoBehaviour
 
     public void Initialize(int ghostId, GhostManager.GhostType ghostType)
     {
-        this.ghostId = ghostId;
-        this.ghostType = ghostType;
-        foreach (int connectionId in GhostManager.ghostConnections.Keys)
-        {
-            if(GhostManager.ghostConnections[connectionId].active)
-            {
-                flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
-            }
+        //this.ghostId = ghostId;
+        //this.ghostType = ghostType;
+        //foreach (int connectionId in GhostManager.ghostConnections.Keys)
+        //{
+        //    if(GhostManager.ghostConnections[connectionId].active)
+        //    {
+        //        flags[connectionId] = 0 | GhostManager.NEWFLAG | GhostManager.POSFLAG | GhostManager.SCALEFLAG | GhostManager.ROTFLAG;
+        //    }
 
-        }
+        //}
     }
 
     public void Initialize(int ghostId)

@@ -14,9 +14,14 @@ public class PhysicsState
     
     public PhysicsState(Rigidbody rigidbody)
     {
-        this.rotation = rigidbody.rotation;
-        this.position = rigidbody.position;
-        this.velocity = rigidbody.velocity;
-        this.angularVelocity = rigidbody.angularVelocity;
+        rotation = rigidbody.rotation;
+        position = rigidbody.position;
+        velocity = rigidbody.velocity;
+        angularVelocity = rigidbody.angularVelocity;
+    }
+
+    public override string ToString()
+    {
+        return $"pos: {position} vel: {velocity} angVel: {angularVelocity} rot: {rotation}";
     }
 }

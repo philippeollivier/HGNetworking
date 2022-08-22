@@ -4,11 +4,9 @@ public class ClientSystemsManager : MonoBehaviour
 {
     public void Awake()
     {
-		ECS.Methods.InitializeComponentArchetypeLists();
-		//		ECS.Systems.ClientInputBufferSystem.Initialize();
-
+		HG.Networking.StartNetworkingClient(HG.NetworkingConstants.CLIENT_PORT, false);
+		ECS.Utils.InitializeComponentArchetypeLists();
 		ECS.Systems.PhysicsSystem.Awake();
-
 	}
 
 	public void FixedUpdate()
@@ -20,7 +18,7 @@ public class ClientSystemsManager : MonoBehaviour
     {
 		ECS.Systems.SynchronizedClockSystem.FixedUpdate();
 		//Read/Process all incoming UDP packets for this frame on main thread
-		NetworkingThreadManager.ReadAsyncPackets();
+		HG.Networking.NetworkingThreadManager.ReadAsyncPackets();
 
 		//GhostManager Read(Ghost component, which has transform, ghost history etcs) (This has #frame number, #entity id, components values, conditionally write it to reconciler singleton)
 
@@ -40,7 +38,6 @@ public class ClientSystemsManager : MonoBehaviour
 
 		ECS.Systems.PhysicsSystem.FixedUpdate();
 
-		ConnectionManager.UpdateTick();
-		StreamManager.WriteToAllConnections();
+		HG.Networking.ConnectionManager.FixedUpdate();
 	}
 }

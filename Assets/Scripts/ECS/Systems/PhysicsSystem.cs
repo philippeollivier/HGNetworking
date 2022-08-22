@@ -7,9 +7,6 @@ namespace ECS.Systems
     public static class PhysicsSystem
     {
         #region Generic Systems Code
-
-        static bool oneTime = true, asdTime = true;
-
         public static void Awake()
         {
             Physics.autoSimulation = false;
@@ -17,60 +14,56 @@ namespace ECS.Systems
 
         public static void FixedUpdate()
         {
+            PhysicsUpdateWithGhostFrames();
+        }
+
+        public static void PhysicsUpdateWithGhostFrames()
+        {
             Physics.Simulate(Time.fixedDeltaTime);
             UpdateAllPhysicsGhostFrames();
-
-            if(Input.GetKey(KeyCode.Space) && oneTime)
-            {
-                Debug.Log("Rewinding 10 frames");
-                ReplayNFrames(10);
-                oneTime = false;
-            }
-            if (Input.GetKey(KeyCode.E) && asdTime)
-            {
-                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                go.transform.position = Vector3.up;
-                asdTime = false;
-            }
         }
 
         public static void UpdateAllPhysicsGhostFrames()
         {
-            foreach (KeyValuePair<int, PhysicsGhostComponent> entry in ComponentLists.componentDictionary.GetDict<PhysicsGhostComponent>())
+            foreach (int entityId in ComponentLists.archetypes[typeof(Archetypes.GhostedPhysicsEntityArchetype)].entities)
             {
-                Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<Rigidbody>(entry.Key);
+                Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<RigidbodyComponent>(entityId).rb;
+                PhysicsGhostComponent physicsGhostComponent = ComponentLists.componentDictionary.GetValueAtIndex<PhysicsGhostComponent>(entityId);
 
-                entry.Value.historicalState.Add(SynchronizedClock.CommandFrame, new PhysicsState(rigidbody));
-                entry.Value.historicalState.Remove(SynchronizedClock.CommandFrame - SynchronizedClock.PhysicsGhostFrames);
+                PhysicsState ps = new PhysicsState(rigidbody);
+                physicsGhostComponent.historicalState[SynchronizedClock.CommandFrame] = ps;
+                physicsGhostComponent.historicalState.Remove(SynchronizedClock.CommandFrame - SynchronizedClock.PhysicsGhostFrames);
             }
         }
 
         public static void ReplayNFrames(int replayFrames)
         {
-            for(int i = SynchronizedClock.CommandFrame - replayFrames; i <= SynchronizedClock.CommandFrame; i++)
+            //Disable all GhostedGameObjects
+            foreach (int entityId in ComponentLists.archetypes[typeof(Archetypes.GhostedPhysicsEntityArchetype)].entities)
             {
-                foreach(KeyValuePair<int, PhysicsGhostComponent> entry in ComponentLists.componentDictionary.GetDict<PhysicsGhostComponent>())
-                {
-                    Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<Rigidbody>(entry.Key);
-                    GameObject gameObject = ComponentLists.componentDictionary.GetValueAtIndex<GameObject>(entry.Key);
-                    //If player movement controller
-                    //If other move controller do the stuff here as well
+                ComponentLists.componentDictionary.GetValueAtIndex<GameObjectComponent>(entityId).gameObject.SetActive(false);
+            }
 
-                    if (entry.Value.historicalState.ContainsKey(entry.Key) && gameObject.activeInHierarchy == false)
+            for (int i = SynchronizedClock.CommandFrame - replayFrames; i <= SynchronizedClock.CommandFrame; i++)
+            {
+                foreach (int entityId in ComponentLists.archetypes[typeof(Archetypes.GhostedPhysicsEntityArchetype)].entities)
+                {
+                    GameObject gameObject = ComponentLists.componentDictionary.GetValueAtIndex<GameObjectComponent>(entityId).gameObject;
+                    Rigidbody rigidbody = ComponentLists.componentDictionary.GetValueAtIndex<RigidbodyComponent>(entityId).rb;
+                    PhysicsGhostComponent physicsGhostComponent = ComponentLists.componentDictionary.GetValueAtIndex<PhysicsGhostComponent>(entityId);
+
+                    //Seed the initial Physics position
+                    if (physicsGhostComponent.historicalState.ContainsKey(i) && gameObject.activeInHierarchy == false)
                     {
-                        rigidbody.rotation = entry.Value.historicalState[i].rotation;
-                        rigidbody.position = entry.Value.historicalState[i].position;
-                        rigidbody.velocity = entry.Value.historicalState[i].velocity;
-                        rigidbody.angularVelocity = entry.Value.historicalState[i].velocity;
+                        gameObject.transform.rotation = physicsGhostComponent.historicalState[i].rotation;
+                        gameObject.transform.position = physicsGhostComponent.historicalState[i].position;
+                        rigidbody.velocity = physicsGhostComponent.historicalState[i].velocity;
+                        rigidbody.angularVelocity = physicsGhostComponent.historicalState[i].angularVelocity;
                         gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gameObject.SetActive(false);
                     }
                 }
 
-                Physics.Simulate(Time.fixedDeltaTime);
+                PhysicsUpdateWithGhostFrames();
             }
         }
 

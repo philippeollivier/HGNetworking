@@ -5,18 +5,21 @@ using UnityEditor;
 public class GeneralNetworkingInterfaceEditor : Editor
 {
     SerializedProperty serverIpAddress;
+    SerializedProperty username;
 
     private void OnEnable()
     {
         serverIpAddress = serializedObject.FindProperty("ipAddress");
+        username = serializedObject.FindProperty("username");
     }
 
     public override void OnInspectorGUI()
     {
         GeneralNetworkingInterface myTarget = (GeneralNetworkingInterface)target;
         serializedObject.Update();
-        EditorGUILayout.PropertyField(serverIpAddress);
         serializedObject.ApplyModifiedProperties();
+
+        EditorGUILayout.PropertyField(serverIpAddress);
 
         EditorGUILayout.LabelField("Starting Server/Client");
         if (GUILayout.Button("Start Server"))
@@ -33,23 +36,35 @@ public class GeneralNetworkingInterfaceEditor : Editor
             myTarget.StartClient();
             myTarget.ConnectLocally();
         }
-        EditorGUILayout.LabelField("MISC");
-        if (GUILayout.Button("Create A Ghost"))
+        
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(username);
+        if (GUILayout.Button("Send Username Event"))
         {
-            myTarget.CreateGhost();
+            Events.SEND_USERNAME e = new Events.SEND_USERNAME();
+            e.Username = username.stringValue;
+            HG.Utils.EventManagerUtils.SendEventToAllConnections(e);
         }
-        if (GUILayout.Button("Ball"))
-        {
-            myTarget.Ball();
-        }
-        if (GUILayout.Button("Give Control 0 to 1"))
-        {
-            myTarget.GiveGhost0To1();
-        }
-        if (GUILayout.Button("Give Control 1 to 2"))
-        {
-            myTarget.GiveGhost1To2();
-        }
- 
+
+
+
+        //EditorGUILayout.LabelField("MISC");
+        //if (GUILayout.Button("Create A Ghost"))
+        //{
+        //    myTarget.CreateGhost();
+        //}
+        //if (GUILayout.Button("Ball"))
+        //{
+        //    myTarget.Ball();
+        //}
+        //if (GUILayout.Button("Give Control 0 to 1"))
+        //{
+        //    myTarget.GiveGhost0To1();
+        //}
+        //if (GUILayout.Button("Give Control 1 to 2"))
+        //{
+        //    myTarget.GiveGhost1To2();
+        //}
+
     }
 }

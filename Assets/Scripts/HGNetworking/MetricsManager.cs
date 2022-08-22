@@ -37,6 +37,8 @@ public class MetricsManager : MonoBehaviour
     
     public static void AddDatapointToMetric(string metricName, float value, bool cumulative = false)
     {
+        Debug.Log("Metrics are disabled... sorry for your loss");
+        return;
         Datapoint datapoint = new Datapoint(Time.time, value);
 
         //If metric is cumulative, increment the value by the previous value in the animation curve
@@ -81,9 +83,9 @@ public class MetricsManager : MonoBehaviour
             metricsText.text = tempMetricsText;
 
             string tempDebugText = "";
-            foreach (Connection connection in ConnectionManager.connections.Values)
+            foreach (Connection connection in HG.Networking.ConnectionManager.connections.Values)
             {
-                tempDebugText += $"\nConnection ID: {connection.id} | Ping: {(int) (connection.GetAveragePing() * 1000)}";
+                tempDebugText += $"\nConnection ID: {connection.connectionId} | Ping: {(int) (connection.GetAveragePing() * 1000)}";
             }
             debugText.text = tempDebugText;
         }

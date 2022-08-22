@@ -1,12 +1,13 @@
 namespace ECS.Archetypes
 {
-    public class PhysicsEntityArchetype : Archetype
+    public class GhostedPhysicsEntityArchetype : Archetype
     {
-        public PhysicsEntityArchetype()
+        public GhostedPhysicsEntityArchetype()
         {
             pattern.Add(typeof(Components.GameObjectComponent));
             pattern.Add(typeof(Components.RigidbodyComponent));
             pattern.Add(typeof(Components.ColliderComponent));
+            pattern.Add(typeof(Components.PhysicsGhostComponent));
         }
     }
 }

@@ -35,6 +35,8 @@ public class ComponentDictionary
                 return Contains<ECS.Components.GameObjectComponent>(index);
             case Type ColliderComponent when type == typeof(ECS.Components.ColliderComponent):
                 return Contains<ECS.Components.ColliderComponent>(index);
+            case Type PhysicsGhostComponent when type == typeof(ECS.Components.PhysicsGhostComponent):
+                return Contains<ECS.Components.PhysicsGhostComponent>(index);
             default:
                 throw new ArgumentException($"Type is not currently handled by Contains: {type}");
         }
@@ -67,5 +69,16 @@ public class ComponentDictionary
         {
             return new Dictionary<int, T>();
         }
+    }
+
+    public override string ToString()
+    {
+        string output = "";
+
+        foreach (Type key in dict.Keys)
+        {
+            output += $"{key}\n";
+        }
+        return output;
     }
 }
