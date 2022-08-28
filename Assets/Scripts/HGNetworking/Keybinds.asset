@@ -15,9 +15,7 @@ MonoBehaviour:
   keybindingChecks:
   - keybindingAction: 0
     keyCode: 119
-  - keybindingAction: 0
-    keyCode: 119
-  - keybindingAction: 0
+  - keybindingAction: 1
     keyCode: 115
-  - keybindingAction: 0
-    keyCode: 0
+  - keybindingAction: 2
+    keyCode: 116

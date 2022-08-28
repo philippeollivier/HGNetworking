@@ -28,6 +28,7 @@ public class InputManager : MonoBehaviour
             _instance = this;
         }
         DontDestroyOnLoad(this);
+
     }
     #endregion
 
@@ -59,10 +60,10 @@ public class InputManager : MonoBehaviour
 
     public BitArray GetKeys()
     {
-        BitArray flags = new BitArray(ECSComponent.InputComponent.keybindingChecks.Count);
-        for (int i = 0; i < ECSComponent.InputComponent.keybindingChecks.Count; i++)
+        BitArray flags = new BitArray(ECS.Components.InputComponent.keybindingChecks.Count);
+        for (int i = 0; i < ECS.Components.InputComponent.keybindingChecks.Count; i++)
         {
-            if (Input.GetKey(ECSComponent.InputComponent.keybindingChecks[i].keyCode))
+            if (Input.GetKey(ECS.Components.InputComponent.keybindingChecks[i].keyCode))
             {
                 flags[i] = true;
             }
@@ -93,4 +94,5 @@ public class InputManager : MonoBehaviour
         }
         return false;
     }
+
 }
