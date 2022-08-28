@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostManager
 {
+    public const int NEWFLAG = 1; //1
+    public const int DELFLAG = 1 << 1; //10
+    public const int POSFLAG = 1 << 2; //100
+    public const int SCALEFLAG = 1 << 3; //1000
+    public const int ROTFLAG = 1 << 4; //10000
+
     private int ghostIndex = 0;
+
     public enum GhostType
     {
         CubeGhost,
@@ -12,32 +20,20 @@ public class GhostManager
         Ball
     }
 
-    public const int NEWFLAG = 1; //1
-    public const int DELFLAG = 1 << 1; //10
-    public const int POSFLAG = 1 << 2; //100
-    public const int SCALEFLAG = 1 << 3; //1000
-    public const int ROTFLAG = 1 << 4; //10000
+    public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
+    
+    public void Connect()
+    {
+        //foreach (Ghost ghost in ghosts.Values)
+        //{
+        //    ghost.NewPlayer(connectionId);
+        //}
+    }
+
+
 
     public class GhostConnection
     {
-        public int connectionId;
-        public bool active = false;
-        public Dictionary<int, List<GhostState>> ghostStates = new Dictionary<int, List<GhostState>>();
-        public void Connect(int connectionId)
-        {
-            //this.active = true;
-            //this.connectionId = connectionId;
-            //foreach (Ghost ghost in ghosts.Values)
-            //{
-            //    ghost.NewPlayer(connectionId);
-                
-            //}
-        }
-        public void Disconnect()
-        {
-            //this.active = false;
-            //this.connectionId = -1;
-        }
         public int WriteToPacket(Packet packet, int remainingBytes)
         {
             //if (HasMoreDataToWrite(connectionId) && active && remainingBytes > 1)
@@ -184,21 +180,8 @@ public class GhostManager
 
     public Dictionary<int, Ghost> localGhosts = new Dictionary<int, Ghost>();
     public GameObject[] prefabs;
-    public void Connect(int connectionId)
-    {
-        ghostConnections[connectionId].Connect(connectionId);
-    }
 
-    public void Disconnect(int connectionid)
-    {
-        ghostConnections[connectionid].Disconnect();
-    }
-
-    public int WriteToPacket(int connectionId, int remainingBytes, Packet packet)
-    {
-        return ghostConnections[connectionId].WriteToPacket(packet, remainingBytes);
-
-    }
+   
 
     public bool HasMoreDataToWrite()
     {
@@ -295,6 +278,5 @@ public class GhostManager
         clientObjectAssociation[GhostType.Player] = objectType.ClientPlayer;
         objectAssociation[GhostType.Ball] = objectType.ServerBall;
         clientObjectAssociation[GhostType.Ball] = objectType.ClientBall;
-
     }
 }

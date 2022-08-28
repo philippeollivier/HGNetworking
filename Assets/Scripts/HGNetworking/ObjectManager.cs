@@ -39,16 +39,6 @@ public class ObjectManager : MonoBehaviour
         return Instantiate(objectPrefabs[objectType]);
     }
 
-    public static void Initialize()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     private void Start()
     {
         objectPrefabs[objectType.CubeGhost] = prefabs[(int)objectType.CubeGhost];
@@ -56,7 +46,6 @@ public class ObjectManager : MonoBehaviour
         objectPrefabs[objectType.ServerPlayer] = prefabs[(int)objectType.ServerPlayer];
         objectPrefabs[objectType.ServerBall] = prefabs[(int)objectType.ServerBall];
         objectPrefabs[objectType.ClientBall] = prefabs[(int)objectType.ClientBall];
-
     }
 
 }

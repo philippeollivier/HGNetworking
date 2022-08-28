@@ -35,7 +35,7 @@ public class ClientStreamManager : StreamManager
     {
         //Read info and send to appropriate manager (Event, Move, Ghost)
         eventManager.ReadFromPacket(packet);
-        //ghostManager.ReadFromPacket(packet);
+        ghostManager.ReadFromPacket(packet);
     }
 
     override public void ProcessNotification(bool success, int packetId)
